@@ -152,6 +152,41 @@ stroke:currentColor;
 }
 .social-strip>a:hover{transform:translateY(-3px)}
 @media(max-width:600px){.hero .top-actions{top:7px;left:7px}.hero .top-actions button{padding:7px 10px;font-size:11px}.social-strip{padding:7px}.social-strip .social-links a{width:31px;height:31px}}
+ /* Social icons visibility fix */
+.social-strip {
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: #f3f8ff;
+  min-height: 66px;
+}
+
+.social-strip > a {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #fff;
+  text-decoration: none;
+  border: 1px solid #ddd;
+}
+
+.social-strip > a:nth-of-type(1) { color: #1877f2 !important; }
+.social-strip > a:nth-of-type(2) { color: #ff0033 !important; }
+.social-strip > a:nth-of-type(3) { color: #111 !important; }
+
+.social-strip > a svg {
+  width: 25px !important;
+  height: 25px !important;
+  display: block !important;
+  fill: currentColor !important;
+  stroke: none !important;
+}
 </style></head>
 <body>
 <header class="hero" aria-label="بنر خشابيتا CNC">
