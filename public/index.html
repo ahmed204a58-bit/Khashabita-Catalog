@@ -112,10 +112,45 @@ body.modal-open{overflow:hidden}
  .social-links svg{width:17px;height:17px}
 }
 
-</style></head>
+.hero-banner {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-banner {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.hero-inner .portrait,
+.hero-inner .brand,
+.laser-art {
+  display: none !important;
+}
+
+.hero-inner {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.social-links {
+  position: absolute;
+  left: 20px;
+  bottom: 14px;
+  z-index: 5;
+  margin: 0;
+  pointer-events: auto;
+}/style></head>
 <body>
 <header class="hero"><div class="top-actions"><button aria-label="القائمة">☰</button><button aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="adminBtn" aria-label="دخول الإدارة">إدارتي</button></div>
-<div class="hero-inner"><div class="portrait"><img src="ahmed-cartoon.png" alt="أحمد خشابيتا"></div><div class="brand"><img src="logo-khashabita.png" alt="لوجو خشابيتا"><div class="tag">كتالوج المنتجات الخشبية</div><p>تصميم • قص ليزر CO2 • ديكورات وهدايا مميزة</p>
+<img src="laser-machine-banner.jpg" alt="بنر خشابيتا" class="hero-banner"><div class="hero-inner"><div class="portrait"><img src="ahmed-cartoon.png" alt="أحمد خشابيتا"></div><div class="brand"><img src="logo-khashabita.png" alt="لوجو خشابيتا"><div class="tag">كتالوج المنتجات الخشبية</div><p>تصميم • قص ليزر CO2 • ديكورات وهدايا مميزة</p>
 <div class="social-links" aria-label="تابع خشابيتا على مواقع التواصل">
 <a href="https://www.facebook.com/share/1DUHTuDPca/" target="_blank" rel="noopener noreferrer" aria-label="فيسبوك" title="فيسبوك">
 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.3-1.5 1.6-1.5h1.7V3.6c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.1H7.3V13h2.8v8h3.4Z"/></svg>
