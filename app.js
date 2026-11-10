@@ -2,8 +2,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebas
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-// Paste the Firebase web-app configuration from Firebase Console here.
-// This config is intended to be public; security is enforced by Firestore/Storage Rules.
 const firebaseConfig = {
   apiKey: "AIzaSyAsP8H7ervpQjGR8Qdh6GDYS_DRI_63iVY",
   authDomain: "khashabita-catalog.firebaseapp.com",
@@ -18,20 +16,39 @@ const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getFirestor
 const provider = new GoogleAuthProvider();
 const $ = id => document.getElementById(id);
 let products = [], editingId = null, unsubscribe = null, currentUser = null;
+let activeProduct = null, activeImageIndex = 0;
 
 function safe(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function money(n){return Number(n||0).toLocaleString("ar-EG")+" ج.م";}
 function isAdmin(){return !!currentUser && currentUser.email?.toLowerCase()===ADMIN_EMAIL.toLowerCase();}
+function validImage(u){return /^https:\/\//i.test(u) || (/^(?:\.\/|products\/)[\w./-]+\.(?:png|jpe?g|webp|gif)$/i.test(u) && !u.includes(".."));}
+function productImages(p){return (Array.isArray(p.imageUrls)?p.imageUrls:(p.imageUrl?[p.imageUrl]:[])).filter(validImage);}
 function showAdmin(on){$("catalog").classList.toggle("hidden",on);$("admin").classList.toggle("hidden",!on);$("adminBtn").textContent=on?"عرض الكتالوج":"دخول الإدارة";}
+function waLink(p){return "https://wa.me/201116026022?text="+encodeURIComponent("السلام عليكم، عايز أستفسر عن "+p.name+" - الكود "+(p.sku||"")+" - السعر "+(p.price||"") +" جنيه");}
+
 function render(){
- const cats=[...new Set(["هدايا مخصصة","دروع وتكريم","ألعاب وبازل","رمضان والأعياد","مجسمات معمارية","ديكورات منزلية","قسم السيارات",...products.map(p=>p.category).filter(Boolean)])].sort();
+ const cats=[...new Set(["هدايا مخصصة","دروع وتكريم","ألعاب وبازل","رمضان والأعياد","مجسمات معمارية","ديكورات منزلية","قسم السيارات",...products.map(p=>p.category).filter(Boolean)])];
  const chosen=$("categoryFilter").value;
- $("categoryFilter").innerHTML='<option value="">كل الأقسام</option>'+cats.map(c=>`<option>${safe(c)}</option>`).join("");
+ $("categoryFilter").innerHTML='<option value="">كل الأقسام</option>'+cats.map(c=>`<option value="${safe(c)}">${safe(c)}</option>`).join("");
  $("categoryFilter").value=cats.includes(chosen)?chosen:"";
  const term=$("search").value.trim().toLowerCase();
- const visible=products.filter(p=>(!$("categoryFilter").value||p.category===$("categoryFilter").value)&&(!term||[p.name,p.sku,p.category].join(" ").toLowerCase().includes(term)));
- $("products").innerHTML=visible.length?visible.map(p=>{const imgs=Array.isArray(p.imageUrls)?p.imageUrls:(p.imageUrl?[p.imageUrl]:[]);return `<article class="card"><div class="photo">${imgs[0]?`<img src="${safe(imgs[0])}" alt="${safe(p.name)}">`:"🪵"}</div>${imgs.length>1?`<div class="gallery">${imgs.slice(1).map(u=>`<img src="${safe(u)}" alt="${safe(p.name)}">`).join("")}</div>`:""}<div class="content"><h3>${safe(p.name)}</h3><div class="muted">${safe(p.category)} · كود ${safe(p.sku)}</div><div class="muted">${safe(p.material||"")} ${p.dimensions?"· "+safe(p.dimensions):""}</div><p class="muted">${safe(p.description||"")}</p><div class="price">${money(p.price)}</div><a class="btn" style="display:block;text-align:center;text-decoration:none;background:#1fa855;color:white" target="_blank" rel="noopener" href="https://wa.me/201116026022?text=${encodeURIComponent("السلام عليكم، عايز أستفسر عن "+p.name+" - الكود "+p.sku+" - السعر "+p.price+" جنيه")}">اطلب على واتساب</a></div></article>`;}).join(""):'<div class="empty">لا توجد منتجات مطابقة.</div>';
- $("adminList").innerHTML=products.length?products.map(p=>`<div class="adminrow"><span><b>${safe(p.name)}</b><br><small class="muted">${safe(p.sku)} · ${money(p.price)}</small></span><span class="actions"><button class="light" data-edit="${p.id}">تعديل</button><button class="danger" data-delete="${p.id}">حذف</button></span></div>`).join(""):'<p class="muted">لا توجد منتجات بعد.</p>';
+ const visible=products.filter(p=>(!$("categoryFilter").value||p.category===$("categoryFilter").value)&&(!term||[p.name,p.sku,p.category,p.description].join(" ").toLowerCase().includes(term)));
+ $("products").innerHTML=visible.length?visible.map(p=>{
+   const imgs=productImages(p), cover=imgs[0];
+   return `<article class="card">
+     <button class="card-photo" data-open="${safe(p.id)}" aria-label="عرض تفاصيل ${safe(p.name)}">
+       ${cover?`<img src="${safe(cover)}" alt="${safe(p.name)}" loading="lazy">`:`<span class="photo-placeholder" aria-hidden="true">▧</span>`}
+       ${imgs.length>1?`<span class="image-count">▧ ${imgs.length} صور</span>`:""}
+     </button>
+     <div class="content">
+       <span class="product-category">${safe(p.category||"منتج خشبي")}</span>
+       <h3>${safe(p.name)}</h3>
+       <div class="muted">${p.dimensions?safe(p.dimensions)+" · ":""}${safe(p.material||"خشب MDF")}</div>
+       <div class="price">${money(p.price)}</div>
+       <div class="card-actions"><button class="light" data-open="${safe(p.id)}">تفاصيل المنتج</button><a class="btn wa" target="_blank" rel="noopener" href="${waLink(p)}">اطلب على واتساب</a></div>
+     </div></article>`;
+ }).join(""):'<div class="empty"><span class="empty-icon">⌕</span><b>لا توجد منتجات مطابقة</b><p>جرّب البحث بكلمة تانية أو اختار قسم مختلف.</p></div>';
+ $("adminList").innerHTML=products.length?products.map(p=>`<div class="adminrow"><span><b>${safe(p.name)}</b><br><small class="muted">${safe(p.sku)} · ${money(p.price)}</small></span><span class="actions"><button class="light" data-edit="${safe(p.id)}">تعديل</button><button class="danger" data-delete="${safe(p.id)}">حذف</button></span></div>`).join(""):'<p class="muted">لا توجد منتجات بعد.</p>';
 }
 function resetForm(){editingId=null;$("productForm").reset();$("material").value="خشب MDF";$("formTitle").textContent="إضافة منتج جديد";$("imagePreviewWrap").classList.add("hidden");$("imagePreviews").innerHTML="";}
 function startListener(){
@@ -45,7 +62,7 @@ $("search").oninput=render;$("categoryFilter").onchange=render;
 $("productForm").onsubmit=async e=>{
  e.preventDefault();if(!isAdmin())return alert("غير مصرح.");
  const imageUrls=$("imageUrls").value.split(/\n|,/).map(u=>u.trim()).filter(Boolean);
- if(imageUrls.some(u=>!/^https:\/\//i.test(u)))return alert("كل روابط الصور لازم تبدأ بـ https://");
+ if(imageUrls.some(u=>!validImage(u)))return alert("استخدم روابط صور HTTPS أو مسارات صور داخل مجلد products مثل products/car-1.jpg");
  const data={name:$("name").value.trim(),sku:$("sku").value.trim(),price:Number($("price").value),category:$("category").value.trim(),dimensions:$("dimensions").value.trim(),material:$("material").value.trim(),description:$("description").value.trim(),imageUrls,updatedAt:serverTimestamp()};
  try{
   if(editingId)await updateDoc(doc(db,"products",editingId),data);
@@ -56,7 +73,7 @@ $("productForm").onsubmit=async e=>{
 $("cancelEdit").onclick=resetForm;
 $("adminList").onclick=async e=>{
  const edit=e.target.dataset.edit, del=e.target.dataset.delete;
- if(edit){const p=products.find(x=>x.id===edit);if(!p)return;editingId=p.id;for(const k of ["name","sku","price","category","dimensions","material","description"])$(k).value=p[k]??"";$("imageUrls").value=(p.imageUrls|| (p.imageUrl?[p.imageUrl]:[])).join("\\n");updateImagePreview();$("formTitle").textContent="تعديل المنتج";}
+ if(edit){const p=products.find(x=>x.id===edit);if(!p)return;editingId=p.id;for(const k of ["name","sku","price","category","dimensions","material","description"])$(k).value=p[k]??"";$("imageUrls").value=productImages(p).join("\n");updateImagePreview();$("formTitle").textContent="تعديل المنتج";$("productForm").scrollIntoView({behavior:"smooth"});}
  if(del&&confirm("هل تريد حذف المنتج نهائياً؟")){try{await deleteDoc(doc(db,"products",del));}catch(err){alert("تعذر الحذف: "+err.message);}}
 };
 onAuthStateChanged(auth,user=>{
@@ -67,8 +84,42 @@ onAuthStateChanged(auth,user=>{
 });
 
 function updateImagePreview(){
- const urls=$("imageUrls").value.split(/\n|,/).map(u=>u.trim()).filter(u=>/^https:\/\//i.test(u));
+ const urls=$("imageUrls").value.split(/\n|,/).map(u=>u.trim()).filter(validImage);
  $("imagePreviews").innerHTML=urls.map(u=>`<img src="${safe(u)}" alt="معاينة صورة المنتج">`).join("");
  $("imagePreviewWrap").classList.toggle("hidden",urls.length===0);
 }
 $("imageUrls").addEventListener("input",updateImagePreview);
+
+function openDetails(id){
+ const p=products.find(x=>x.id===id);if(!p)return;
+ activeProduct=p;activeImageIndex=0;renderDetails();
+ $("productModal").classList.remove("hidden");document.body.classList.add("modal-open");
+ $("modalClose").focus();
+}
+function renderDetails(){
+ if(!activeProduct)return;
+ const p=activeProduct, imgs=productImages(p);
+ const current=imgs[activeImageIndex]||"";
+ $("modalContent").innerHTML=`
+  <div class="modal-gallery">
+   <div class="modal-main-image">${current?`<img src="${safe(current)}" alt="${safe(p.name)}">`:`<span class="photo-placeholder">▧</span>`}
+    ${imgs.length>1?`<button class="gallery-arrow prev" id="galleryPrev" aria-label="الصورة السابقة">‹</button><button class="gallery-arrow next" id="galleryNext" aria-label="الصورة التالية">›</button>`:""}
+    ${imgs.length?`<span class="gallery-position">${activeImageIndex+1} / ${imgs.length}</span>`:""}
+   </div>
+   ${imgs.length>1?`<div class="modal-thumbs">${imgs.map((u,i)=>`<button class="${i===activeImageIndex?"selected":""}" data-image-index="${i}" aria-label="عرض الصورة ${i+1}"><img src="${safe(u)}" alt=""></button>`).join("")}</div>`:""}
+  </div>
+  <div class="modal-info"><span class="product-category">${safe(p.category||"منتج خشبي")}</span><h2>${safe(p.name)}</h2>
+   <div class="price">${money(p.price)}</div><p>${safe(p.description||"منتج مصنوع بعناية في خشابيتا CNC.")}</p>
+   <dl class="product-specs"><div><dt>كود المنتج</dt><dd>${safe(p.sku||"—")}</dd></div><div><dt>المقاس</dt><dd>${safe(p.dimensions||"حسب الطلب")}</dd></div><div><dt>الخامة</dt><dd>${safe(p.material||"خشب MDF")}</dd></div></dl>
+   <a class="btn wa modal-wa" target="_blank" rel="noopener" href="${waLink(p)}">اطلب المنتج على واتساب</a>
+  </div>`;
+ $("galleryPrev")?.addEventListener("click",()=>changeImage(-1));
+ $("galleryNext")?.addEventListener("click",()=>changeImage(1));
+ $("modalContent").querySelectorAll("[data-image-index]").forEach(b=>b.addEventListener("click",()=>{activeImageIndex=Number(b.dataset.imageIndex);renderDetails();}));
+}
+function changeImage(delta){const n=productImages(activeProduct).length;if(!n)return;activeImageIndex=(activeImageIndex+delta+n)%n;renderDetails();}
+$("products").addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(b)openDetails(b.dataset.open);});
+$("modalClose").onclick=closeDetails;
+$("productModal").addEventListener("click",e=>{if(e.target===$("productModal"))closeDetails();});
+function closeDetails(){$("productModal").classList.add("hidden");document.body.classList.remove("modal-open");activeProduct=null;}
+document.addEventListener("keydown",e=>{if($("productModal").classList.contains("hidden"))return;if(e.key==="Escape")closeDetails();if(e.key==="ArrowLeft")changeImage(1);if(e.key==="ArrowRight")changeImage(-1);});
