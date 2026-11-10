@@ -128,11 +128,25 @@ body.modal-open{overflow:hidden}
 @media(max-width:850px){.hero-inner{direction:ltr;grid-template-columns:150px minmax(0,1fr) 150px;gap:10px}.portrait{height:225px}.portrait img{height:225px;max-height:225px}.machine-art{height:210px}.brand img{max-height:125px}.brand p{font-size:13px}}
 @media(max-width:600px){.hero{min-height:250px;padding:48px 10px 22px}.hero-inner{grid-template-columns:100px minmax(0,1fr);gap:8px;min-height:0}.portrait{height:175px}.portrait img{height:175px;max-height:175px}.machine-art{display:none}.brand img{max-height:88px}.brand .tag{font-size:14px;padding:8px 10px}.brand p{font-size:11px;line-height:1.6}.social-links{gap:7px;margin-top:8px}.social-links a{width:31px;height:31px}.social-links svg{width:17px;height:17px}.top-actions{top:8px;left:8px}.top-actions button{padding:8px 10px;font-size:12px}}
 
+
+/* Approved single-image Khashabita banner */
+.hero{position:relative;min-height:0;height:auto;padding:0;margin:0;overflow:hidden;background:#062b69;line-height:0}
+.hero:before,.hero:after{display:none}
+.hero .hero-banner{display:block;width:100%;height:auto;max-height:none;object-fit:contain;margin:0}
+.hero .top-actions{position:absolute;top:12px;left:12px;z-index:5;line-height:normal}
+.hero .top-actions button{background:#061b45eF;color:#fff;border:1px solid #ffffff88;border-radius:12px;padding:9px 14px;font-size:13px}
+.social-strip{display:flex;justify-content:center;align-items:center;gap:12px;padding:10px 12px;background:#f3f8ff}
+.social-strip .social-links{display:flex;justify-content:center;align-items:center;gap:10px;margin:0}
+.social-strip .social-links a{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #ffffff80;border-radius:50%;background:#082e70;color:#fff;box-shadow:0 3px 9px #00183d25}
+.social-strip .social-links svg{width:19px;height:19px;display:block;fill:currentColor}
+@media(max-width:600px){.hero .top-actions{top:7px;left:7px}.hero .top-actions button{padding:7px 10px;font-size:11px}.social-strip{padding:7px}.social-strip .social-links a{width:31px;height:31px}}
 </style></head>
 <body>
-<header class="hero"><div class="top-actions"><button aria-label="القائمة">☰</button><button aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="adminBtn" aria-label="دخول الإدارة">إدارتي</button></div>
-<div class="hero-inner"><div class="portrait"><img src="ahmed-cartoon.png" alt="أحمد خشابيتا"></div><div class="brand"><img src="logo-khashabita.png" alt="لوجو خشابيتا"><div class="tag">كتالوج المنتجات الخشبية</div><p>تصميم • قص ليزر CO2 • ديكورات وهدايا مميزة</p>
-<div class="social-links" aria-label="تابع خشابيتا على مواقع التواصل">
+<header class="hero" aria-label="بنر خشابيتا CNC">
+  <img class="hero-banner" src="khashabita-banner.png" alt="أحمد خشابيتا - كتالوج المنتجات الخشبية - قص ليزر CO2">
+  <div class="top-actions"><button id="adminBtn" aria-label="دخول الإدارة">دخول الإدارة</button></div>
+</header>
+<div class="social-strip" aria-label="تابع خشابيتا على مواقع التواصل">
 <a href="https://www.facebook.com/share/1DUHTuDPca/" target="_blank" rel="noopener noreferrer" aria-label="فيسبوك" title="فيسبوك">
 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.3-1.5 1.6-1.5h1.7V3.6c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.1H7.3V13h2.8v8h3.4Z"/></svg>
 </a>
@@ -142,7 +156,7 @@ body.modal-open{overflow:hidden}
 <a href="https://www.tiktok.com/@khashabita?_r=1&_t=ZS-9BHYWpW8PDU" target="_blank" rel="noopener noreferrer" aria-label="تيك توك" title="تيك توك">
 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.6 7.1a6.8 6.8 0 0 1-4.2-1.5v8.1a6.1 6.1 0 1 1-5.3-6.1v3.2a2.9 2.9 0 1 0 2.1 2.8V2h3.2c.2 1.8 1.6 3.4 4.2 3.7v1.4Z"/></svg>
 </a>
-</div></div><div class="machine-art"><img src="laser-machine-banner.jpg" alt="ماكينة ليزر CO2 أثناء حفر الخشب"></div></div></header>
+</div>
 <div class="searchbar"><div class="inner"><input id="search" placeholder="ابحث عن منتجك هنا..."><button onclick="document.getElementById('search').focus()">بحث</button></div></div>
 <nav class="categories" id="categoryTiles">
 <button class="cat cat-gifts" data-cat="هدايا مخصصة"><span class="cat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 7v14M12 7H7.5a2.5 2.5 0 1 1 2.5-2.5C10 6 12 7 12 7Zm0 0h4.5A2.5 2.5 0 1 0 14 4.5C14 6 12 7 12 7Z"/></svg></span><b>هدايا مخصصة</b></button>
