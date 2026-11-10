@@ -12,6 +12,8 @@ const firebaseConfig = {
   measurementId: "G-6Y64SKT5RT"
 };
 const ADMIN_EMAIL = "ahmed204a58@gmail.com";
+const CLOUDINARY_CLOUD_NAME = "hbbdio2h";
+const CLOUDINARY_UPLOAD_PRESET = "khashabita_products";
 const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 const $ = id => document.getElementById(id);
@@ -50,7 +52,7 @@ function render(){
  }).join(""):'<div class="empty"><span class="empty-icon">⌕</span><b>لا توجد منتجات مطابقة</b><p>جرّب البحث بكلمة تانية أو اختار قسم مختلف.</p></div>';
  $("adminList").innerHTML=products.length?products.map(p=>`<div class="adminrow"><span><b>${safe(p.name)}</b><br><small class="muted">${safe(p.sku)} · ${money(p.price)}</small></span><span class="actions"><button class="light" data-edit="${safe(p.id)}">تعديل</button><button class="danger" data-delete="${safe(p.id)}">حذف</button></span></div>`).join(""):'<p class="muted">لا توجد منتجات بعد.</p>';
 }
-function resetForm(){editingId=null;$("productForm").reset();$("material").value="خشب MDF";$("formTitle").textContent="إضافة منتج جديد";$("imagePreviewWrap").classList.add("hidden");$("imagePreviews").innerHTML="";}
+function resetForm(){editingId=null;$("productForm").reset();$("material").value="خشب MDF";$("formTitle").textContent="إضافة منتج جديد";$("imagePreviewWrap").classList.add("hidden");$("imagePreviews").innerHTML="";$("uploadStatus").textContent="";}
 function startListener(){
  if(unsubscribe)unsubscribe();
  const q=query(collection(db,"products"),orderBy("createdAt","desc"));
@@ -62,8 +64,10 @@ $("search").oninput=render;$("categoryFilter").onchange=render;
 $("productForm").onsubmit=async e=>{
  e.preventDefault();if(!isAdmin())return alert("غير مصرح.");
  const imageUrls=$("imageUrls").value.split(/\n|,/).map(u=>u.trim()).filter(Boolean);
- if(imageUrls.some(u=>!validImage(u)))return alert("استخدم روابط صور HTTPS أو مسارات صور داخل مجلد products مثل products/car-1.jpg");
- const data={name:$("name").value.trim(),sku:$("sku").value.trim(),price:Number($("price").value),category:$("category").value.trim(),dimensions:$("dimensions").value.trim(),material:$("material").value.trim(),description:$("description").value.trim(),imageUrls,updatedAt:serverTimestamp()};
+ if(imageUrls.some(u=>!validImage(u)))return alert("فيه رابط صورة غير صالح. ارفع الصور من زر إضافة صور أو استخدم رابط HTTPS صحيح.");
+ if($("imageFiles").files.length){try{await uploadSelectedImages();}catch(err){console.error(err);alert("تعذر رفع الصور: "+err.message);return;}}
+ const finalImageUrls=$("imageUrls").value.split(/\n|,/).map(u=>u.trim()).filter(validImage);
+ const data={name:$("name").value.trim(),sku:$("sku").value.trim(),price:Number($("price").value),category:$("category").value.trim(),dimensions:$("dimensions").value.trim(),material:$("material").value.trim(),description:$("description").value.trim(),imageUrls:finalImageUrls,updatedAt:serverTimestamp()};
  try{
   if(editingId)await updateDoc(doc(db,"products",editingId),data);
   else await addDoc(collection(db,"products"),{...data,createdAt:serverTimestamp()});
@@ -82,6 +86,25 @@ onAuthStateChanged(auth,user=>{
  $("adminEmail").textContent=user?`مسجل الدخول: ${user.email}`:"";
  if(unsubscribe)unsubscribe();startListener();showAdmin(!!user && isAdmin());
 });
+
+async function uploadSelectedImages(){
+ const files=[...$("imageFiles").files]; if(!files.length)return;
+ const status=$("uploadStatus"), existing=$("imageUrls").value.split(/\n|,/).map(u=>u.trim()).filter(validImage), uploaded=[];
+ const allowed=["image/jpeg","image/png","image/webp","image/gif"];
+ for(let i=0;i<files.length;i++){
+  const file=files[i];
+  if(!allowed.includes(file.type))throw new Error(`الملف ${file.name} ليس صورة JPG أو PNG أو WEBP أو GIF.`);
+  if(file.size>10*1024*1024)throw new Error(`حجم ${file.name} أكبر من 10 ميجابايت.`);
+  status.textContent=`جاري رفع الصورة ${i+1} من ${files.length}: ${file.name}`;
+  const body=new FormData();body.append("file",file);body.append("upload_preset",CLOUDINARY_UPLOAD_PRESET);
+  const response=await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,{method:"POST",body});
+  const result=await response.json();if(!response.ok)throw new Error(result.error?.message||`فشل رفع ${file.name}`);
+  if(!result.secure_url)throw new Error(`لم يرجع رابط آمن للصورة ${file.name}`);uploaded.push(result.secure_url);
+ }
+ $("imageUrls").value=[...existing,...uploaded].join("\n");$("imageFiles").value="";
+ status.textContent=`تم رفع ${uploaded.length} صورة بنجاح. إجمالي الصور: ${existing.length+uploaded.length}`;updateImagePreview();
+}
+$("imageFiles").addEventListener("change",async()=>{if(!$("imageFiles").files.length)return;try{await uploadSelectedImages();}catch(err){console.error(err);$("uploadStatus").textContent="فشل رفع الصور";alert("تعذر رفع الصور: "+err.message);$("imageFiles").value="";}});
 
 function updateImagePreview(){
  const urls=$("imageUrls").value.split(/\n|,/).map(u=>u.trim()).filter(validImage);
