@@ -67,7 +67,7 @@ $("productForm").onsubmit=async e=>{
  if(imageUrls.some(u=>!validImage(u)))return alert("فيه رابط صورة غير صالح. ارفع الصور من زر إضافة صور أو استخدم رابط HTTPS صحيح.");
  if($("imageFiles").files.length){try{await uploadSelectedImages();}catch(err){console.error(err);alert("تعذر رفع الصور: "+err.message);return;}}
  const finalImageUrls=$("imageUrls").value.split(/\n|,/).map(u=>u.trim()).filter(validImage);
- const data={name:$("name").value.trim(),sku:$("sku").value.trim(),price:Number($("price").value),category:$("category").value.trim(),dimensions:$("dimensions").value.trim(),material:$("material").value.trim(),description:$("description").value.trim(),imageUrls:finalImageUrls,updatedAt:serverTimestamp()};
+ const data={name:$("name").value.trim(),sku:$("sku").value.trim(),price:Number($("price").value),category:$("category").value.trim(),dimensions:$("dimensions").value.trim(),material:$("material").value.trim(),description:$("description").value.trim(),videoUrl:$("videoUrl").value.trim(),tiktokUrl:$("tiktokUrl").value.trim(),imageUrls:finalImageUrls,updatedAt:serverTimestamp()};
  try{
   if(editingId)await updateDoc(doc(db,"products",editingId),data);
   else await addDoc(collection(db,"products"),{...data,createdAt:serverTimestamp()});
@@ -77,7 +77,7 @@ $("productForm").onsubmit=async e=>{
 $("cancelEdit").onclick=resetForm;
 $("adminList").onclick=async e=>{
  const edit=e.target.dataset.edit, del=e.target.dataset.delete;
- if(edit){const p=products.find(x=>x.id===edit);if(!p)return;editingId=p.id;for(const k of ["name","sku","price","category","dimensions","material","description"])$(k).value=p[k]??"";$("imageUrls").value=productImages(p).join("\n");updateImagePreview();$("formTitle").textContent="تعديل المنتج";$("productForm").scrollIntoView({behavior:"smooth"});}
+ if(edit){const p=products.find(x=>x.id===edit);if(!p)return;editingId=p.id;for(const k of ["name","sku","price","category","dimensions","material","description","videoUrl","tiktokUrl"])$(k).value=p[k]??"";$("imageUrls").value=productImages(p).join("\n");updateImagePreview();$("formTitle").textContent="تعديل المنتج";$("productForm").scrollIntoView({behavior:"smooth"});}
  if(del&&confirm("هل تريد حذف المنتج نهائياً؟")){try{await deleteDoc(doc(db,"products",del));}catch(err){alert("تعذر الحذف: "+err.message);}}
 };
 onAuthStateChanged(auth,user=>{
@@ -134,7 +134,7 @@ function renderDetails(){
   <div class="modal-info"><span class="product-category">${safe(p.category||"منتج خشبي")}</span><h2>${safe(p.name)}</h2>
    <div class="price">${money(p.price)}</div><p>${safe(p.description||"منتج مصنوع بعناية في خشابيتا CNC.")}</p>
    <dl class="product-specs"><div><dt>كود المنتج</dt><dd>${safe(p.sku||"—")}</dd></div><div><dt>المقاس</dt><dd>${safe(p.dimensions||"حسب الطلب")}</dd></div><div><dt>الخامة</dt><dd>${safe(p.material||"خشب MDF")}</dd></div></dl>
-   <a class="btn wa modal-wa" target="_blank" rel="noopener" href="${waLink(p)}">اطلب المنتج على واتساب</a>
+   ${/^https:\/\/(www\.)?(youtube\.com|youtu\.be)\//i.test(p.videoUrl||"")?'<a class="btn light" target="_blank" rel="noopener noreferrer" href="'+safe(p.videoUrl)+'">▶ شاهد على YouTube</a>':""} ${/^https:\/\/(www\.)?(tiktok\.com|vm\.tiktok\.com)\//i.test(p.tiktokUrl||"")?'<a class="btn light" target="_blank" rel="noopener noreferrer" href="'+safe(p.tiktokUrl)+'">▶ شاهد على TikTok</a>':""} <a class="btn wa modal-wa" target="_blank" rel="noopener" href="${waLink(p)}">اطلب المنتج على واتساب</a>
   </div>`;
  $("galleryPrev")?.addEventListener("click",()=>changeImage(-1));
  $("galleryNext")?.addEventListener("click",()=>changeImage(1));
