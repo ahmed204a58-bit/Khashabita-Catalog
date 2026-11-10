@@ -127,6 +127,30 @@ body.modal-open{overflow:hidden}
 .social-strip .social-links{display:flex;justify-content:center;align-items:center;gap:10px;margin:0}
 .social-strip .social-links a{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #ffffff80;border-radius:50%;background:#082e70;color:#fff;box-shadow:0 3px 9px #00183d25}
 .social-strip .social-links svg{width:19px;height:19px;display:block;fill:currentColor}
+ .social-strip>a{
+display:inline-flex;
+align-items:center;
+justify-content:center;
+width:42px;
+height:42px;
+margin:5px;
+border-radius:12px;
+background:#fff;
+border:1px solid #ddd;
+text-decoration:none;
+transition:.2s;
+}
+.social-strip>a:nth-of-type(1){color:#1877f2}
+.social-strip>a:nth-of-type(2){color:#ff0033}
+.social-strip>a:nth-of-type(3){color:#111}
+.social-strip>a svg{
+width:24px;
+height:24px;
+display:block;
+fill:none;
+stroke:currentColor;
+}
+.social-strip>a:hover{transform:translateY(-3px)}
 @media(max-width:600px){.hero .top-actions{top:7px;left:7px}.hero .top-actions button{padding:7px 10px;font-size:11px}.social-strip{padding:7px}.social-strip .social-links a{width:31px;height:31px}}
 </style></head>
 <body>
