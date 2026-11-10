@@ -112,6 +112,22 @@ body.modal-open{overflow:hidden}
  .social-links svg{width:17px;height:17px}
 }
 
+
+/* Banner final layout: match the approved Khashabita storefront concept */
+.hero{min-height:360px;padding:22px 18px 24px;background:linear-gradient(122deg,transparent 0 17%,#0879dc55 17.1% 31%,transparent 31.1% 66%,#ffffff18 66.1% 75%,transparent 75.1%),linear-gradient(112deg,#061c50 0%,#073d83 42%,#0879c9 76%,#00a9d8 100%)}
+.hero-inner{direction:ltr;grid-template-columns:minmax(190px,260px) minmax(300px,1fr) minmax(190px,260px);gap:18px;max-width:1220px;min-height:310px;align-items:center}
+.portrait{height:315px;justify-content:center;align-items:flex-end;overflow:hidden}
+.portrait img{height:315px;max-height:315px;width:auto;max-width:100%;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 10px 18px #00143c88)}
+.brand{direction:rtl;text-align:center;min-width:0}
+.brand img{width:min(100%,400px);max-height:165px;object-fit:contain}
+.brand .tag{display:inline-block;margin-top:7px}
+.brand p{font-size:16px;line-height:1.7}
+.machine-art{height:290px;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:18px;box-shadow:0 12px 26px #00143c55;border:1px solid #ffffff55;background:#06336e}
+.machine-art img{width:100%;height:100%;object-fit:cover;object-position:center center;display:block}
+.social-links{margin-top:13px}
+@media(max-width:850px){.hero-inner{direction:ltr;grid-template-columns:150px minmax(0,1fr) 150px;gap:10px}.portrait{height:225px}.portrait img{height:225px;max-height:225px}.machine-art{height:210px}.brand img{max-height:125px}.brand p{font-size:13px}}
+@media(max-width:600px){.hero{min-height:250px;padding:48px 10px 22px}.hero-inner{grid-template-columns:100px minmax(0,1fr);gap:8px;min-height:0}.portrait{height:175px}.portrait img{height:175px;max-height:175px}.machine-art{display:none}.brand img{max-height:88px}.brand .tag{font-size:14px;padding:8px 10px}.brand p{font-size:11px;line-height:1.6}.social-links{gap:7px;margin-top:8px}.social-links a{width:31px;height:31px}.social-links svg{width:17px;height:17px}.top-actions{top:8px;left:8px}.top-actions button{padding:8px 10px;font-size:12px}}
+
 </style></head>
 <body>
 <header class="hero"><div class="top-actions"><button aria-label="القائمة">☰</button><button aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="adminBtn" aria-label="دخول الإدارة">إدارتي</button></div>
@@ -126,7 +142,7 @@ body.modal-open{overflow:hidden}
 <a href="https://www.tiktok.com/@khashabita?_r=1&_t=ZS-9BHYWpW8PDU" target="_blank" rel="noopener noreferrer" aria-label="تيك توك" title="تيك توك">
 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.6 7.1a6.8 6.8 0 0 1-4.2-1.5v8.1a6.1 6.1 0 1 1-5.3-6.1v3.2a2.9 2.9 0 1 0 2.1 2.8V2h3.2c.2 1.8 1.6 3.4 4.2 3.7v1.4Z"/></svg>
 </a>
-</div></div><div class="laser-art">⚡</div></div></header>
+</div></div><div class="machine-art"><img src="laser-machine-banner.jpg" alt="ماكينة ليزر CO2 أثناء حفر الخشب"></div></div></header>
 <div class="searchbar"><div class="inner"><input id="search" placeholder="ابحث عن منتجك هنا..."><button onclick="document.getElementById('search').focus()">بحث</button></div></div>
 <nav class="categories" id="categoryTiles">
 <button class="cat cat-gifts" data-cat="هدايا مخصصة"><span class="cat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 7v14M12 7H7.5a2.5 2.5 0 1 1 2.5-2.5C10 6 12 7 12 7Zm0 0h4.5A2.5 2.5 0 1 0 14 4.5C14 6 12 7 12 7Z"/></svg></span><b>هدايا مخصصة</b></button>
