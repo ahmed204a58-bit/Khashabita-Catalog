@@ -23,6 +23,14 @@
 .cat-cars{background:linear-gradient(145deg,#287fdf,#092e75)!important}
  .cat-engagement{background:linear-gradient(145deg,#ec4899,#be185d)!important;color:#fff!important}
 .cat-office{background:linear-gradient(145deg,#14b8a6,#0f766e)!important;color:#fff!important}
+.cat-antiques{
+  background:linear-gradient(145deg,#a66a3f,#633b25)!important;
+  color:#fff!important;
+}
+.cat-education{
+  background:linear-gradient(145deg,#0ea5e9,#075985)!important;
+  color:#fff!important;
+}
 .card{transition:transform .2s ease,box-shadow .2s ease}
 .card:hover{transform:translateY(-4px);box-shadow:0 12px 28px #123e7630}
 .card-photo{display:block;width:100%;height:220px;padding:0;border:0;border-radius:0;background:#e8f2ff;position:relative;overflow:hidden}
@@ -219,7 +227,16 @@ stroke:currentColor;
 </button>
 <button class="cat cat-office" data-cat="أدوات مكتبية">
   <span>✏️</span><b>أدوات مكتبية</b>
-</button></nav>
+</button>
+<button class="cat cat-antiques" data-cat="أنتيكات وديكورات">
+<span class="cat-icon">🪑</span>
+<b>أنتيكات وديكورات</b>
+</button>
+<button class="cat cat-education" data-cat="أدوات مدرسية وتعليمية">
+<span class="cat-icon">🎓</span>
+<b>أدوات مدرسية وتعليمية</b>
+</button>
+</nav>
 <main>
 <section id="catalog"><h2 class="section-title">⭐ أحدث المنتجات ⭐</h2><div class="toolbar"><input id="searchFallback" class="hidden" aria-hidden="true"><select id="categoryFilter"><option value="">كل الأقسام</option><option>قسم السيارات</option></select></div><div id="products" class="grid"><div class="empty">جاري تحميل المنتجات...</div></div><div class="benefits"><span>🚚 شحن لجميع المحافظات</span><span>✓ جودة وتشطيب عالي</span><span>⚙️ تصميمات حصرية</span><span>💬 طلب مباشر على واتساب</span></div></section>
 <section id="admin" class="hidden"><div class="panel"><div class="actions" style="justify-content:space-between;align-items:center"><h2>لوحة إدارة خشابيتا</h2><button id="logout" class="danger">تسجيل الخروج</button></div><p id="adminEmail" class="muted"></p><div class="notice">أنت مسجل كمدير. أي منتج تحفظه أو تعدّل سعره سيظهر في كتالوج العملاء بعد الحفظ.</div><button id="backCatalog" class="light" style="margin-top:12px">عرض الكتالوج</button></div>
