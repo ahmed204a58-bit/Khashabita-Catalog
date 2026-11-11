@@ -29,7 +29,7 @@ function showAdmin(on){$("catalog").classList.toggle("hidden",on);$("admin").cla
 function waLink(p){return "https://wa.me/201116026022?text="+encodeURIComponent("السلام عليكم، عايز أستفسر عن "+p.name+" - الكود "+(p.sku||"")+" - السعر "+(p.price||"") +" جنيه");}
 
 function render(){
-const cats=[...new Set(["هدايا مخصصة","شبكة وخطوبة","أدوات مكتبية","دروع وتكريم","ألعاب وبازل","رمضان والأعياد","مجسمات معمارية","ديكورات منزلية","مركبات","أنتيكات","أدوات مدرسية وتعليمية",...products.map(p=>p.category).filter(Boolean)])]; const chosen=$("categoryFilter").value;
+const cats=[...new Set(["هدايا مخصصة","شبكة وخطوبة","أدوات مكتبية","دروع وتكريم","ألعاب وبازل","رمضان والأعياد","مجسمات معمارية","ديكورات منزلية","مركبات","أنتيكات","أدوات مدرسية وتعليمية","منوعات",...products.map(p=>p.category).filter(Boolean)])]; const chosen=$("categoryFilter").value;
  $("categoryFilter").innerHTML='<option value="">كل الأقسام</option>'+cats.map(c=>`<option value="${safe(c)}">${safe(c)}</option>`).join("");
  $("categoryFilter").value=cats.includes(chosen)?chosen:"";
  const term=$("search").value.trim().toLowerCase();
