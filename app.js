@@ -51,7 +51,8 @@ const cats=[...new Set(["هدايا مخصصة","شبكة وخطوبة","أدو�
  }).join(""):'<div class="empty"><span class="empty-icon">⌕</span><b>لا توجد منتجات مطابقة</b><p>جرّب البحث بكلمة تانية أو اختار قسم مختلف.</p></div>';
  $("adminList").innerHTML=products.length?products.map(p=>`<div class="adminrow"><span><b>${safe(p.name)}</b><br><small class="muted">${safe(p.sku)} · ${money(p.price)}</small></span><span class="actions"><button class="light" data-edit="${safe(p.id)}">تعديل</button><button class="danger" data-delete="${safe(p.id)}">حذف</button></span></div>`).join(""):'<p class="muted">لا توجد منتجات بعد.</p>';
 }
-function resetForm(){editingId=null;$("productForm").reset();$("material").value="خشب MDF";$("formTitle").textContent="إضافة منتج جديد";$("imagePreviewWrap").classList.add("hidden");$("imagePreviews").innerHTML="";$("uploadStatus").textContent="";}
+function resetForm(){editingId=null;$("productForm").reset();
+                     $("category").value=$("categoryFilter").value;$("material").value="خشب MDF";$("formTitle").textContent="إضافة منتج جديد";$("imagePreviewWrap").classList.add("hidden");$("imagePreviews").innerHTML="";$("uploadStatus").textContent="";}
 function startListener(){
  if(unsubscribe)unsubscribe();
  const q=query(collection(db,"products"),orderBy("createdAt","desc"));
