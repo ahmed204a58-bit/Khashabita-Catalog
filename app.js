@@ -153,3 +153,92 @@ $("modalClose").onclick=closeDetails;
 $("productModal").addEventListener("click",e=>{if(e.target===$("productModal"))closeDetails();});
 function closeDetails(){$("productModal").classList.add("hidden");document.body.classList.remove("modal-open");activeProduct=null;}
 document.addEventListener("keydown",e=>{if($("productModal").classList.contains("hidden"))return;if(e.key==="Escape")closeDetails();if(e.key==="ArrowLeft")changeImage(1);if(e.key==="ArrowRight")changeImage(-1);});
+
+// ===== نظام تقييمات خشابيتا =====
+
+async function loadReviews() {
+  const list = $("reviewsList");
+  if (!list) return;
+
+  list.textContent = "جاري تحميل التقييمات...";
+
+  const { data, error } = await supabase
+    .from("site_reviews")
+    .select("rating, comment, created_at")
+    .eq("status", "approved")
+    .order("created_at", { ascending: false });
+
+  list.replaceChildren();
+
+  if (error) {
+    list.textContent = "تعذر تحميل التقييمات حاليًا.";
+    console.error(error);
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    list.textContent = "لسه مفيش تقييمات معتمدة. كن أول من يقيّم خشابيتا!";
+    return;
+  }
+
+  data.forEach(review => {
+    const card = document.createElement("div");
+    card.className = "review-card";
+
+    const stars = document.createElement("div");
+    stars.textContent = "★".repeat(review.rating) + "☆".repeat(5 - review.rating);
+    stars.style.color = "#e6a800";
+
+    const comment = document.createElement("p");
+    comment.textContent = review.comment;
+
+    const date = document.createElement("small");
+    date.textContent = new Date(review.created_at).toLocaleDateString("ar-EG");
+
+    card.append(stars, comment, date);
+    list.appendChild(card);
+  });
+}
+
+const reviewForm = $("reviewForm");
+
+if (reviewForm) {
+  reviewForm.addEventListener("submit", async e => {
+    e.preventDefault();
+
+    const rating = Number($("reviewRating").value);
+    const comment = $("reviewComment").value.trim();
+    const submitButton = reviewForm.querySelector('button[type="submit"]');
+
+    if (!rating || rating < 1 || rating > 5 || !comment) {
+      alert("من فضلك اختار التقييم واكتب تعليقك.");
+      return;
+    }
+
+    submitButton.disabled = true;
+    submitButton.textContent = "جاري إرسال التقييم...";
+
+    const { error } = await supabase
+      .from("site_reviews")
+      .insert([{
+        rating,
+        comment,
+        status: "pending"
+      }]);
+
+    submitButton.disabled = false;
+    submitButton.textContent = "إرسال التقييم";
+
+    if (error) {
+      console.error(error);
+      alert("حصل خطأ أثناء إرسال التقييم. حاول مرة تانية.");
+      return;
+    }
+
+    reviewForm.reset();
+    alert("شكرًا ليك! تم إرسال تقييمك، وهيظهر بعد المراجعة.");
+  });
+}
+
+loadReviews();
+
