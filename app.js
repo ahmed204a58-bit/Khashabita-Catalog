@@ -2,6 +2,13 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebas
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
+
+
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const SUPABASE_URL = "https://heswhtppyiboxbccgoag.supabase.co";
+const SUPABASE_KEY = "sb_publishable_yFWjEhFpJXvXzQpBNkGX3Q_i1EdFM3o";
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 const firebaseConfig = {
   apiKey: "AIzaSyAsP8H7ervpQjGR8Qdh6GDYS_DRI_63iVY",
   authDomain: "khashabita-catalog.firebaseapp.com",
