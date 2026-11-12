@@ -32,8 +32,7 @@ function money(n){return Number(n||0).toLocaleString("ar-EG")+" ج.م";}
 function isAdmin(){return !!currentUser && currentUser.email?.toLowerCase()===ADMIN_EMAIL.toLowerCase();}
 function validImage(u){return /^https:\/\//i.test(u) || (/^(?:\.\/|products\/)[\w./-]+\.(?:png|jpe?g|webp|gif)$/i.test(u) && !u.includes(".."));}
 function productImages(p){return (Array.isArray(p.imageUrls)?p.imageUrls:(p.imageUrl?[p.imageUrl]:[])).filter(validImage);}
-function showAdmin(on){$("catalog").classList.toggle("hidden",on);$("admin").classList.toggle("hidden",!on);$("adminBtn").textContent=on?"عرض الكتالوج":"دخول الإدارة";}
-function waLink(p){return "https://wa.me/201116026022?text="+encodeURIComponent("السلام عليكم، عايز أستفسر عن "+p.name+" - الكود "+(p.sku||"")+" - السعر "+(p.price||"") +" جنيه");}
+function showAdmin(on){$("catalog").classList.toggle("hidden",on);$("admin").classList.toggle("hidden",!on);$("adminBtn").textContent=on?"عرض الكتالوج":"دخول الإدارة";if(on)loadPendingReviews();}function waLink(p){return "https://wa.me/201116026022?text="+encodeURIComponent("السلام عليكم، عايز أستفسر عن "+p.name+" - الكود "+(p.sku||"")+" - السعر "+(p.price||"") +" جنيه");}
 
 function render(){
 const cats=[...new Set(["هدايا مخصصة","شبكة وخطوبة","أدوات مكتبية","دروع وتكريم","ألعاب وبازل","رمضان والأعياد","مجسمات معمارية","ديكورات منزلية","مركبات","أنتيكات","أدوات مدرسية وتعليمية","منوعات",...products.map(p=>p.category).filter(Boolean)])]; const chosen=$("categoryFilter").value;
@@ -156,6 +155,62 @@ document.addEventListener("keydown",e=>{if($("productModal").classList.contains(
 
 // ===== نظام تقييمات خشابيتا =====
 
+async function loadPendingReviews() {
+  const list = $("adminReviewsList");
+  if (!list) return;
+
+  list.textContent = "جاري تحميل التقييمات المعلقة...";
+
+  const { data, error } = await supabase
+    .from("site_reviews")
+    .select("id, rating, comment, created_at")
+    .eq("status", "pending")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    list.textContent = "حدث خطأ أثناء تحميل التقييمات.";
+    console.error(error);
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    list.textContent = "لا توجد تقييمات معلقة حالياً.";
+    return;
+  }
+
+  list.innerHTML = data.map(review => `
+    <div class="review-card">
+      <div>⭐ ${review.rating} / 5</div>
+      <p>${safe(review.comment)}</p>
+      <button class="light" data-approve="${review.id}">موافقة</button>
+      <button class="danger" data-reject="${review.id}">رفض</button>
+    </div>
+  `).join("");
+
+  list.querySelectorAll("[data-approve]").forEach(button => {
+    button.onclick = () => updateReviewStatus(button.dataset.approve, "approved");
+  });
+
+  list.querySelectorAll("[data-reject]").forEach(button => {
+    button.onclick = () => updateReviewStatus(button.dataset.reject, "rejected");
+  });
+}
+
+async function updateReviewStatus(id, status) {
+  const { error } = await supabase
+    .from("site_reviews")
+    .update({ status })
+    .eq("id", id);
+
+  if (error) {
+    alert("حصل خطأ أثناء تحديث التقييم.");
+    console.error(error);
+    return;
+  }
+
+  await loadPendingReviews();
+  await loadReviews();
+}
 async function loadReviews() {
   const list = $("reviewsList");
   if (!list) return;
