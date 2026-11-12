@@ -8,8 +8,12 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const SUPABASE_URL = "https://heswhtppyiboxbccgoag.supabase.co";
 const SUPABASE_KEY = "sb_publishable_yFWjEhFpJXvXzQpBNkGX3Q_i1EdFM3o";
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-const firebaseConfig = {
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
+  accessToken: async () => {
+    const user = auth.currentUser;
+    return user ? await user.getIdToken() : null;
+  }
+});const firebaseConfig = {
   apiKey: "AIzaSyAsP8H7ervpQjGR8Qdh6GDYS_DRI_63iVY",
   authDomain: "khashabita-catalog.firebaseapp.com",
   projectId: "khashabita-catalog",
