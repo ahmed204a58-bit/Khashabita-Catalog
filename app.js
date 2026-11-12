@@ -112,11 +112,29 @@ async function uploadSelectedImages(){
 }
 $("imageFiles").addEventListener("change",async()=>{if(!$("imageFiles").files.length)return;try{await uploadSelectedImages();}catch(err){console.error(err);$("uploadStatus").textContent="فشل رفع الصور";alert("تعذر رفع الصور: "+err.message);$("imageFiles").value="";}});
 
+
 function updateImagePreview(){
- const urls=$("imageUrls").value.split(/\n|,/).map(u=>u.trim()).filter(validImage);
- $("imagePreviews").innerHTML=urls.map(u=>`<img src="${safe(u)}" alt="معاينة صورة المنتج">`).join("");
- $("imagePreviewWrap").classList.toggle("hidden",urls.length===0);
+  const urls=$("imageUrls").value.split(/\n/).map(u=>u.trim()).filter(validImage);
+
+  $("imagePreviews").innerHTML=urls.map((u,i)=>`
+    <div style="display:inline-flex;flex-direction:column;align-items:center;gap:5px;margin:5px">
+      <img src="${safe(u)}" alt="معاينة صورة المنتج" style="width:90px;height:90px;object-fit:cover;border-radius:8px">
+      <button type="button" data-remove-image="${i}" style="background:#dc3545;color:white;border:0;border-radius:6px;padding:5px 12px;cursor:pointer">حذف الصورة</button>
+    </div>
+  `).join("");
+
+  $("imagePreviewWrap").classList.toggle("hidden",urls.length===0);
+
+  $("imagePreviews").querySelectorAll("[data-remove-image]").forEach(button=>{
+    button.onclick=()=>{
+      const current=$("imageUrls").value.split(/\n/).map(u=>u.trim()).filter(validImage);
+      current.splice(Number(button.dataset.removeImage),1);
+      $("imageUrls").value=current.join("\n");
+      updateImagePreview();
+    };
+  });
 }
+
 $("imageUrls").addEventListener("input",updateImagePreview);
 
 function openDetails(id){
