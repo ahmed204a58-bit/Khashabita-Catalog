@@ -328,22 +328,47 @@ stroke:currentColor;
 </div>
 <footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js"></script>
 <script>
-document.querySelectorAll('.cat').forEach(b=>b.addEventListener('click',()=>{
-document.getElementById('categoryFilter').value=b.dataset.cat;
-document.getElementById('category').value=b.dataset.cat;
-document.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));
-b.classList.add('active');
-document.getElementById('categoryFilter').dispatchEvent(new Event('change'));
-document.getElementById('catalog').scrollIntoView({behavior:'smooth'});
-}));
-document.getElementById('search').addEventListener('input',e=>{
-const real=document.querySelector('#search');
-real.dispatchEvent(new Event('change'));
-});
-document.getElementById('backCatalog').onclick=()=>{
-document.getElementById('admin').classList.add('hidden');
-document.getElementById('catalog').classList.remove('hidden');
-};
+(() => {
+  // ربط أزرار الأقسام بعد تحميل عناصر الصفحة.
+  document.querySelectorAll("#categoryTiles .cat").forEach(button => {
+    button.type = "button";
+    button.addEventListener("click", () => {
+      const selectedCategory = button.dataset.cat || "";
+      const filter = document.getElementById("categoryFilter");
+      const adminCategory = document.getElementById("category");
 
+      if (!filter) return;
+
+      // إذا لم يكن القسم موجودًا في القائمة بعد، أضفه قبل اختياره.
+      if (![...filter.options].some(option => option.value === selectedCategory)) {
+        filter.add(new Option(selectedCategory, selectedCategory));
+      }
+      filter.value = selectedCategory;
+
+      if (adminCategory) adminCategory.value = selectedCategory;
+
+      document.querySelectorAll("#categoryTiles .cat").forEach(item => {
+        item.classList.toggle("active", item === button);
+      });
+
+      filter.dispatchEvent(new Event("change", { bubbles: true }));
+      document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+
+  const search = document.getElementById("search");
+  if (search) {
+    search.addEventListener("input", () => {
+      search.dispatchEvent(new Event("change", { bubbles: true }));
+    });
   }
-});</script></body></html>
+
+  const backCatalog = document.getElementById("backCatalog");
+  if (backCatalog) {
+    backCatalog.addEventListener("click", () => {
+      document.getElementById("admin")?.classList.add("hidden");
+      document.getElementById("catalog")?.classList.remove("hidden");
+    });
+  }
+})();
+</script></body></html>
