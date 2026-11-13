@@ -243,7 +243,9 @@ stroke:currentColor;
 #topViewedProducts,#topWhatsappProducts{background:#f8fbff;border-radius:10px;padding:10px;margin:8px 0;line-height:2}
 .stats-list-row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e5edf7;padding:6px 2px}
 
-</style></head>
+
+.product-display-note{margin:0 18px 12px;padding:10px 14px;background:#eef5ff;border:1px solid #d9e8fb;border-radius:12px;text-align:right;font-size:13px}
+\n</style></head>
 <body>
 <header class="hero" aria-label="بنر خشابيتا CNC">
   <img class="hero-banner" src="khashabita-banner-new.png.png" alt="أحمد خشابيتا - كتالوج المنتجات الخشبية - قص ليزر CO2">
@@ -295,7 +297,7 @@ stroke:currentColor;
 </button>
 </nav>
 <main>
-<section id="catalog"><h2 class="section-title">⭐ أحدث المنتجات ⭐</h2><div class="toolbar"><input id="searchFallback" class="hidden" aria-hidden="true"><select id="categoryFilter"><option value="">كل الأقسام</option><option>قمركبات</option></select></div><div id="products" class="grid"><div class="empty">جاري تحميل المنتجات...</div></div><div class="benefits"><span>🚚 شحن لجميع المحافظات</span><span>✓ جودة وتشطيب عالي</span><span>⚙️ تصميمات حصرية</span><span>💬 طلب مباشر على واتساب</span></div></section>
+<section id="catalog"><h2 class="section-title">⭐ أحدث المنتجات ⭐</h2><div class="toolbar"><input id="searchFallback" class="hidden" aria-hidden="true"><select id="categoryFilter"><option value="">كل الأقسام</option><option>قمركبات</option></select></div><p id="productDisplayNote" class="muted product-display-note" aria-live="polite"></p><div id="products" class="grid"><div class="empty">جاري تحميل المنتجات...</div></div><div class="benefits"><span>🚚 شحن لجميع المحافظات</span><span>✓ جودة وتشطيب عالي</span><span>⚙️ تصميمات حصرية</span><span>💬 طلب مباشر على واتساب</span></div></section>
 <section id="admin" class="hidden"><div class="panel"><div class="actions" style="justify-content:space-between;align-items:center"><h2>لوحة إدارة خشابيتا</h2><button id="logout" class="danger">تسجيل الخروج</button></div><p id="adminEmail" class="muted"></p><div class="notice">أنت مسجل كمدير. أي منتج تحفظه أو تعدّل سعره سيظهر في كتالوج العملاء بعد الحفظ.</div><button id="backCatalog" class="light" style="margin-top:12px">عرض الكتالوج</button></div>
 
 
