@@ -236,6 +236,13 @@ stroke:currentColor;
 .visitor-counter strong{font-size:17px;color:#0879dc;font-variant-numeric:tabular-nums}
 @media(max-width:600px){.visitor-counter{min-height:36px;padding:5px 9px;gap:6px}.visitor-counter .visitor-label{font-size:10px}.visitor-counter strong{font-size:14px}}
 
+
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin:16px 0}
+.stat-card{background:#f1f7ff;border:1px solid #d7e8fb;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.stat-card span{font-size:13px;color:#65758d}.stat-card strong{font-size:25px;color:#082e70}
+#topViewedProducts,#topWhatsappProducts{background:#f8fbff;border-radius:10px;padding:10px;margin:8px 0;line-height:2}
+.stats-list-row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #e5edf7;padding:6px 2px}
+
 </style></head>
 <body>
 <header class="hero" aria-label="بنر خشابيتا CNC">
@@ -290,6 +297,25 @@ stroke:currentColor;
 <main>
 <section id="catalog"><h2 class="section-title">⭐ أحدث المنتجات ⭐</h2><div class="toolbar"><input id="searchFallback" class="hidden" aria-hidden="true"><select id="categoryFilter"><option value="">كل الأقسام</option><option>قمركبات</option></select></div><div id="products" class="grid"><div class="empty">جاري تحميل المنتجات...</div></div><div class="benefits"><span>🚚 شحن لجميع المحافظات</span><span>✓ جودة وتشطيب عالي</span><span>⚙️ تصميمات حصرية</span><span>💬 طلب مباشر على واتساب</span></div></section>
 <section id="admin" class="hidden"><div class="panel"><div class="actions" style="justify-content:space-between;align-items:center"><h2>لوحة إدارة خشابيتا</h2><button id="logout" class="danger">تسجيل الخروج</button></div><p id="adminEmail" class="muted"></p><div class="notice">أنت مسجل كمدير. أي منتج تحفظه أو تعدّل سعره سيظهر في كتالوج العملاء بعد الحفظ.</div><button id="backCatalog" class="light" style="margin-top:12px">عرض الكتالوج</button></div>
+
+
+<div class="panel" id="analyticsPanel">
+  <div class="actions" style="justify-content:space-between;align-items:center">
+    <h3 style="margin:0">إحصائيات خشابيتا</h3>
+    <button type="button" class="light" id="refreshStats">تحديث الإحصائيات</button>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card"><span>إجمالي زيارات الموقع</span><strong id="statVisits">—</strong></div>
+    <div class="stat-card"><span>عدد المنتجات المنشورة</span><strong id="statProducts">—</strong></div>
+    <div class="stat-card"><span>ضغطات واتساب</span><strong id="statWhatsapp">—</strong></div>
+    <div class="stat-card"><span>مشاهدات تفاصيل المنتجات</span><strong id="statViews">—</strong></div>
+  </div>
+  <h4>أكثر المنتجات مشاهدة</h4>
+  <div id="topViewedProducts" class="muted">جاري تحميل الإحصائيات...</div>
+  <h4>أكثر المنتجات طلبًا عبر واتساب</h4>
+  <div id="topWhatsappProducts" class="muted">جاري تحميل الإحصائيات...</div>
+  <p id="statsStatus" class="muted" role="status" aria-live="polite"></p>
+</div>
 
 <div class="panel"><h3 id="formTitle">إضافة منتج جديد</h3><form id="productForm"><div class="fields"><label>اسم المنتج<input id="name" required maxlength="120"></label><label>كود المنتج<input id="sku" required maxlength="50"></label><label>السعر بالجنيه<input id="price" type="number" min="0" step="0.01" required></label><label>القسم<input id="category" required placeholder="مثال: قمركبات"></label><label>المقاس<input id="dimensions" placeholder="مثال: 35 × 45 × 32 سم"></label><label>الخامة<input id="material" value="خشب MDF"></label><div class="image-upload-field"><label for="imageFiles">صور المنتج</label><label class="upload-picker" for="imageFiles"><span>＋</span><b>إضافة صور من الجهاز</b><small>اختار صورة أو أكتر (JPG / PNG / WEBP / GIF)</small></label><input id="imageFiles" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple hidden><textarea id="imageUrls" rows="2" hidden aria-hidden="true"></textarea><p id="uploadStatus" class="muted" role="status" aria-live="polite"></p></div><label>وصف مختصر<input id="description" maxlength="300"></label><label>رابط فيديو YouTube (اختياري)<input id="videoUrl" type="url" placeholder="https://youtu.be/..."><small class="muted">اترك الخانة فارغة لو المنتج ملوش فيديو.</small></label><label>رابط فيديو TikTok (اختياري)<input id="tiktokUrl" type="url" placeholder="https://www.tiktok.com/@username/video/..."><small class="muted">اترك الخانة فارغة لو المنتج ملوش فيديو.</small></label></div><div id="imagePreviewWrap" class="hidden" style="margin-top:12px"><p class="muted">معاينة الصور</p><div id="imagePreviews" class="thumbs"></div></div><p class="muted">ارفع الصور مباشرة من جهازك. أول صورة هي الرئيسية والباقي يظهر في معرض تفاصيل المنتج.</p><p class="actions"><button class="primary" type="submit">حفظ المنتج</button><button id="cancelEdit" type="button" class="light">إلغاء</button></p></form></div><div class="panel"><h3>المنتجات الحالية</h3><div id="adminList"></div></div><div class="panel">
 </div></section>
