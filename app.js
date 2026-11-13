@@ -4,11 +4,6 @@ import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot
 
 
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const SUPABASE_URL = "https://heswhtppyiboxbccgoag.supabase.co";
-const SUPABASE_KEY = "sb_publishable_yFWjEhFpJXvXzQpBNkGX3Q_i1EdFM3o";
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 const firebaseConfig = {
   apiKey: "AIzaSyAsP8H7ervpQjGR8Qdh6GDYS_DRI_63iVY",
   authDomain: "khashabita-catalog.firebaseapp.com",
@@ -32,7 +27,7 @@ function money(n){return Number(n||0).toLocaleString("ar-EG")+" ج.م";}
 function isAdmin(){return !!currentUser && currentUser.email?.toLowerCase()===ADMIN_EMAIL.toLowerCase();}
 function validImage(u){return /^https:\/\//i.test(u) || (/^(?:\.\/|products\/)[\w./-]+\.(?:png|jpe?g|webp|gif)$/i.test(u) && !u.includes(".."));}
 function productImages(p){return (Array.isArray(p.imageUrls)?p.imageUrls:(p.imageUrl?[p.imageUrl]:[])).filter(validImage);}
-function showAdmin(on){$("catalog").classList.toggle("hidden",on);$("admin").classList.toggle("hidden",!on);$("adminBtn").textContent=on?"عرض الكتالوج":"دخول الإدارة";if(on)loadPendingReviews();}function waLink(p){return "https://wa.me/201116026022?text="+encodeURIComponent("السلام عليكم، عايز أستفسر عن "+p.name+" - الكود "+(p.sku||"")+" - السعر "+(p.price||"") +" جنيه");}
+function showAdmin(on){$("catalog").classList.toggle("hidden",on);$("admin").classList.toggle("hidden",!on);$("adminBtn").textContent=on?"عرض الكتالوج":"دخول الإدارة";}function waLink(p){return "https://wa.me/201116026022?text="+encodeURIComponent("السلام عليكم، عايز أستفسر عن "+p.name+" - الكود "+(p.sku||"")+" - السعر "+(p.price||"") +" جنيه");}
 
 function render(){
 const cats=[...new Set(["هدايا مخصصة","شبكة وخطوبة","أدوات مكتبية","دروع وتكريم","ألعاب وبازل","رمضان والأعياد","مجسمات معمارية","ديكورات منزلية","مركبات","أنتيكات","أدوات مدرسية وتعليمية","منوعات",...products.map(p=>p.category).filter(Boolean)])]; const chosen=$("categoryFilter").value;
@@ -171,147 +166,36 @@ $("productModal").addEventListener("click",e=>{if(e.target===$("productModal"))c
 function closeDetails(){$("productModal").classList.add("hidden");document.body.classList.remove("modal-open");activeProduct=null;}
 document.addEventListener("keydown",e=>{if($("productModal").classList.contains("hidden"))return;if(e.key==="Escape")closeDetails();if(e.key==="ArrowLeft")changeImage(1);if(e.key==="ArrowRight")changeImage(-1);});
 
-// ===== نظام تقييمات خشابيتا =====
+// ===== عداد زيارات خشابيتا =====
+async function updateVisitorCounter() {
+  const counter = $("visitorCount");
+  if (!counter) return;
 
-async function loadPendingReviews() {
-  const list = $("adminReviewsList");
-  if (!list) return;
+  try {
+    const { data, error } = await fetch("https://heswhtppyiboxbccgoag.supabase.co/rest/v1/rpc/increment_site_visits", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": "sb_publishable_yFWjEhFpJXvXzQpBNkGX3Q_i1EdFM3o",
+        "Authorization": "Bearer sb_publishable_yFWjEhFpJXvXzQpBNkGX3Q_i1EdFM3o"
+      },
+      body: "{}"
+    }).then(async response => {
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || "تعذر تحديث عداد الزيارات");
+      return { data: result, error: null };
+    });
 
-  list.textContent = "جاري تحميل التقييمات المعلقة...";
-
-  const { data, error } = await supabase
-    .from("site_reviews")
-    .select("id, rating, comment, created_at")
-    .eq("status", "pending")
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    list.textContent = "حدث خطأ أثناء تحميل التقييمات.";
-    console.error(error);
-    return;
+    if (error) throw error;
+    const total = Number(data);
+    if (!Number.isFinite(total)) throw new Error("قيمة العداد غير صالحة");
+    counter.textContent = total.toLocaleString("ar-EG");
+    counter.setAttribute("aria-label", `إجمالي زيارات الموقع: ${total}`);
+  } catch (err) {
+    console.error("Visitor counter:", err);
+    counter.textContent = "—";
+    counter.title = "عداد الزيارات غير متاح مؤقتًا";
   }
-
-  if (!data || data.length === 0) {
-    list.textContent = "لا توجد تقييمات معلقة حالياً.";
-    return;
-  }
-
-  list.innerHTML = data.map(review => `
-    <div class="review-card">
-      <div>⭐ ${review.rating} / 5</div>
-      <p>${safe(review.comment)}</p>
-      <button class="light" data-approve="${review.id}">موافقة</button>
-      <button class="danger" data-reject="${review.id}">رفض</button>
-    </div>
-  `).join("");
-
-  list.querySelectorAll("[data-approve]").forEach(button => {
-    button.onclick = () => updateReviewStatus(button.dataset.approve, "approved");
-  });
-
-  list.querySelectorAll("[data-reject]").forEach(button => {
-    button.onclick = () => updateReviewStatus(button.dataset.reject, "rejected");
-  });
 }
 
-async function updateReviewStatus(id, status) {
-  const { error } = await supabase
-    .from("site_reviews")
-    .update({ status })
-    .eq("id", id);
-
-  if (error) {
-    alert("حصل خطأ أثناء تحديث التقييم.");
-    console.error(error);
-    return;
-  }
-
-  await loadPendingReviews();
-  await loadReviews();
-}
-async function loadReviews() {
-  const list = $("reviewsList");
-  if (!list) return;
-
-  list.textContent = "جاري تحميل التقييمات...";
-
-  const { data, error } = await supabase
-    .from("site_reviews")
-    .select("rating, comment, created_at")
-    .eq("status", "approved")
-    .order("created_at", { ascending: false });
-
-  list.replaceChildren();
-
-  if (error) {
-    list.textContent = "تعذر تحميل التقييمات حاليًا.";
-    console.error(error);
-    return;
-  }
-
-  if (!data || data.length === 0) {
-    list.textContent = "لسه مفيش تقييمات معتمدة. كن أول من يقيّم خشابيتا!";
-    return;
-  }
-
-  data.forEach(review => {
-    const card = document.createElement("div");
-    card.className = "review-card";
-
-    const stars = document.createElement("div");
-    stars.textContent = "★".repeat(review.rating) + "☆".repeat(5 - review.rating);
-    stars.style.color = "#e6a800";
-
-    const comment = document.createElement("p");
-    comment.textContent = review.comment;
-
-    const date = document.createElement("small");
-    date.textContent = new Date(review.created_at).toLocaleDateString("ar-EG");
-
-    card.append(stars, comment, date);
-    list.appendChild(card);
-  });
-}
-
-const reviewForm = $("reviewForm");
-
-if (reviewForm) {
-  reviewForm.addEventListener("submit", async e => {
-    e.preventDefault();
-
-    const rating = Number($("reviewRating").value);
-    const comment = $("reviewComment").value.trim();
-    const submitButton = reviewForm.querySelector('button[type="submit"]');
-
-    if (!rating || rating < 1 || rating > 5 || !comment) {
-      alert("من فضلك اختار التقييم واكتب تعليقك.");
-      return;
-    }
-
-    submitButton.disabled = true;
-    submitButton.textContent = "جاري إرسال التقييم...";
-
-    const { error } = await supabase
-      .from("site_reviews")
-      .insert([{
-        rating,
-        comment,
-        status: "pending"
-      }]);
-
-    submitButton.disabled = false;
-    submitButton.textContent = "إرسال التقييم";
-
-    if (error) {
-      console.error(error);
-      alert("حصل خطأ أثناء إرسال التقييم. حاول مرة تانية.");
-      return;
-    }
-
-    reviewForm.reset();
-    alert("شكرًا ليك! تم إرسال تقييمك، وهيظهر بعد المراجعة.");
-  });
-}
-
-loadReviews();
-
+updateVisitorCounter();
