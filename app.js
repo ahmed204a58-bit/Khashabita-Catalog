@@ -27,7 +27,7 @@ function money(n){return Number(n||0).toLocaleString("ar-EG")+" ج.م";}
 function isAdmin(){return !!currentUser && currentUser.email?.toLowerCase()===ADMIN_EMAIL.toLowerCase();}
 function validImage(u){return /^https:\/\//i.test(u) || (/^(?:\.\/|products\/)[\w./-]+\.(?:png|jpe?g|webp|gif)$/i.test(u) && !u.includes(".."));}
 function productImages(p){return (Array.isArray(p.imageUrls)?p.imageUrls:(p.imageUrl?[p.imageUrl]:[])).filter(validImage);}
-function showAdmin(on){$("catalog").classList.toggle("hidden",on);$("admin").classList.toggle("hidden",!on);$("adminBtn").textContent=on?"عرض الكتالوج":"دخول الإدارة";}function waLink(p){return "https://wa.me/201116026022?text="+encodeURIComponent("السلام عليكم، عايز أستفسر عن "+p.name+" - الكود "+(p.sku||"")+" - السعر "+(p.price||"") +" جنيه");}
+function showAdmin(on){$("catalog").classList.toggle("hidden",on);$("admin").classList.toggle("hidden",!on);$("adminBtn").textContent=on?"عرض الكتالوج":"دخول الإدارة";if(on)loadAdminStats();}function waLink(p){return "https://wa.me/201116026022?text="+encodeURIComponent("السلام عليكم، عايز أستفسر عن "+p.name+" - الكود "+(p.sku||"")+" - السعر "+(p.price||"") +" جنيه");}
 
 function render(){
 const cats=[...new Set(["هدايا مخصصة","شبكة وخطوبة","أدوات مكتبية","دروع وتكريم","ألعاب وبازل","رمضان والأعياد","مجسمات معمارية","ديكورات منزلية","مركبات","أنتيكات","أدوات مدرسية وتعليمية","منوعات",...products.map(p=>p.category).filter(Boolean)])]; const chosen=$("categoryFilter").value;
@@ -47,7 +47,7 @@ const cats=[...new Set(["هدايا مخصصة","شبكة وخطوبة","أدو�
        <h3>${safe(p.name)}</h3>
        <div class="muted">${p.dimensions?safe(p.dimensions)+" · ":""}${safe(p.material||"خشب MDF")}</div>
        <div class="price">${money(p.price)}</div>
-       <div class="card-actions"><button class="light" data-open="${safe(p.id)}">تفاصيل المنتج</button><a class="btn wa" target="_blank" rel="noopener" href="${waLink(p)}">اطلب على واتساب</a></div>
+       <div class="card-actions"><button class="light" data-open="${safe(p.id)}">تفاصيل المنتج</button><a class="btn wa" target="_blank" rel="noopener" href="${waLink(p)}" data-track-whatsapp="${safe(p.id)}">اطلب على واتساب</a></div>
      </div></article>`;
  }).join(""):'<div class="empty"><span class="empty-icon">⌕</span><b>لا توجد منتجات مطابقة</b><p>جرّب البحث بكلمة تانية أو اختار قسم مختلف.</p></div>';
  $("adminList").innerHTML=products.length?products.map(p=>`<div class="adminrow"><span><b>${safe(p.name)}</b><br><small class="muted">${safe(p.sku)} · ${money(p.price)}</small></span><span class="actions"><button class="light" data-edit="${safe(p.id)}">تعديل</button><button class="danger" data-delete="${safe(p.id)}">حذف</button></span></div>`).join(""):'<p class="muted">لا توجد منتجات بعد.</p>';
@@ -57,7 +57,7 @@ function resetForm(){editingId=null;$("productForm").reset();
 function startListener(){
  if(unsubscribe)unsubscribe();
  const q=query(collection(db,"products"),orderBy("createdAt","desc"));
- unsubscribe=onSnapshot(q,snap=>{products=snap.docs.map(d=>({id:d.id,...d.data()}));render();},err=>{$("products").innerHTML='<div class="empty">تعذر تحميل المنتجات. راجع إعدادات قاعدة البيانات.</div>';console.error(err);});
+ unsubscribe=onSnapshot(q,snap=>{products=snap.docs.map(d=>({id:d.id,...d.data()}));render();if(isAdmin())loadAdminStats();},err=>{$("products").innerHTML='<div class="empty">تعذر تحميل المنتجات. راجع إعدادات قاعدة البيانات.</div>';console.error(err);});
 }
 $("adminBtn").onclick=async()=>{if(isAdmin()){showAdmin($("catalog").classList.contains("hidden"));return;}try{const result=await signInWithPopup(auth,provider);if(result.user.email?.toLowerCase()!==ADMIN_EMAIL.toLowerCase()){await signOut(auth);alert("هذا الحساب غير مصرح له بإدارة الكتالوج.");}}catch(e){alert("تعذر تسجيل الدخول باستخدام Google: "+e.message);}};
 $("logout").onclick=()=>signOut(auth);
@@ -134,7 +134,7 @@ $("imageUrls").addEventListener("input",updateImagePreview);
 
 function openDetails(id){
  const p=products.find(x=>x.id===id);if(!p)return;
- activeProduct=p;activeImageIndex=0;renderDetails();
+ activeProduct=p;activeImageIndex=0;renderDetails();trackProductView(p.id);
  $("productModal").classList.remove("hidden");document.body.classList.add("modal-open");
  $("modalClose").focus();
 }
@@ -153,7 +153,7 @@ function renderDetails(){
   <div class="modal-info"><span class="product-category">${safe(p.category||"منتج خشبي")}</span><h2>${safe(p.name)}</h2>
    <div class="price">${money(p.price)}</div><p>${safe(p.description||"منتج مصنوع بعناية في خشابيتا CNC.")}</p>
    <dl class="product-specs"><div><dt>كود المنتج</dt><dd>${safe(p.sku||"—")}</dd></div><div><dt>المقاس</dt><dd>${safe(p.dimensions||"حسب الطلب")}</dd></div><div><dt>الخامة</dt><dd>${safe(p.material||"خشب MDF")}</dd></div></dl>
-   ${/^https:\/\/(www\.)?(youtube\.com|youtu\.be)\//i.test(p.videoUrl||"")?'<a class="btn light" target="_blank" rel="noopener noreferrer" href="'+safe(p.videoUrl)+'">▶ شاهد على YouTube</a>':""} ${/^https:\/\/(www\.)?(tiktok\.com|vm\.tiktok\.com)\//i.test(p.tiktokUrl||"")?'<a class="btn light" target="_blank" rel="noopener noreferrer" href="'+safe(p.tiktokUrl)+'">▶ شاهد على TikTok</a>':""} <a class="btn wa modal-wa" target="_blank" rel="noopener" href="${waLink(p)}">اطلب المنتج على واتساب</a>
+   ${/^https:\/\/(www\.)?(youtube\.com|youtu\.be)\//i.test(p.videoUrl||"")?'<a class="btn light" target="_blank" rel="noopener noreferrer" href="'+safe(p.videoUrl)+'">▶ شاهد على YouTube</a>':""} ${/^https:\/\/(www\.)?(tiktok\.com|vm\.tiktok\.com)\//i.test(p.tiktokUrl||"")?'<a class="btn light" target="_blank" rel="noopener noreferrer" href="'+safe(p.tiktokUrl)+'">▶ شاهد على TikTok</a>':""} <a class="btn wa modal-wa" target="_blank" rel="noopener" href="${waLink(p)}" data-track-whatsapp="${safe(p.id)}">اطلب المنتج على واتساب</a>
   </div>`;
  $("galleryPrev")?.addEventListener("click",()=>changeImage(-1));
  $("galleryNext")?.addEventListener("click",()=>changeImage(1));
@@ -165,6 +165,78 @@ $("modalClose").onclick=closeDetails;
 $("productModal").addEventListener("click",e=>{if(e.target===$("productModal"))closeDetails();});
 function closeDetails(){$("productModal").classList.add("hidden");document.body.classList.remove("modal-open");activeProduct=null;}
 document.addEventListener("keydown",e=>{if($("productModal").classList.contains("hidden"))return;if(e.key==="Escape")closeDetails();if(e.key==="ArrowLeft")changeImage(1);if(e.key==="ArrowRight")changeImage(-1);});
+
+
+// ===== إحصائيات المنتجات والتواصل =====
+const SUPABASE_REST_URL = "https://heswhtppyiboxbccgoag.supabase.co/rest/v1";
+const SUPABASE_PUBLIC_KEY = "sb_publishable_yFWjEhFpJXvXzQpBNkGX3Q_i1EdFM3o";
+
+async function callStatsRpc(functionName, payload = {}) {
+  const response = await fetch(`${SUPABASE_REST_URL}/rpc/${functionName}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": SUPABASE_PUBLIC_KEY,
+      "Authorization": `Bearer ${SUPABASE_PUBLIC_KEY}`
+    },
+    body: JSON.stringify(payload)
+  });
+  const result = await response.json().catch(() => null);
+  if (!response.ok) throw new Error(result?.message || result?.hint || `فشل طلب الإحصائيات (${response.status})`);
+  return result;
+}
+
+function trackProductView(productId) {
+  if (!productId) return;
+  callStatsRpc("track_product_view", { p_product_id: String(productId) })
+    .catch(err => console.warn("Product view tracking:", err));
+}
+
+document.addEventListener("click", event => {
+  const link = event.target.closest("[data-track-whatsapp]");
+  if (!link) return;
+  const productId = link.dataset.trackWhatsapp;
+  if (productId) {
+    callStatsRpc("track_whatsapp_click", { p_product_id: String(productId) })
+      .catch(err => console.warn("WhatsApp click tracking:", err));
+  }
+}, true);
+
+async function loadAdminStats() {
+  const status = $("statsStatus");
+  if (!status || !isAdmin()) return;
+  status.textContent = "جاري تحديث الإحصائيات...";
+  try {
+    const stats = await callStatsRpc("get_khashabita_stats");
+    const views = Array.isArray(stats.product_views) ? stats.product_views : [];
+    const clicks = Array.isArray(stats.whatsapp_clicks) ? stats.whatsapp_clicks : [];
+    const totalViews = views.reduce((sum, item) => sum + Number(item.count || 0), 0);
+    const totalClicks = clicks.reduce((sum, item) => sum + Number(item.count || 0), 0);
+    $("statVisits").textContent = Number(stats.visits || 0).toLocaleString("ar-EG");
+    $("statProducts").textContent = products.length.toLocaleString("ar-EG");
+    $("statWhatsapp").textContent = totalClicks.toLocaleString("ar-EG");
+    $("statViews").textContent = totalViews.toLocaleString("ar-EG");
+
+    const renderTop = (items, targetId, emptyText) => {
+      const target = $(targetId);
+      const top = [...items].sort((a,b) => Number(b.count||0)-Number(a.count||0)).slice(0,5);
+      target.innerHTML = top.length ? top.map((item,index) => {
+        const product = products.find(p => p.id === item.product_id);
+        const name = product ? product.name : `منتج محذوف (${item.product_id})`;
+        return `<div class="stats-list-row"><span>${index+1}. ${safe(name)}</span><b>${Number(item.count||0).toLocaleString("ar-EG")}</b></div>`;
+      }).join("") : emptyText;
+    };
+    renderTop(views, "topViewedProducts", "لا توجد مشاهدات مسجلة للمنتجات حتى الآن.");
+    renderTop(clicks, "topWhatsappProducts", "لا توجد ضغطات واتساب مسجلة حتى الآن.");
+    status.textContent = "تم تحديث الإحصائيات بنجاح.";
+  } catch (err) {
+    console.error("Admin analytics:", err);
+    status.textContent = "تعذر تحميل الإحصائيات. تأكد من تشغيل كود SQL الخاص بالإحصائيات في Supabase.";
+  }
+}
+
+$("refreshStats")?.addEventListener("click", loadAdminStats);
+
 
 // ===== عداد زيارات خشابيتا =====
 async function updateVisitorCounter() {
