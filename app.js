@@ -34,7 +34,16 @@ const cats=[...new Set(["هدايا مخصصة","شبكة وخطوبة","أدو�
  $("categoryFilter").innerHTML='<option value="">كل الأقسام</option>'+cats.map(c=>`<option value="${safe(c)}">${safe(c)}</option>`).join("");
  $("categoryFilter").value=cats.includes(chosen)?chosen:"";
  const term=$("search").value.trim().toLowerCase();
- const visible=products.filter(p=>(!$("categoryFilter").value||p.category===$("categoryFilter").value)&&(!term||[p.name,p.sku,p.category,p.description].join(" ").toLowerCase().includes(term)));
+ const filtered=products.filter(p=>(!$("categoryFilter").value||p.category===$("categoryFilter").value)&&(!term||[p.name,p.sku,p.category,p.description].join(" ").toLowerCase().includes(term)));
+ // الصفحة الرئيسية تعرض أحدث 30 منتجًا فقط؛ الأقسام والبحث يعرضان كل النتائج المطابقة.
+ const isHomeView=!$("categoryFilter").value&&!term;
+ const visible=isHomeView?filtered.slice(0,30):filtered;
+ const displayNote=$("productDisplayNote");
+ if(displayNote){
+   if(isHomeView) displayNote.textContent=`نعرض أحدث ${visible.length} منتجًا من إجمالي ${products.length}. تصفّح الأقسام لرؤية باقي المنتجات.`;
+   else if($("categoryFilter").value) displayNote.textContent=`يعرض قسم «${$("categoryFilter").value}» عدد ${visible.length} منتجًا.`;
+   else displayNote.textContent=`نتائج البحث: ${visible.length} منتجًا.`;
+ }
  $("products").innerHTML=visible.length?visible.map(p=>{
    const imgs=productImages(p), cover=imgs[0];
    return `<article class="card">
