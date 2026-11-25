@@ -41,7 +41,7 @@ function render(){
    return `<article class="card">
      <button class="card-photo" data-open="${safe(p.id)}" aria-label="عرض تفاصيل ${safe(p.name)}">
        ${cover?`<img src="${safe(cover)}" alt="${safe(p.name)}" loading="lazy">`:`<span class="photo-placeholder" aria-hidden="true">▧</span>`}
-       ${isNew?`<span class="new-product-badge" aria-label="أحدث منتج"><span class="new-badge-copy"><small>NEW</small><b>جديد</b></span></span>`:""}
+       ${isNew?`<span class="new-product-badge" aria-label="منتج جديد"><span class="new-badge-cap" aria-hidden="true"></span><span class="new-badge-fold left" aria-hidden="true"></span><span class="new-badge-fold right" aria-hidden="true"></span><span class="new-badge-body"><b>جديد</b></span></span>`:""}
        ${imgs.length>1?`<span class="image-count">▧ ${imgs.length} صور</span>`:""}
      </button>
      <div class="content">
