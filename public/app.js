@@ -18,6 +18,8 @@ const $ = id => document.getElementById(id);
 let products = [], editingId = null, unsubscribe = null, currentUser = null;
 let activeProduct = null, activeImageIndex = 0;
 let deepLinkHandled = false;
+// Set to the deployed Cloudflare Worker origin to enable product-specific social previews.
+const PRODUCT_SHARE_WORKER_BASE = "";
 
 function safe(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function money(n){return Number(n||0).toLocaleString("ar-EG")+" ج.م";}
@@ -96,6 +98,9 @@ $("imageUrls").addEventListener("input",updateImagePreview);
 
 
 function productShareUrl(productId){
+ if(PRODUCT_SHARE_WORKER_BASE){
+  return `${PRODUCT_SHARE_WORKER_BASE.replace(/\\/+$/,"")}/p/${encodeURIComponent(productId)}`;
+ }
  const url=new URL(window.location.href);
  url.search="";
  url.hash="";
