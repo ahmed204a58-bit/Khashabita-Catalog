@@ -23,7 +23,7 @@ let products = [], editingId = null, unsubscribe = null, currentUser = null;
 let activeProduct = null, activeImageIndex = 0;
 let deepLinkHandled = false;
 // Set to the deployed Cloudflare Worker origin to enable product-specific social previews.
-const PRODUCT_SHARE_WORKER_BASE = "";
+const PRODUCT_SHARE_WORKER_BASE = "https://khashabita-product-share.ahmed204a58.workers.dev";
 
 function safe(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function money(n){return Number(n||0).toLocaleString("ar-EG")+" ج.م";}
