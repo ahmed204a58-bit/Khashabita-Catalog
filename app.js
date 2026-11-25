@@ -159,7 +159,7 @@ $("imageUrls").addEventListener("input",updateImagePreview);
 
 function productShareUrl(productId){
  if(PRODUCT_SHARE_WORKER_BASE){
-  return `${PRODUCT_SHARE_WORKER_BASE.replace(/\\/+$/,"")}/p/${encodeURIComponent(productId)}`;
+  return `${PRODUCT_SHARE_WORKER_BASE.replace(/\/+$/,"")}/p/${encodeURIComponent(productId)}`;
  }
  const url=new URL(window.location.href);
  url.search="";
