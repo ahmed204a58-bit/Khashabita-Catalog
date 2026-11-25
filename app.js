@@ -39,7 +39,7 @@ const cats=[...new Set(["هدايا مخصصة","شبكة وخطوبة","أدو�
  const isHomeView=!$("categoryFilter").value&&!term;
  const visible=isHomeView?filtered.slice(0,30):filtered;
  // products مرتبة حسب createdAt تنازليًا؛ الشارة تخص أحدث خمسة في الكتالوج كله، لا نتائج الفلتر فقط.
- const latestProductIds=new Set(products.slice(0,5).map(p=>p.id));
+
  const displayNote=$("productDisplayNote");
  if(displayNote){
    if(isHomeView) displayNote.textContent=`نعرض أحدث ${visible.length} منتجًا من إجمالي ${products.length}. تصفّح الأقسام لرؤية باقي المنتجات.`;
@@ -48,11 +48,19 @@ const cats=[...new Set(["هدايا مخصصة","شبكة وخطوبة","أدو�
  }
  $("products").innerHTML=visible.length?visible.map(p=>{
    const imgs=productImages(p), cover=imgs[0];
-   const isNew=latestProductIds.has(p.id);
+   const isNew=products.indexOf(p)>=0 && products.indexOf(p)<5;
    return `<article class="card">
      <button class="card-photo" data-open="${safe(p.id)}" aria-label="عرض تفاصيل ${safe(p.name)}">
        ${cover?`<img src="${safe(cover)}" alt="${safe(p.name)}" loading="lazy">`:`<span class="photo-placeholder" aria-hidden="true">▧</span>`}
-       ${isNew?`<span class="new-product-badge" aria-label="منتج جديد" style="position:absolute;top:10px;left:12px;right:auto;z-index:20;display:block;width:104px;height:72px;pointer-events:none;filter:drop-shadow(0 5px 8px rgba(0,12,35,.42))"><span class="new-badge-cap" aria-hidden="true"></span><span class="new-badge-fold left" aria-hidden="true"></span><span class="new-badge-fold right" aria-hidden="true"></span><span class="new-badge-body" style="position:absolute;top:8px;left:10px;width:84px;height:59px;z-index:2;display:grid;place-items:center;color:#fff;text-align:center;background:linear-gradient(155deg,#124b7b 0%,#08294e 48%,#04172f 100%);border:1px solid #62caff;border-top:0;border-radius:0 0 19px 19px;box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 -7px 15px rgba(0,8,28,.35),0 4px 10px rgba(0,14,42,.25)"><b style="position:relative;z-index:1;font-size:19px;font-weight:900;line-height:1;color:#f5fcff;text-shadow:0 0 8px rgba(43,190,255,.55),0 2px 2px rgba(0,0,0,.4)">جديد</b></span></span>`:""}
+       ${isNew?`<span class="new-product-badge" aria-label="منتج جديد" style="position:absolute;top:9px;left:12px;right:auto;z-index:50;display:block;width:108px;height:74px;opacity:1;visibility:visible;pointer-events:none;filter:drop-shadow(0 5px 8px rgba(0,10,32,.48))">
+ <span aria-hidden="true" style="position:absolute;top:0;left:0;display:block;width:108px;height:14px;background:linear-gradient(90deg,#071b36 0%,#4d9acb 15%,#d8f5ff 45%,#4d9acb 82%,#071b36 100%);clip-path:polygon(8% 0,92% 0,100% 100%,0 100%)"></span>
+ <span aria-hidden="true" style="position:absolute;top:8px;left:11px;display:flex;align-items:center;justify-content:center;width:86px;height:59px;background:linear-gradient(145deg,#174d7c 0%,#0a2e56 48%,#04172f 100%);border:1px solid #70d4ff;border-top:0;border-radius:0 0 21px 21px;box-shadow:inset 0 1px 0 rgba(255,255,255,.24),inset 0 -8px 14px rgba(0,0,0,.24)">
+  <span aria-hidden="true" style="position:absolute;top:0;left:10px;right:10px;height:2px;background:linear-gradient(90deg,transparent,#c9f4ff,#fff,#c9f4ff,transparent);box-shadow:0 0 8px #3ac7ff"></span>
+  <b style="position:relative;color:#fff;font-family:Tahoma,Arial,sans-serif;font-size:19px;font-weight:900;line-height:1;text-shadow:0 0 9px rgba(62,196,255,.66),0 2px 2px rgba(0,0,0,.45)">جديد</b>
+ </span>
+ <span aria-hidden="true" style="position:absolute;top:12px;left:0;width:12px;height:14px;background:#061a34;clip-path:polygon(100% 0,100% 100%,0 72%)"></span>
+ <span aria-hidden="true" style="position:absolute;top:12px;right:0;width:12px;height:14px;background:#061a34;clip-path:polygon(0 0,100% 72%,0 100%)"></span>
+</span>`:""}
        ${imgs.length>1?`<span class="image-count">▧ ${imgs.length} صور</span>`:""}
      </button>
      <div class="content">
