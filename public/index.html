@@ -4,6 +4,14 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#082e70"><meta name="description" content="كتالوج منتجات خشابيتا CNC الخشبية">
 <title>أحمد خشابيتا | كتالوج المنتجات</title>
+<script>
+try {
+  const savedTheme = localStorage.getItem("khashabita-theme");
+  document.documentElement.dataset.theme = savedTheme === "dark" ? "dark" : "light";
+} catch (_) {
+  document.documentElement.dataset.theme = "light";
+}
+</script>
 <style>
 :root{font-family:Tahoma,Arial,sans-serif;color:#102b59;background:#f3f8ff;--navy:#082e70;--blue:#0879dc;--cyan:#00b9df;--red:#e9322c;--orange:#ff9d16;--muted:#65758d}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#eaf5ff,#f8fbff 55%,#eaf4ff)}button,.btn{border:0;border-radius:12px;padding:11px 16px;font:inherit;font-weight:bold;cursor:pointer;text-decoration:none}.wrap,main{max-width:1240px;margin:auto}.hero{position:relative;overflow:hidden;background:linear-gradient(112deg,#061c50,#0753a8 55%,#00a9d8);color:#fff;min-height:330px;padding:24px 20px 26px}.hero:before,.hero:after{content:"";position:absolute;inset:-70px auto auto -70px;width:280px;height:500px;transform:rotate(32deg);background:#09b9ed;opacity:.22}.hero:after{inset:-90px 30% auto auto;background:#fff;width:90px;opacity:.12}.hero-inner{position:relative;z-index:1;display:grid;grid-template-columns:260px 1fr 230px;align-items:center;gap:24px;max-width:1180px;margin:auto}.portrait{height:280px;display:flex;align-items:end;justify-content:center}.portrait img{max-height:280px;max-width:100%;object-fit:contain;filter:drop-shadow(0 12px 18px #00143c88)}.brand{text-align:center}.brand img{width:min(100%,410px);max-height:170px;object-fit:contain}.brand h1{font-size:clamp(24px,4vw,42px);margin:8px 0;color:#fff;text-shadow:0 3px 0 #061b45}.brand p{margin:8px 0;color:#e2f4ff;font-weight:bold}.tag{display:inline-block;background:linear-gradient(90deg,#f12c25,#b90d1b);padding:10px 24px;border-radius:8px;font-size:clamp(18px,2.5vw,27px);font-weight:bold;box-shadow:0 5px 0 #8d1020}.laser-art{font-size:110px;text-align:center;filter:drop-shadow(0 5px 12px #001b4a)}.top-actions{position:absolute;z-index:3;top:15px;left:18px;display:flex;gap:8px}.top-actions button{background:#061b45;color:white;border:1px solid #ffffff33}.searchbar{max-width:1100px;margin:-24px auto 18px;position:relative;z-index:4;padding:0 14px}.searchbar .inner{display:flex;gap:10px;background:#fff;border-radius:30px;padding:9px 12px;box-shadow:0 8px 25px #003c8530;border:2px solid #d7eaff}.searchbar input{border:0;outline:0;flex:1;min-width:0;font:inherit;padding:8px 14px}.searchbar button{background:var(--blue);color:white}.categories{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;padding:8px 18px 16px}.cat{border-radius:18px;color:#fff;min-height:105px;padding:12px 6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center;box-shadow:0 5px 12px #153e7020;transition:.15s}.cat span{font-size:30px}.cat b{font-size:14px;line-height:1.4}.cat.active{outline:4px solid #00b9df;outline-offset:2px;transform:translateY(-2px)}.cat:nth-child(1){background:linear-gradient(145deg,#c13be5,#6912a9)}.cat:nth-child(2){background:linear-gradient(145deg,#ffc52a,#e77b00);color:#301b00}.cat:nth-child(3){background:linear-gradient(145deg,#19b9ed,#0754ae)}.cat:nth-child(4){background:linear-gradient(145deg,#29c98a,#08734c)}.cat:nth-child(5){background:linear-gradient(145deg,#19c6c2,#086b78)}.cat:nth-child(6){background:linear-gradient(145deg,#ff5c5c,#b80d28)}.cat:nth-child(7){background:linear-gradient(145deg,#267fdf,#082b72)}main{padding:10px 18px 30px}.section-title{text-align:center;font-size:28px;margin:8px 0 18px;color:#082e70}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(225px,1fr));gap:16px}.card,.panel{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 5px 18px #123e7620;border:1px solid #d7e8fb}.photo{height:205px;background:#e8f2ff;display:flex;align-items:center;justify-content:center}.photo img{width:100%;height:100%;object-fit:cover}.gallery{display:flex;gap:7px;overflow-x:auto;padding:8px 12px}.gallery img{width:76px;height:64px;object-fit:cover;border-radius:8px;flex:0 0 auto;border:1px solid #d7e8fb}.content{padding:14px}.content h3{margin:0 0 8px;color:#122b50}.muted{font-size:13px;color:var(--muted);line-height:1.7}.price{font-size:23px;font-weight:bold;color:#e32924;margin:10px 0}.wa{display:block;text-align:center;background:#16a34a;color:#fff;margin-top:10px}.panel{padding:18px;margin-bottom:16px}.hidden{display:none!important}.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:11px}label{display:flex;flex-direction:column;gap:6px;font-size:14px}input,select,textarea{font:inherit;padding:11px;border:1px solid #cbd5e1;border-radius:9px;max-width:100%;width:100%}.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px}
 
@@ -350,9 +358,102 @@ body.modal-open{overflow:hidden}
 .offer-fields label{display:grid;gap:6px;font-weight:700}
 .offer-fields small{color:#526982;line-height:1.7}
 @media(max-width:600px){.offers-products{gap:12px}.offer-ribbon{top:8px;right:8px;padding:6px 8px;font-size:11px}}
+/* Khashabita user-selectable dark theme */
+html[data-theme="dark"]{
+ color-scheme:dark;background:#0b1422;color:#e7eef8;
+ --navy:#8bbdff;--blue:#3297ed;--cyan:#35c9ec;--muted:#a8bbd1
+}
+html[data-theme="dark"] body{
+ background:linear-gradient(180deg,#0a1321 0%,#101c2d 55%,#0b1422 100%);
+ color:#e7eef8
+}
+html[data-theme="dark"] .social-strip{background:#101c2d}
+html[data-theme="dark"] .searchbar .inner{
+ background:#172438;border-color:#35506f;box-shadow:0 8px 25px #0008
+}
+html[data-theme="dark"] .searchbar input,
+html[data-theme="dark"] input:not([type="checkbox"]):not([type="file"]),
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] select{
+ background:#172438;color:#e7eef8;border-color:#405773!important
+}
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder{color:#91a6bf}
+html[data-theme="dark"] main{color:#e7eef8}
+html[data-theme="dark"] .section-title{color:#9acbff}
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .panel{
+ background:#152338;color:#e7eef8;border-color:#2b4562;
+ box-shadow:0 7px 20px rgba(0,0,0,.24)
+}
+html[data-theme="dark"] .content h3,
+html[data-theme="dark"] .product-specs dd{color:#e7eef8}
+html[data-theme="dark"] .muted,
+html[data-theme="dark"] .empty,
+html[data-theme="dark"] footer{color:#a8bbd1}
+html[data-theme="dark"] .product-category{background:#203d5d;color:#9bd4ff}
+html[data-theme="dark"] .benefits{
+ background:#152338;color:#a9d1ff;border:1px solid #2c4867;
+ box-shadow:0 5px 18px rgba(0,0,0,.2)
+}
+html[data-theme="dark"] .notice{
+ background:#20344d;color:#d4e6f8;border:1px solid #365574
+}
+html[data-theme="dark"] .adminrow{border-color:#30455e}
+html[data-theme="dark"] .light{
+ background:#263b55;color:#e5effb;border:1px solid #496582
+}
+html[data-theme="dark"] .danger{background:#542c37;color:#ffd9df}
+html[data-theme="dark"] .stat-card{
+ background:#1b2c43;border-color:#344f6d
+}
+html[data-theme="dark"] .stat-card span{color:#a8bbd1}
+html[data-theme="dark"] .stat-card strong{color:#a9d2ff}
+html[data-theme="dark"] #topViewedProducts,
+html[data-theme="dark"] #topWhatsappProducts{
+ background:#1b2c43;color:#e7eef8
+}
+html[data-theme="dark"] .stats-list-row{border-color:#344a63}
+html[data-theme="dark"] .visitor-counter{
+ background:#172438;color:#dcecff;border-color:#405773
+}
+html[data-theme="dark"] .visitor-counter .visitor-label{color:#a8bbd1}
+html[data-theme="dark"] .visitor-counter strong{color:#7fcaff}
+html[data-theme="dark"] .toolbar select{background:#172438;color:#e7eef8}
+html[data-theme="dark"] .modal-shell{
+ background:#142238;color:#e7eef8;border:1px solid #35506e
+}
+html[data-theme="dark"] .modal-info h2{color:#9acbff}
+html[data-theme="dark"] .modal-info>p{color:#c1d0e2}
+html[data-theme="dark"] .product-specs div{background:#1d3049}
+html[data-theme="dark"] .product-specs dt{color:#a8bbd1}
+html[data-theme="dark"] .modal-close{background:#263c58;color:#f1f7ff}
+html[data-theme="dark"] .modal-main-image{background:#1a2b41}
+html[data-theme="dark"] .modal-thumbs button{background:#1b2c43;border-color:#3b5775}
+html[data-theme="dark"] .offer-admin-settings{
+ background:linear-gradient(135deg,#1a2d45,#1b3855);border-color:#3b5d7c
+}
+html[data-theme="dark"] .offer-admin-settings .offer-check{color:#e5f1ff}
+html[data-theme="dark"] .offer-fields small{color:#b6c9df}
+html[data-theme="dark"] .thumbs img{border-color:#45617f}
+html[data-theme="dark"] .product-display-note{color:#a8bbd1}
+.theme-toggle{
+ white-space:nowrap;min-height:40px;padding:8px 12px!important;
+ background:#061b45!important;color:#fff!important;border:1px solid #9bdcff!important;
+ box-shadow:0 3px 10px #00183d30;font-size:12px!important
+}
+.theme-toggle:hover{transform:translateY(-1px);filter:brightness(1.12)}
+html[data-theme="dark"] .theme-toggle{
+ background:#d9f2ff!important;color:#07305b!important;border-color:#fff!important
+}
+@media(max-width:520px){
+ .top-actions{gap:5px}
+ .theme-toggle{min-height:36px;padding:7px 9px!important;font-size:11px!important}
+}
+@media(prefers-reduced-motion:reduce){.theme-toggle{transition:none!important}}
 </style></head>
 <body>
-<header class="hero"><div class="top-actions"><button aria-label="القائمة">☰</button><button aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="adminBtn" aria-label="دخول الإدارة">إدارتي</button></div>
+<header class="hero"><div class="top-actions"><button aria-label="القائمة">☰</button><button aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button type="button" id="themeToggle" class="theme-toggle" aria-label="التبديل إلى الوضع الداكن" aria-pressed="false" title="تغيير مظهر الموقع">☾ الوضع الداكن</button><button id="adminBtn" aria-label="دخول الإدارة">إدارتي</button></div>
 <img src="laser-machine-banner.jpg" alt="بنر خشابيتا" class="hero-banner"><div class="hero-inner"><div class="portrait"><img src="ahmed-cartoon.png" alt="أحمد خشابيتا"></div><div class="brand"><img src="logo-khashabita.png" alt="لوجو خشابيتا"><div class="tag">كتالوج المنتجات الخشبية</div><p>تصميم • قص ليزر CO2 • ديكورات وهدايا مميزة</p>
 <div class="social-links" aria-label="تابع خشابيتا على مواقع التواصل">
 <a href="https://www.facebook.com/share/1DUHTuDPca/" target="_blank" rel="noopener noreferrer" aria-label="فيسبوك" title="فيسبوك">
@@ -405,6 +506,6 @@ body.modal-open{overflow:hidden}
 <div id="productModal" class="product-modal hidden" role="dialog" aria-modal="true" aria-label="تفاصيل المنتج">
  <div class="modal-shell"><button id="modalClose" class="modal-close" aria-label="إغلاق">×</button><div id="modalContent" class="modal-layout"></div></div>
 </div>
-<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261126-offers-inside-banner1"></script>
+<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261126-theme-toggle1"></script>
 <script>document.querySelectorAll('.cat').forEach(b=>b.addEventListener('click',()=>{document.getElementById('categoryFilter').value=b.dataset.cat;document.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('categoryFilter').dispatchEvent(new Event('change'));document.getElementById('catalog').scrollIntoView({behavior:'smooth'});}));document.getElementById('search').addEventListener('input',e=>{const real=document.querySelector('#search');real.dispatchEvent(new Event('change'));});document.getElementById('backCatalog').onclick=()=>{document.getElementById('admin').classList.add('hidden');document.getElementById('catalog').classList.remove('hidden');};</script>
 </body></html>
