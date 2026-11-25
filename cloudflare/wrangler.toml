@@ -1,0 +1,4 @@
+name = "khashabita-product-share"
+main = "worker.js"
+compatibility_date = "2026-11-25"
+workers_dev = true
