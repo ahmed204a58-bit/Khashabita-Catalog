@@ -29,10 +29,13 @@ const PRODUCT_SHARE_WORKER_BASE = "https://khashabita-product-share.ahmed204a58.
 
 function safe(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function money(n){return Number(n||0).toLocaleString("ar-EG")+" ج.م";}
+function isOfferProduct(p){const original=Number(p?.price||0),sale=Number(p?.offerPrice||0);return p?.isOffer===true&&original>0&&sale>0&&sale<original;}
+function offerDiscount(p){return isOfferProduct(p)?Math.round((1-Number(p.offerPrice)/Number(p.price))*100):0;}
+function priceMarkup(p){return isOfferProduct(p)?`<div class="price offer-price-group"><del>${money(p.price)}</del><strong>${money(p.offerPrice)}</strong></div>`:`${priceMarkup(p)}`;}
 function isAdmin(){return !!currentUser && currentUser.email?.toLowerCase()===ADMIN_EMAIL.toLowerCase();}
 function validImage(u){return /^https:\/\//i.test(u) || (/^(?:\.\/|products\/)[\w./-]+\.(?:png|jpe?g|webp|gif)$/i.test(u) && !u.includes(".."));}
 function productImages(p){return (Array.isArray(p.imageUrls)?p.imageUrls:(p.imageUrl?[p.imageUrl]:[])).filter(validImage);}
-function showAdmin(on){$("catalog").classList.toggle("hidden",on);$("admin").classList.toggle("hidden",!on);$("adminBtn").textContent=on?"عرض الكتالوج":"دخول الإدارة";if(on)loadAdminStats();}function waLink(p){return "https://wa.me/201116026022?text="+encodeURIComponent("السلام عليكم، عايز أستفسر عن "+p.name+" - الكود "+(p.sku||"")+" - السعر "+(p.price||"") +" جنيه");}
+function showAdmin(on){$("catalog").classList.toggle("hidden",on);$("admin").classList.toggle("hidden",!on);$("adminBtn").textContent=on?"عرض الكتالوج":"دخول الإدارة";if(on)loadAdminStats();}function waLink(p){const amount=isOfferProduct(p)?p.offerPrice:p.price;const priceText=isOfferProduct(p)?("السعر بعد الخصم "+amount+" جنيه بدل "+p.price+" جنيه"):("السعر "+(amount||"")+" جنيه");return "https://wa.me/201116026022?text="+encodeURIComponent("السلام عليكم، عايز أستفسر عن "+p.name+" - الكود "+(p.sku||"")+" - "+priceText);}
 
 function render(){
 const cats=[...new Set(["هدايا مخصصة","شبكة وخطوبة","أدوات مكتبية","دروع وتكريم","ألعاب وبازل","رمضان والأعياد","مجسمات معمارية","ديكورات منزلية","مركبات","أنتيكات","أدوات مدرسية وتعليمية","منوعات",...products.map(p=>p.category).filter(Boolean)])]; const chosen=$("categoryFilter").value;
@@ -72,13 +75,35 @@ const cats=[...new Set(["هدايا مخصصة","شبكة وخطوبة","أدو�
        <span class="product-category">${safe(p.category||"منتج خشبي")}</span>
        <h3>${safe(p.name)}</h3>
        <div class="muted">${p.dimensions?safe(p.dimensions)+" · ":""}${safe(p.material||"خشب MDF")}</div>
-       <div class="price">${money(p.price)}</div>
+       ${priceMarkup(p)}
        <div class="card-actions"><button class="light" data-open="${safe(p.id)}">تفاصيل المنتج</button><a class="btn wa" target="_blank" rel="noopener" href="${waLink(p)}" data-track-whatsapp="${safe(p.id)}">اطلب على واتساب</a></div>
      </div></article>`;
  }).join(""):'<div class="empty"><span class="empty-icon">⌕</span><b>لا توجد منتجات مطابقة</b><p>جرّب البحث بكلمة تانية أو اختار قسم مختلف.</p></div>';
- $("adminList").innerHTML=products.length?products.map(p=>`<div class="adminrow"><span><b>${safe(p.name)}</b><br><small class="muted">${safe(p.sku)} · ${money(p.price)}</small></span><span class="actions"><button class="light" data-edit="${safe(p.id)}">تعديل</button><button class="danger" data-delete="${safe(p.id)}">حذف</button></span></div>`).join(""):'<p class="muted">لا توجد منتجات بعد.</p>';
+ renderOffers();
+ $("adminList").innerHTML=products.length?products.map(p=>`<div class="adminrow"><span><b>${safe(p.name)}</b><br><small class="muted">${safe(p.sku)} · ${isOfferProduct(p)?`عرض بسعر ${money(p.offerPrice)} بدل ${money(p.price)}`:money(p.price)}</small></span><span class="actions"><button class="light" data-edit="${safe(p.id)}">تعديل</button><button class="danger" data-delete="${safe(p.id)}">حذف</button></span></div>`).join(""):'<p class="muted">لا توجد منتجات بعد.</p>';
 }
-function resetForm(){editingId=null;$("productForm").reset();
+function renderOffers(){
+ const target=$("offerProducts");
+ if(!target)return;
+ const offers=products.filter(isOfferProduct);
+ target.innerHTML=offers.length?offers.map(p=>{
+  const cover=productImages(p)[0], discount=offerDiscount(p);
+  return `<article class="card offer-card">
+   <button class="card-photo" data-open="${safe(p.id)}" aria-label="عرض تفاصيل ${safe(p.name)}">
+    ${cover?`<img src="${safe(cover)}" alt="${safe(p.name)}" loading="lazy">`:`<span class="photo-placeholder" aria-hidden="true">▧</span>`}
+    <span class="offer-ribbon">خصم ${discount}٪</span>
+   </button>
+   <div class="content">
+    <span class="product-category">${safe(p.category||"منتج خشبي")}</span>
+    <h3>${safe(p.name)}</h3>
+    <div class="muted">${p.dimensions?safe(p.dimensions)+" · ":""}${safe(p.material||"خشب MDF")}</div>
+    <div class="price offer-price-group"><del>${money(p.price)}</del><strong>${money(p.offerPrice)}</strong></div>
+    <div class="card-actions"><button class="light" data-open="${safe(p.id)}">تفاصيل المنتج</button><a class="btn wa" target="_blank" rel="noopener" href="${waLink(p)}">اطلب على واتساب</a></div>
+   </div>
+  </article>`;
+ }).join(""):'<div class="empty">مفيش عروض خاصة حاليًا.. تابعنا قريبًا لعروض خشابيتا الجديدة.</div>';
+}
+function resetForm(){editingId=null;$("productForm").reset();$("isOffer").checked=false;$("offerPrice").value="";$("offerFields").classList.add("hidden");
                      $("category").value=$("categoryFilter").value;$("material").value="خشب MDF";$("formTitle").textContent="إضافة منتج جديد";$("imagePreviewWrap").classList.add("hidden");$("imagePreviews").innerHTML="";$("uploadStatus").textContent="";}
 function startListener(){
  if(unsubscribe)unsubscribe();
@@ -94,13 +119,16 @@ $("homeButton")?.addEventListener("click",()=>{
  render();
  window.scrollTo({top:0,behavior:"smooth"});
 });
+$("isOffer")?.addEventListener("change",()=>{$("offerFields").classList.toggle("hidden",!$("isOffer").checked);if(!$("isOffer").checked)$("offerPrice").value="";});
 $("productForm").onsubmit=async e=>{
  e.preventDefault();if(!isAdmin())return alert("غير مصرح.");
  const imageUrls=$("imageUrls").value.split(/\n|,/).map(u=>u.trim()).filter(Boolean);
  if(imageUrls.some(u=>!validImage(u)))return alert("فيه رابط صورة غير صالح. ارفع الصور من زر إضافة صور أو استخدم رابط HTTPS صحيح.");
  if($("imageFiles").files.length){try{await uploadSelectedImages();}catch(err){console.error(err);alert("تعذر رفع الصور: "+err.message);return;}}
  const finalImageUrls=$("imageUrls").value.split(/\n|,/).map(u=>u.trim()).filter(validImage);
- const data={name:$("name").value.trim(),sku:$("sku").value.trim(),price:Number($("price").value),category:$("category").value.trim(),dimensions:$("dimensions").value.trim(),material:$("material").value.trim(),description:$("description").value.trim(),videoUrl:$("videoUrl").value.trim(),tiktokUrl:$("tiktokUrl").value.trim(),imageUrls:finalImageUrls,updatedAt:serverTimestamp()};
+ const originalPrice=Number($("price").value),offerEnabled=$("isOffer").checked,discountedPrice=Number($("offerPrice").value);
+ if(offerEnabled&&(!discountedPrice||discountedPrice<=0||discountedPrice>=originalPrice))return alert("سعر العرض لازم يكون أكبر من صفر وأقل من السعر الأساسي.");
+ const data={name:$("name").value.trim(),sku:$("sku").value.trim(),price:Number($("price").value),isOffer:offerEnabled,offerPrice:offerEnabled?discountedPrice:null,category:$("category").value.trim(),dimensions:$("dimensions").value.trim(),material:$("material").value.trim(),description:$("description").value.trim(),videoUrl:$("videoUrl").value.trim(),tiktokUrl:$("tiktokUrl").value.trim(),imageUrls:finalImageUrls,updatedAt:serverTimestamp()};
  try{
   if(editingId)await updateDoc(doc(db,"products",editingId),data);
   else await addDoc(collection(db,"products"),{...data,createdAt:serverTimestamp()});
@@ -110,7 +138,7 @@ $("productForm").onsubmit=async e=>{
 $("cancelEdit").onclick=resetForm;
 $("adminList").onclick=async e=>{
  const edit=e.target.dataset.edit, del=e.target.dataset.delete;
- if(edit){const p=products.find(x=>x.id===edit);if(!p)return;editingId=p.id;for(const k of ["name","sku","price","category","dimensions","material","description","videoUrl","tiktokUrl"])$(k).value=p[k]??"";$("imageUrls").value=productImages(p).join("\n");updateImagePreview();$("formTitle").textContent="تعديل المنتج";$("productForm").scrollIntoView({behavior:"smooth"});}
+ if(edit){const p=products.find(x=>x.id===edit);if(!p)return;editingId=p.id;for(const k of ["name","sku","price","category","dimensions","material","description","videoUrl","tiktokUrl"])$(k).value=p[k]??"";$("isOffer").checked=isOfferProduct(p);$("offerPrice").value=isOfferProduct(p)?p.offerPrice:"";$("offerFields").classList.toggle("hidden",!$("isOffer").checked);$("imageUrls").value=productImages(p).join("\n");updateImagePreview();$("formTitle").textContent="تعديل المنتج";$("productForm").scrollIntoView({behavior:"smooth"});}
  if(del&&confirm("هل تريد حذف المنتج نهائياً؟")){try{await deleteDoc(doc(db,"products",del));}catch(err){alert("تعذر الحذف: "+err.message);}}
 };
 onAuthStateChanged(auth,user=>{
@@ -261,7 +289,7 @@ function renderDetails(){
    ${imgs.length>1?`<div class="modal-thumbs">${imgs.map((u,i)=>`<button class="${i===activeImageIndex?"selected":""}" data-image-index="${i}" aria-label="عرض الصورة ${i+1}"><img src="${safe(u)}" alt=""></button>`).join("")}</div>`:""}
   </div>
   <div class="modal-info"><span class="product-category">${safe(p.category||"منتج خشبي")}</span><h2>${safe(p.name)}</h2>
-   <div class="price">${money(p.price)}</div><p>${safe(p.description||"منتج مصنوع بعناية في خشابيتا CNC.")}</p>
+   ${priceMarkup(p)}<p>${safe(p.description||"منتج مصنوع بعناية في خشابيتا CNC.")}</p>
    <dl class="product-specs"><div><dt>كود المنتج</dt><dd>${safe(p.sku||"—")}</dd></div><div><dt>المقاس</dt><dd>${safe(p.dimensions||"حسب الطلب")}</dd></div><div><dt>الخامة</dt><dd>${safe(p.material||"خشب MDF")}</dd></div></dl>
    ${/^https:\/\/(www\.)?(youtube\.com|youtu\.be)\//i.test(p.videoUrl||"")?'<a class="btn light" target="_blank" rel="noopener noreferrer" href="'+safe(p.videoUrl)+'">▶ شاهد على YouTube</a>':""} ${/^https:\/\/(www\.)?(tiktok\.com|vm\.tiktok\.com)\//i.test(p.tiktokUrl||"")?'<a class="btn light" target="_blank" rel="noopener noreferrer" href="'+safe(p.tiktokUrl)+'">▶ شاهد على TikTok</a>':""} <a class="btn wa modal-wa" target="_blank" rel="noopener" href="${waLink(p)}" data-track-whatsapp="${safe(p.id)}">اطلب المنتج على واتساب</a> <button type="button" class="btn light modal-share-link" id="copyProductLink">نسخ رابط المنتج</button>
   </div>`;
