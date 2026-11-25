@@ -162,31 +162,28 @@ body.modal-open{overflow:hidden}
 @media(max-width:520px){.card-photo .new-product-badge{top:8px;left:8px;transform:scale(.88);transform-origin:top left}}
 
 
-/* CSS-only fallback: show ribbon on the first five newest visible cards */
+/* 
+/* Compact Khashabita silver + neon-blue corner badge */
 #products>.card:nth-child(-n+5) .card-photo::before{
- content:"جديد";
- position:absolute;top:0;left:18px;z-index:30;
- width:96px;height:62px;box-sizing:border-box;
- display:flex;align-items:flex-end;justify-content:center;
- padding:0 0 13px;
- color:#fff;font-family:Tahoma,Arial,sans-serif;font-size:18px;font-weight:900;line-height:1;
- text-shadow:0 0 8px rgba(62,196,255,.62),0 2px 2px rgba(0,0,0,.45);
- background:linear-gradient(145deg,#174d7c 0%,#0a2e56 48%,#04172f 100%);
- border:1px solid #70d4ff;border-top:0;border-radius:0 0 22px 22px;
- box-shadow:inset 0 1px 0 rgba(255,255,255,.24),inset 0 -8px 14px rgba(0,0,0,.24),0 4px 10px rgba(0,14,42,.32);
+ content:"جديد";position:absolute;top:0;left:12px;z-index:30;
+ width:44px;height:33px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;
+ padding:5px 2px 2px;color:#f7fcff;font-family:Tahoma,Arial,sans-serif;
+ font-size:11px;font-weight:900;line-height:1;text-shadow:0 0 5px rgba(90,220,255,.78),0 1px 2px #00152c;
+ background:linear-gradient(135deg,rgba(255,255,255,.18),transparent 34%),linear-gradient(160deg,#174d7b 0%,#0a2c52 52%,#04172e 100%);
+ border:1px solid #9bdcf7;border-top:2px solid #e4f7ff;border-radius:0 0 9px 9px;
+ clip-path:polygon(0 0,100% 0,100% 83%,82% 100%,18% 100%,0 83%);
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.4),inset 0 -3px 7px rgba(0,0,0,.3),0 0 5px #159dff,0 3px 7px rgba(0,14,40,.38);
  pointer-events:none;
 }
 #products>.card:nth-child(-n+5) .card-photo::after{
- content:"";position:absolute;top:0;left:11px;z-index:31;
- width:110px;height:14px;
- background:linear-gradient(90deg,#071b36 0%,#4d9acb 15%,#d8f5ff 45%,#4d9acb 82%,#071b36 100%);
- clip-path:polygon(8% 0,92% 0,100% 100%,0 100%);
- pointer-events:none;
+ content:"";position:absolute;top:0;left:8px;z-index:31;width:52px;height:5px;
+ background:linear-gradient(90deg,#0a2748 0%,#65bdeb 18%,#f0fcff 45%,#62c9f5 72%,#0a2748 100%);
+ clip-path:polygon(9% 0,91% 0,100% 100%,0 100%);box-shadow:0 0 7px #00aaff;pointer-events:none;
 }
 #products .card-photo .new-product-badge{display:none!important}
 @media(max-width:520px){
- #products>.card:nth-child(-n+5) .card-photo::before{left:12px;width:84px;height:54px;font-size:16px;padding-bottom:11px}
- #products>.card:nth-child(-n+5) .card-photo::after{left:6px;width:96px;height:12px}
+ #products>.card:nth-child(-n+5) .card-photo::before{left:9px;width:40px;height:30px;font-size:10px;padding-top:5px;border-radius:0 0 8px 8px}
+ #products>.card:nth-child(-n+5) .card-photo::after{left:6px;width:47px;height:4px}
 }
 
 </style></head>
@@ -222,6 +219,6 @@ body.modal-open{overflow:hidden}
 <div id="productModal" class="product-modal hidden" role="dialog" aria-modal="true" aria-label="تفاصيل المنتج">
  <div class="modal-shell"><button id="modalClose" class="modal-close" aria-label="إغلاق">×</button><div id="modalContent" class="modal-layout"></div></div>
 </div>
-<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261125-css-ribbon5"></script>
+<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261125-neon-silver-small"></script>
 <script>document.querySelectorAll('.cat').forEach(b=>b.addEventListener('click',()=>{document.getElementById('categoryFilter').value=b.dataset.cat;document.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('categoryFilter').dispatchEvent(new Event('change'));document.getElementById('catalog').scrollIntoView({behavior:'smooth'});}));document.getElementById('search').addEventListener('input',e=>{const real=document.querySelector('#search');real.dispatchEvent(new Event('change'));});document.getElementById('backCatalog').onclick=()=>{document.getElementById('admin').classList.add('hidden');document.getElementById('catalog').classList.remove('hidden');};</script>
 </body></html>
