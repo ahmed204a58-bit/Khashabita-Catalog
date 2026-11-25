@@ -68,21 +68,23 @@ function renderOffers(){
  const offers=products.filter(isOfferProduct);
  target.innerHTML=offers.length?offers.map(p=>{
   const cover=productImages(p)[0], discount=offerDiscount(p);
-  return `<article class="card offer-card">
-   <button class="card-photo" data-open="${safe(p.id)}" aria-label="عرض تفاصيل ${safe(p.name)}">
-    ${cover?`<img src="${safe(cover)}" alt="${safe(p.name)}" loading="lazy">`:`<span class="photo-placeholder" aria-hidden="true">▧</span>`}
-    <span class="offer-ribbon">خصم ${discount}٪</span>
+  return `<article class="offer-mini-card">
+   <button type="button" class="offer-mini-image" data-open="${safe(p.id)}" aria-label="عرض تفاصيل ${safe(p.name)}">
+    ${cover?`<img src="${safe(cover)}" alt="${safe(p.name)}" loading="lazy">`:`<span class="offer-mini-placeholder" aria-hidden="true">▧</span>`}
+    <span class="offer-mini-ribbon">خصم ${discount}٪</span>
    </button>
-   <div class="content">
-    <span class="product-category">${safe(p.category||"منتج خشبي")}</span>
+   <div class="offer-mini-info">
     <h3>${safe(p.name)}</h3>
-    <div class="muted">${p.dimensions?safe(p.dimensions)+" · ":""}${safe(p.material||"خشب MDF")}</div>
-    <div class="price offer-price-group"><del>${money(p.price)}</del><strong>${money(p.offerPrice)}</strong></div>
-    <div class="card-actions"><button class="light" data-open="${safe(p.id)}">تفاصيل المنتج</button><a class="btn wa" target="_blank" rel="noopener" href="${waLink(p)}">اطلب على واتساب</a></div>
+    <div class="offer-mini-prices"><del>${money(p.price)}</del><strong>${money(p.offerPrice)}</strong></div>
+    <div class="offer-mini-actions">
+     <button type="button" class="offer-mini-details" data-open="${safe(p.id)}">التفاصيل</button>
+     <a class="offer-mini-buy" target="_blank" rel="noopener" href="${waLink(p)}">اطلب</a>
+    </div>
    </div>
   </article>`;
- }).join(""):'<div class="empty">مفيش عروض خاصة حاليًا.. تابعنا قريبًا لعروض خشابيتا الجديدة.</div>';
+ }).join(""):'<div class="offers-empty">العروض الخاصة هتظهر هنا بمجرد تفعيلها من لوحة الإدارة.</div>';
 }
+
 function resetForm(){editingId=null;$("productForm").reset();$("isOffer").checked=false;$("offerPrice").value="";$("offerFields").classList.add("hidden");$("material").value="خشب MDF";$("formTitle").textContent="إضافة منتج جديد";$("imagePreviewWrap").classList.add("hidden");$("imagePreviews").innerHTML="";}
 function startListener(){
  if(unsubscribe)unsubscribe();
