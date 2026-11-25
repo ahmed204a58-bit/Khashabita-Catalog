@@ -194,6 +194,6 @@ body.modal-open{overflow:hidden}
 <div id="productModal" class="product-modal hidden" role="dialog" aria-modal="true" aria-label="تفاصيل المنتج">
  <div class="modal-shell"><button id="modalClose" class="modal-close" aria-label="إغلاق">×</button><div id="modalContent" class="modal-layout"></div></div>
 </div>
-<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261125-navytech-ribbon"></script>
+<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261125-navy-ribbon-final3"></script>
 <script>document.querySelectorAll('.cat').forEach(b=>b.addEventListener('click',()=>{document.getElementById('categoryFilter').value=b.dataset.cat;document.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('categoryFilter').dispatchEvent(new Event('change'));document.getElementById('catalog').scrollIntoView({behavior:'smooth'});}));document.getElementById('search').addEventListener('input',e=>{const real=document.querySelector('#search');real.dispatchEvent(new Event('change'));});document.getElementById('backCatalog').onclick=()=>{document.getElementById('admin').classList.add('hidden');document.getElementById('catalog').classList.remove('hidden');};</script>
 </body></html>
