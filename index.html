@@ -73,6 +73,19 @@
 .product-specs div{display:flex;justify-content:space-between;gap:15px;padding:11px 13px;background:#f3f8ff;border-radius:10px}
 .product-specs dt{color:#6b7c92}.product-specs dd{margin:0;font-weight:bold;color:#173966}
 .modal-wa{display:block;text-align:center;padding:14px}
+
+.modal-share-link{
+ display:block;width:100%;margin-top:10px;padding:12px 14px;
+ text-align:center;border:1px solid #b6d8f2!important;
+ border-radius:12px;background:linear-gradient(135deg,#f4f9ff,#e4f1ff)!important;
+ color:#0b4b83!important;font-weight:800;
+}
+.modal-share-link.copied{
+ background:linear-gradient(135deg,#eaf9f0,#d7f2e2)!important;
+ color:#087a45!important;border-color:#9bd7b4!important;
+}
+.modal-share-link:disabled{opacity:.95;cursor:default}
+
 body.modal-open{overflow:hidden}
 @media(max-width:700px){
  .product-modal{padding:8px;align-items:flex-start}
@@ -443,7 +456,7 @@ stroke:currentColor;
 </main><div id="productModal" class="product-modal hidden" role="dialog" aria-modal="true" aria-label="تفاصيل المنتج">
  <div class="modal-shell"><button id="modalClose" class="modal-close" aria-label="إغلاق">×</button><div id="modalContent" class="modal-layout"></div></div>
 </div>
-<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261125-neon-silver-small"></script>
+<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261125-share-product1"></script>
 <script>
 (() => {
   // ربط أزرار الأقسام بعد تحميل عناصر الصفحة.
