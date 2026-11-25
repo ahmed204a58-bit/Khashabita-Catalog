@@ -248,31 +248,52 @@ stroke:currentColor;
 \n
 
 
-/* Corner ribbon badge inspired by the supplied reference */
+
+/* Khashabita modern navy tech ribbon */
 .card-photo .new-product-badge{
-  position:absolute;top:12px;left:12px;z-index:5;
-  width:94px;min-height:52px;padding:6px 8px 8px;
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;text-align:center;direction:rtl;
-  background:linear-gradient(145deg,#ff3545 0%,#ef1f32 62%,#d9142b 100%);
-  border:1px solid rgba(255,255,255,.72);
-  border-radius:0 19px 19px 0;
-  box-shadow:0 5px 12px rgba(40,0,8,.34),inset 0 1px 0 rgba(255,255,255,.28);
-  transform:none;overflow:visible;pointer-events:none;
+  position:absolute;top:10px;left:12px;right:auto;z-index:6;
+  display:block;width:104px;height:72px;pointer-events:none;
+  filter:drop-shadow(0 5px 8px rgba(0,12,35,.42));
 }
-.card-photo .new-product-badge::before{
-  content:"";position:absolute;left:0;top:calc(100% - 1px);
-  width:0;height:0;border-top:24px solid #a90f24;border-right:48px solid transparent;
-  filter:drop-shadow(0 3px 2px rgba(0,0,0,.14));
+.new-badge-cap{
+  position:absolute;top:0;left:0;width:104px;height:15px;z-index:1;
+  background:linear-gradient(90deg,#0a2d58 0%,#6dc8f4 16%,#c9f1ff 48%,#4b9ed4 78%,#08284f 100%);
+  clip-path:polygon(7% 0,93% 0,100% 100%,0 100%);
+  border-radius:2px;
 }
-.new-badge-copy{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1}
-.new-badge-copy small{font:800 9px/1 Arial,sans-serif;letter-spacing:1.2px;color:#ffe9eb;direction:ltr}
-.new-badge-copy b{font-size:19px;font-weight:900;line-height:1.15;color:#fff;text-shadow:0 1px 2px rgba(100,0,0,.25)}
+.new-badge-body{
+  position:absolute;top:8px;left:10px;width:84px;height:59px;z-index:2;
+  display:grid;place-items:center;
+  color:#fff;text-align:center;
+  background:
+    linear-gradient(115deg,transparent 0 18%,rgba(83,205,255,.10) 18.5% 20%,transparent 20.5% 78%,rgba(83,205,255,.08) 78.5% 80%,transparent 80.5%),
+    linear-gradient(155deg,#124b7b 0%,#08294e 48%,#04172f 100%);
+  border:1px solid #62caff;border-top:0;
+  border-radius:0 0 19px 19px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 -7px 15px rgba(0,8,28,.35),0 4px 10px rgba(0,14,42,.25);
+}
+.new-badge-body::before{
+  content:"";position:absolute;top:0;left:11px;right:11px;height:2px;
+  background:linear-gradient(90deg,transparent,#a9edff,#fff,#a9edff,transparent);
+  box-shadow:0 0 8px #3ac7ff;
+}
+.new-badge-body b{
+  position:relative;z-index:1;font-size:19px;font-weight:900;line-height:1;
+  color:#f5fcff;text-shadow:0 0 8px rgba(43,190,255,.55),0 2px 2px rgba(0,0,0,.4);
+}
+.new-badge-fold{
+  position:absolute;top:12px;z-index:0;width:12px;height:14px;
+  background:linear-gradient(145deg,#05172d,#123b61);
+  filter:drop-shadow(0 2px 2px rgba(0,0,0,.22));
+}
+.new-badge-fold.left{
+  left:0;clip-path:polygon(100% 0,100% 100%,0 72%);
+}
+.new-badge-fold.right{
+  right:0;clip-path:polygon(0 0,100% 72%,0 100%);
+}
 @media(max-width:520px){
- .card-photo .new-product-badge{top:9px;left:9px;width:82px;min-height:46px;padding:5px 6px 7px}
- .card-photo .new-product-badge::before{border-top-width:20px;border-right-width:41px}
- .new-badge-copy small{font-size:8px}
- .new-badge-copy b{font-size:17px}
+ .card-photo .new-product-badge{top:8px;left:8px;transform:scale(.88);transform-origin:top left}
 }
 
 </style></head>
@@ -356,7 +377,7 @@ stroke:currentColor;
 </main><div id="productModal" class="product-modal hidden" role="dialog" aria-modal="true" aria-label="تفاصيل المنتج">
  <div class="modal-shell"><button id="modalClose" class="modal-close" aria-label="إغلاق">×</button><div id="modalContent" class="modal-layout"></div></div>
 </div>
-<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261125-corner-ribbon2"></script>
+<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261125-navytech-ribbon"></script>
 <script>
 (() => {
   // ربط أزرار الأقسام بعد تحميل عناصر الصفحة.
