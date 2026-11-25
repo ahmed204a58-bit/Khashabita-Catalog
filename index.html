@@ -59,6 +59,33 @@
 .modal-gallery{min-width:0}
 .modal-main-image{height:440px;background:#edf5ff;border-radius:16px;overflow:hidden;position:relative;display:grid;place-items:center}
 .modal-main-image img{width:100%;height:100%;object-fit:contain}
+
+/* Smooth Khashabita product-gallery transitions */
+.modal-main-image{touch-action:pan-y}
+.modal-main-image img{backface-visibility:hidden}
+.modal-main-image.slide-from-right img{
+ animation:khashabita-gallery-next .38s cubic-bezier(.22,.68,.2,1) both;
+}
+.modal-main-image.slide-from-left img{
+ animation:khashabita-gallery-prev .38s cubic-bezier(.22,.68,.2,1) both;
+}
+@keyframes khashabita-gallery-next{
+ from{opacity:.35;transform:translateX(34px) scale(.985);filter:blur(2px)}
+ to{opacity:1;transform:translateX(0) scale(1);filter:blur(0)}
+}
+@keyframes khashabita-gallery-prev{
+ from{opacity:.35;transform:translateX(-34px) scale(.985);filter:blur(2px)}
+ to{opacity:1;transform:translateX(0) scale(1);filter:blur(0)}
+}
+.gallery-arrow{transition:transform .2s ease,background .2s ease,box-shadow .2s ease}
+.gallery-arrow:hover{transform:translateY(-50%) scale(1.07);box-shadow:0 4px 12px #06265440;background:#0879dc}
+.modal-thumbs button{transition:border-color .22s ease,transform .22s ease,box-shadow .22s ease}
+.modal-thumbs button.selected{transform:translateY(-2px);box-shadow:0 3px 9px #0879dc30}
+@media(prefers-reduced-motion:reduce){
+ .modal-main-image.slide-from-right img,.modal-main-image.slide-from-left img{animation:none}
+ .gallery-arrow,.modal-thumbs button{transition:none}
+}
+
 .gallery-arrow{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;background:#092d68d9;color:#fff;font-size:30px;padding:0}
 .gallery-arrow.prev{right:12px}.gallery-arrow.next{left:12px}
 .gallery-position{position:absolute;bottom:12px;left:12px;background:#092d68d9;color:#fff;border-radius:20px;padding:6px 12px;font-size:12px}
@@ -456,7 +483,7 @@ stroke:currentColor;
 </main><div id="productModal" class="product-modal hidden" role="dialog" aria-modal="true" aria-label="تفاصيل المنتج">
  <div class="modal-shell"><button id="modalClose" class="modal-close" aria-label="إغلاق">×</button><div id="modalContent" class="modal-layout"></div></div>
 </div>
-<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261126-share-preview-linked"></script>
+<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261126-gallery-motion1"></script>
 <script>
 (() => {
   // ربط أزرار الأقسام بعد تحميل عناصر الصفحة.
