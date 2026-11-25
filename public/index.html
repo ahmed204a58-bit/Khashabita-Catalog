@@ -147,7 +147,41 @@ body.modal-open{overflow:hidden}
   z-index: 5;
   margin: 0;
   pointer-events: auto;
-}</style></head>
+}
+/* Khashabita premium new-product plate */
+.card-photo .new-product-badge{
+  position:absolute;top:13px;right:13px;z-index:4;
+  display:inline-flex;align-items:center;gap:8px;
+  min-width:100px;padding:7px 11px 7px 9px;
+  color:#fff;text-align:right;
+  background:linear-gradient(135deg,#061a3b 0%,#0a356c 56%,#087ebd 100%);
+  border:1px solid #b8e8ff;border-radius:11px 3px 11px 3px;
+  box-shadow:0 5px 15px rgba(0,18,52,.48),inset 0 1px 0 rgba(255,255,255,.38);
+  transform:rotate(-2deg);overflow:hidden;pointer-events:none;
+}
+.card-photo .new-product-badge::after{
+  content:"";position:absolute;top:-45%;left:-35%;width:28%;height:190%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.24),transparent);
+  transform:rotate(24deg);pointer-events:none;
+}
+.new-badge-spark{
+  display:grid;place-items:center;flex:0 0 27px;width:27px;height:27px;
+  border:1px solid #82d9ff;border-radius:8px;
+  color:#b9efff;background:linear-gradient(145deg,#087fc2,#082957);
+  font-size:17px;line-height:1;text-shadow:0 0 9px #38c8ff;
+  box-shadow:inset 0 1px 4px rgba(255,255,255,.18),0 0 9px rgba(0,185,255,.28);
+}
+.new-badge-copy{display:flex;flex-direction:column;gap:3px;line-height:1.05}
+.new-badge-copy small{font:800 7px/1 Arial,sans-serif;letter-spacing:1px;color:#a8e8ff;direction:ltr;text-align:right}
+.new-badge-copy b{font-size:13px;font-weight:900;letter-spacing:.1px}
+@media(max-width:520px){
+ .card-photo .new-product-badge{top:9px;right:9px;min-width:91px;gap:6px;padding:6px 8px}
+ .new-badge-spark{width:24px;height:24px;flex-basis:24px;font-size:15px}
+ .new-badge-copy small{font-size:6px}
+ .new-badge-copy b{font-size:12px}
+}
+
+</style></head>
 <body>
 <header class="hero"><div class="top-actions"><button aria-label="القائمة">☰</button><button aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="adminBtn" aria-label="دخول الإدارة">إدارتي</button></div>
 <img src="laser-machine-banner.jpg" alt="بنر خشابيتا" class="hero-banner"><div class="hero-inner"><div class="portrait"><img src="ahmed-cartoon.png" alt="أحمد خشابيتا"></div><div class="brand"><img src="logo-khashabita.png" alt="لوجو خشابيتا"><div class="tag">كتالوج المنتجات الخشبية</div><p>تصميم • قص ليزر CO2 • ديكورات وهدايا مميزة</p>
@@ -180,6 +214,6 @@ body.modal-open{overflow:hidden}
 <div id="productModal" class="product-modal hidden" role="dialog" aria-modal="true" aria-label="تفاصيل المنتج">
  <div class="modal-shell"><button id="modalClose" class="modal-close" aria-label="إغلاق">×</button><div id="modalContent" class="modal-layout"></div></div>
 </div>
-<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261125-new5"></script>
+<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261125-premiumbadge"></script>
 <script>document.querySelectorAll('.cat').forEach(b=>b.addEventListener('click',()=>{document.getElementById('categoryFilter').value=b.dataset.cat;document.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('categoryFilter').dispatchEvent(new Event('change'));document.getElementById('catalog').scrollIntoView({behavior:'smooth'});}));document.getElementById('search').addEventListener('input',e=>{const real=document.querySelector('#search');real.dispatchEvent(new Event('change'));});document.getElementById('backCatalog').onclick=()=>{document.getElementById('admin').classList.add('hidden');document.getElementById('catalog').classList.remove('hidden');};</script>
 </body></html>
