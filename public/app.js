@@ -17,6 +17,7 @@ const provider = new GoogleAuthProvider();
 const $ = id => document.getElementById(id);
 let products = [], editingId = null, unsubscribe = null, currentUser = null;
 let activeProduct = null, activeImageIndex = 0;
+let imageChangeDirection = 1;
 let deepLinkHandled = false;
 // Set to the deployed Cloudflare Worker origin to enable product-specific social previews.
 const PRODUCT_SHARE_WORKER_BASE = "https://khashabita-product-share.ahmed204a58.workers.dev";
@@ -165,7 +166,7 @@ function renderDetails(){
  const current=imgs[activeImageIndex]||"";
  $("modalContent").innerHTML=`
   <div class="modal-gallery">
-   <div class="modal-main-image">${current?`<img src="${safe(current)}" alt="${safe(p.name)}">`:`<span class="photo-placeholder">▧</span>`}
+   <div class="modal-main-image ${imageChangeDirection > 0 ? "slide-from-right" : "slide-from-left"}">${current?`<img src="${safe(current)}" alt="${safe(p.name)}">`:`<span class="photo-placeholder">▧</span>`}
     ${imgs.length>1?`<button class="gallery-arrow prev" id="galleryPrev" aria-label="الصورة السابقة">‹</button><button class="gallery-arrow next" id="galleryNext" aria-label="الصورة التالية">›</button>`:""}
     ${imgs.length?`<span class="gallery-position">${activeImageIndex+1} / ${imgs.length}</span>`:""}
    </div>
@@ -178,10 +179,24 @@ function renderDetails(){
   </div>`;
  $("galleryPrev")?.addEventListener("click",()=>changeImage(-1));
  $("galleryNext")?.addEventListener("click",()=>changeImage(1));
- $("modalContent").querySelectorAll("[data-image-index]").forEach(b=>b.addEventListener("click",()=>{activeImageIndex=Number(b.dataset.imageIndex);renderDetails();}));
+ const mainImage=$("modalContent").querySelector(".modal-main-image");
+ let touchStartX=0;
+ mainImage?.addEventListener("touchstart",e=>{touchStartX=e.changedTouches[0]?.clientX||0;},{passive:true});
+ mainImage?.addEventListener("touchend",e=>{
+  const touchEndX=e.changedTouches[0]?.clientX||0;
+  const swipeDistance=touchEndX-touchStartX;
+  if(Math.abs(swipeDistance)>45)changeImage(swipeDistance<0?1:-1);
+ },{passive:true});
+ $("modalContent").querySelectorAll("[data-image-index]").forEach(b=>b.addEventListener("click",()=>{const nextIndex=Number(b.dataset.imageIndex);imageChangeDirection=nextIndex>=activeImageIndex?1:-1;activeImageIndex=nextIndex;renderDetails();}));
  $("copyProductLink")?.addEventListener("click",e=>copyProductLink(p.id,e.currentTarget));
 }
-function changeImage(delta){const n=productImages(activeProduct).length;if(!n)return;activeImageIndex=(activeImageIndex+delta+n)%n;renderDetails();}
+function changeImage(delta){
+ const n=productImages(activeProduct).length;
+ if(!n)return;
+ imageChangeDirection=delta>0?1:-1;
+ activeImageIndex=(activeImageIndex+delta+n)%n;
+ renderDetails();
+}
 $("products").addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(b)openDetails(b.dataset.open);});
 $("modalClose").onclick=closeDetails;
 $("productModal").addEventListener("click",e=>{if(e.target===$("productModal"))closeDetails();});
