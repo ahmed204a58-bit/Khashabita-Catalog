@@ -19,6 +19,34 @@ const CLOUDINARY_UPLOAD_PRESET = "khashabita_products";
 const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 const $ = id => document.getElementById(id);
+const THEME_STORAGE_KEY = "khashabita-theme";
+function applySiteTheme(theme, save = false) {
+ const selected = theme === "dark" ? "dark" : "light";
+ document.documentElement.dataset.theme = selected;
+ document.documentElement.style.colorScheme = selected;
+ const button = $("themeToggle");
+ if (button) {
+  button.textContent = selected === "dark" ? "☀ الوضع الفاتح" : "☾ الوضع الداكن";
+  button.setAttribute("aria-pressed", String(selected === "dark"));
+  button.setAttribute("aria-label", selected === "dark" ? "التبديل إلى الوضع الفاتح" : "التبديل إلى الوضع الداكن");
+  button.title = selected === "dark" ? "تفعيل الوضع الفاتح" : "تفعيل الوضع الداكن";
+ }
+ const themeMeta = document.querySelector('meta[name="theme-color"]');
+ if (themeMeta) themeMeta.setAttribute("content", selected === "dark" ? "#0b1422" : "#082e70");
+ if (save) {
+  try { localStorage.setItem(THEME_STORAGE_KEY, selected); }
+  catch (err) { console.warn("Could not save theme preference:", err); }
+ }
+}
+let savedSiteTheme = "light";
+try { savedSiteTheme = localStorage.getItem(THEME_STORAGE_KEY) || "light"; }
+catch (err) { console.warn("Could not read theme preference:", err); }
+applySiteTheme(savedSiteTheme);
+$("themeToggle")?.addEventListener("click", () => {
+ const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+ applySiteTheme(nextTheme, true);
+});
+
 let products = [], editingId = null, unsubscribe = null, currentUser = null;
 let activeProduct = null, activeImageIndex = 0;
 let imageChangeDirection = 1;
