@@ -41,7 +41,7 @@ function render(){
    return `<article class="card">
      <button class="card-photo" data-open="${safe(p.id)}" aria-label="عرض تفاصيل ${safe(p.name)}">
        ${cover?`<img src="${safe(cover)}" alt="${safe(p.name)}" loading="lazy">`:`<span class="photo-placeholder" aria-hidden="true">▧</span>`}
-       ${isNew?`<span class="new-product-badge" aria-label="أحدث منتج" style="position:absolute;top:12px;right:12px;z-index:2;display:inline-flex;align-items:center;padding:6px 12px;border-radius:7px;color:#fff;background:linear-gradient(135deg,#0879dc,#00b9df);border:1px solid #ffffffa8;box-shadow:0 3px 10px #002b5c55;font-size:12px;font-weight:800;line-height:1.2;pointer-events:none">✦ جديد</span>`:""}
+       ${isNew?`<span class="new-product-badge" aria-label="أحدث منتج"><span class="new-badge-spark" aria-hidden="true">✦</span><span class="new-badge-copy"><small>NEW ARRIVAL</small><b>جديد</b></span></span>`:""}
        ${imgs.length>1?`<span class="image-count">▧ ${imgs.length} صور</span>`:""}
      </button>
      <div class="content">
