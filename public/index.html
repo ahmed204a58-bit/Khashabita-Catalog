@@ -451,9 +451,33 @@ html[data-theme="dark"] .theme-toggle{
  .theme-toggle{min-height:36px;padding:7px 9px!important;font-size:11px!important}
 }
 @media(prefers-reduced-motion:reduce){.theme-toggle{transition:none!important}}
+/* Theme control sits with the social links */
+.social-strip>.theme-toggle{
+ display:inline-flex;align-items:center;justify-content:center;
+ width:42px;height:42px;min-height:42px;margin:5px;padding:0!important;
+ border-radius:12px!important;background:#082e70!important;color:#fff!important;
+ border:1px solid #ffffff80!important;box-shadow:0 3px 9px #00183d25;
+ font-size:21px!important;line-height:1
+}
+.social-links>.theme-toggle{
+ display:inline-flex;align-items:center;justify-content:center;
+ width:40px;height:40px;min-height:40px;margin:0;padding:0!important;
+ border-radius:50%!important;background:#061b45cc!important;color:#fff!important;
+ border:1px solid #ffffff80!important;box-shadow:0 4px 12px #00183d40;
+ font-size:21px!important;line-height:1
+}
+html[data-theme="dark"] .social-strip>.theme-toggle,
+html[data-theme="dark"] .social-links>.theme-toggle{
+ background:#d9f2ff!important;color:#07305b!important;border-color:#fff!important
+}
+.social-strip>.theme-toggle:hover,.social-links>.theme-toggle:hover{
+ transform:translateY(-2px);filter:brightness(1.1)
+}
+@media(max-width:850px){.social-links>.theme-toggle{width:36px;height:36px;min-height:36px}}
+@media(max-width:520px){.social-strip>.theme-toggle{width:38px;height:38px;min-height:38px;margin:3px}}
 </style></head>
 <body>
-<header class="hero"><div class="top-actions"><button aria-label="القائمة">☰</button><button aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button type="button" id="themeToggle" class="theme-toggle" aria-label="التبديل إلى الوضع الداكن" aria-pressed="false" title="تغيير مظهر الموقع">☾ الوضع الداكن</button><button id="adminBtn" aria-label="دخول الإدارة">إدارتي</button></div>
+<header class="hero"><div class="top-actions"><button aria-label="القائمة">☰</button><button aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="adminBtn" aria-label="دخول الإدارة">إدارتي</button></div>
 <img src="laser-machine-banner.jpg" alt="بنر خشابيتا" class="hero-banner"><div class="hero-inner"><div class="portrait"><img src="ahmed-cartoon.png" alt="أحمد خشابيتا"></div><div class="brand"><img src="logo-khashabita.png" alt="لوجو خشابيتا"><div class="tag">كتالوج المنتجات الخشبية</div><p>تصميم • قص ليزر CO2 • ديكورات وهدايا مميزة</p>
 <div class="social-links" aria-label="تابع خشابيتا على مواقع التواصل">
 <a href="https://www.facebook.com/share/1DUHTuDPca/" target="_blank" rel="noopener noreferrer" aria-label="فيسبوك" title="فيسبوك">
@@ -465,6 +489,7 @@ html[data-theme="dark"] .theme-toggle{
 <a href="https://www.tiktok.com/@khashabita?_r=1&_t=ZS-9BHYWpW8PDU" target="_blank" rel="noopener noreferrer" aria-label="تيك توك" title="تيك توك">
 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.6 7.1a6.8 6.8 0 0 1-4.2-1.5v8.1a6.1 6.1 0 1 1-5.3-6.1v3.2a2.9 2.9 0 1 0 2.1 2.8V2h3.2c.2 1.8 1.6 3.4 4.2 3.7v1.4Z"/></svg>
 </a>
+<button type="button" id="themeToggle" class="theme-toggle" aria-label="التبديل إلى الوضع الداكن" aria-pressed="false" title="تغيير مظهر الموقع">☾</button>
 </div></div><div class="laser-art">⚡</div></div></header>
 <div class="searchbar"><div class="inner"><input id="search" placeholder="ابحث عن منتجك هنا..."><button onclick="document.getElementById('search').focus()">بحث</button></div></div>
 <nav class="categories" id="categoryTiles">
@@ -506,6 +531,6 @@ html[data-theme="dark"] .theme-toggle{
 <div id="productModal" class="product-modal hidden" role="dialog" aria-modal="true" aria-label="تفاصيل المنتج">
  <div class="modal-shell"><button id="modalClose" class="modal-close" aria-label="إغلاق">×</button><div id="modalContent" class="modal-layout"></div></div>
 </div>
-<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261126-theme-toggle1"></script>
+<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261126-theme-social1"></script>
 <script>document.querySelectorAll('.cat').forEach(b=>b.addEventListener('click',()=>{document.getElementById('categoryFilter').value=b.dataset.cat;document.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('categoryFilter').dispatchEvent(new Event('change'));document.getElementById('catalog').scrollIntoView({behavior:'smooth'});}));document.getElementById('search').addEventListener('input',e=>{const real=document.querySelector('#search');real.dispatchEvent(new Event('change'));});document.getElementById('backCatalog').onclick=()=>{document.getElementById('admin').classList.add('hidden');document.getElementById('catalog').classList.remove('hidden');};</script>
 </body></html>
