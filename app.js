@@ -21,6 +21,7 @@ const provider = new GoogleAuthProvider();
 const $ = id => document.getElementById(id);
 let products = [], editingId = null, unsubscribe = null, currentUser = null;
 let activeProduct = null, activeImageIndex = 0;
+let deepLinkHandled = false;
 
 function safe(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function money(n){return Number(n||0).toLocaleString("ar-EG")+" ج.م";}
@@ -78,7 +79,7 @@ function resetForm(){editingId=null;$("productForm").reset();
 function startListener(){
  if(unsubscribe)unsubscribe();
  const q=query(collection(db,"products"),orderBy("createdAt","desc"));
- unsubscribe=onSnapshot(q,snap=>{products=snap.docs.map(d=>({id:d.id,...d.data()}));render();if(isAdmin())loadAdminStats();},err=>{$("products").innerHTML='<div class="empty">تعذر تحميل المنتجات. راجع إعدادات قاعدة البيانات.</div>';console.error(err);});
+ unsubscribe=onSnapshot(q,snap=>{products=snap.docs.map(d=>({id:d.id,...d.data()}));render();openSharedProductFromUrl();if(isAdmin())loadAdminStats();},err=>{$("products").innerHTML='<div class="empty">تعذر تحميل المنتجات. راجع إعدادات قاعدة البيانات.</div>';console.error(err);});
 }
 $("adminBtn").onclick=async()=>{if(isAdmin()){showAdmin($("catalog").classList.contains("hidden"));return;}try{const result=await signInWithPopup(auth,provider);if(result.user.email?.toLowerCase()!==ADMIN_EMAIL.toLowerCase()){await signOut(auth);alert("هذا الحساب غير مصرح له بإدارة الكتالوج.");}}catch(e){alert("تعذر تسجيل الدخول باستخدام Google: "+e.message);}};
 $("logout").onclick=()=>signOut(auth);
@@ -153,6 +154,61 @@ function updateImagePreview(){
 
 $("imageUrls").addEventListener("input",updateImagePreview);
 
+
+function productShareUrl(productId){
+ const url=new URL(window.location.href);
+ url.search="";
+ url.hash="";
+ url.searchParams.set("product",productId);
+ return url.toString();
+}
+async function copyTextToClipboard(value){
+ try{
+  if(navigator.clipboard&&window.isSecureContext){
+   await navigator.clipboard.writeText(value);
+   return true;
+  }
+ }catch(_){}
+ const field=document.createElement("textarea");
+ field.value=value;
+ field.setAttribute("readonly","");
+ field.style.position="fixed";
+ field.style.left="-9999px";
+ field.style.top="0";
+ document.body.appendChild(field);
+ field.focus();
+ field.select();
+ let copied=false;
+ try{copied=document.execCommand("copy");}catch(_){}
+ field.remove();
+ return copied;
+}
+async function copyProductLink(productId,button){
+ const copied=await copyTextToClipboard(productShareUrl(productId));
+ if(!button)return copied;
+ const original="نسخ رابط المنتج";
+ button.textContent=copied?"تم نسخ الرابط ✓":"تعذر النسخ";
+ button.classList.toggle("copied",copied);
+ button.disabled=true;
+ window.setTimeout(()=>{
+  if(button.isConnected){
+   button.textContent=original;
+   button.classList.remove("copied");
+   button.disabled=false;
+  }
+ },1800);
+ return copied;
+}
+function openSharedProductFromUrl(){
+ if(deepLinkHandled)return;
+ const productId=new URLSearchParams(window.location.search).get("product");
+ if(!productId)return;
+ const product=products.find(p=>p.id===productId);
+ if(!product)return;
+ deepLinkHandled=true;
+ openDetails(product.id);
+}
+
 function openDetails(id){
  const p=products.find(x=>x.id===id);if(!p)return;
  activeProduct=p;activeImageIndex=0;renderDetails();trackProductView(p.id);
@@ -174,17 +230,28 @@ function renderDetails(){
   <div class="modal-info"><span class="product-category">${safe(p.category||"منتج خشبي")}</span><h2>${safe(p.name)}</h2>
    <div class="price">${money(p.price)}</div><p>${safe(p.description||"منتج مصنوع بعناية في خشابيتا CNC.")}</p>
    <dl class="product-specs"><div><dt>كود المنتج</dt><dd>${safe(p.sku||"—")}</dd></div><div><dt>المقاس</dt><dd>${safe(p.dimensions||"حسب الطلب")}</dd></div><div><dt>الخامة</dt><dd>${safe(p.material||"خشب MDF")}</dd></div></dl>
-   ${/^https:\/\/(www\.)?(youtube\.com|youtu\.be)\//i.test(p.videoUrl||"")?'<a class="btn light" target="_blank" rel="noopener noreferrer" href="'+safe(p.videoUrl)+'">▶ شاهد على YouTube</a>':""} ${/^https:\/\/(www\.)?(tiktok\.com|vm\.tiktok\.com)\//i.test(p.tiktokUrl||"")?'<a class="btn light" target="_blank" rel="noopener noreferrer" href="'+safe(p.tiktokUrl)+'">▶ شاهد على TikTok</a>':""} <a class="btn wa modal-wa" target="_blank" rel="noopener" href="${waLink(p)}" data-track-whatsapp="${safe(p.id)}">اطلب المنتج على واتساب</a>
+   ${/^https:\/\/(www\.)?(youtube\.com|youtu\.be)\//i.test(p.videoUrl||"")?'<a class="btn light" target="_blank" rel="noopener noreferrer" href="'+safe(p.videoUrl)+'">▶ شاهد على YouTube</a>':""} ${/^https:\/\/(www\.)?(tiktok\.com|vm\.tiktok\.com)\//i.test(p.tiktokUrl||"")?'<a class="btn light" target="_blank" rel="noopener noreferrer" href="'+safe(p.tiktokUrl)+'">▶ شاهد على TikTok</a>':""} <a class="btn wa modal-wa" target="_blank" rel="noopener" href="${waLink(p)}" data-track-whatsapp="${safe(p.id)}">اطلب المنتج على واتساب</a> <button type="button" class="btn light modal-share-link" id="copyProductLink">نسخ رابط المنتج</button>
   </div>`;
  $("galleryPrev")?.addEventListener("click",()=>changeImage(-1));
  $("galleryNext")?.addEventListener("click",()=>changeImage(1));
  $("modalContent").querySelectorAll("[data-image-index]").forEach(b=>b.addEventListener("click",()=>{activeImageIndex=Number(b.dataset.imageIndex);renderDetails();}));
+ $("copyProductLink")?.addEventListener("click",e=>copyProductLink(p.id,e.currentTarget));
 }
 function changeImage(delta){const n=productImages(activeProduct).length;if(!n)return;activeImageIndex=(activeImageIndex+delta+n)%n;renderDetails();}
 $("products").addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(b)openDetails(b.dataset.open);});
 $("modalClose").onclick=closeDetails;
 $("productModal").addEventListener("click",e=>{if(e.target===$("productModal"))closeDetails();});
-function closeDetails(){$("productModal").classList.add("hidden");document.body.classList.remove("modal-open");activeProduct=null;}
+function closeDetails(){
+ $("productModal").classList.add("hidden");
+ document.body.classList.remove("modal-open");
+ activeProduct=null;
+ const url=new URL(window.location.href);
+ if(url.searchParams.has("product")){
+  url.searchParams.delete("product");
+  window.history.replaceState({}, "", url.pathname+url.search+url.hash);
+ }
+ deepLinkHandled=false;
+}
 document.addEventListener("keydown",e=>{if($("productModal").classList.contains("hidden"))return;if(e.key==="Escape")closeDetails();if(e.key==="ArrowLeft")changeImage(1);if(e.key==="ArrowRight")changeImage(-1);});
 
 
