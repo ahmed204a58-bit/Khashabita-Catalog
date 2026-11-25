@@ -26,7 +26,7 @@ function applySiteTheme(theme, save = false) {
  document.documentElement.style.colorScheme = selected;
  const button = $("themeToggle");
  if (button) {
-  button.textContent = selected === "dark" ? "☀ الوضع الفاتح" : "☾ الوضع الداكن";
+  button.textContent = selected === "dark" ? "☀" : "☾";
   button.setAttribute("aria-pressed", String(selected === "dark"));
   button.setAttribute("aria-label", selected === "dark" ? "التبديل إلى الوضع الفاتح" : "التبديل إلى الوضع الداكن");
   button.title = selected === "dark" ? "تفعيل الوضع الفاتح" : "تفعيل الوضع الداكن";
