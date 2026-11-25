@@ -33,11 +33,16 @@ function render(){
  $("categoryFilter").value=cats.includes(chosen)?chosen:"";
  const term=$("search").value.trim().toLowerCase();
  const visible=products.filter(p=>(!$("categoryFilter").value||p.category===$("categoryFilter").value)&&(!term||[p.name,p.sku,p.category,p.description].join(" ").toLowerCase().includes(term)));
+ // المنتجات مرتبة بالفعل من الأحدث للأقدم حسب createdAt في startListener.
+ // نحسب أحدث خمسة على مستوى الكتالوج كله، حتى مع استخدام البحث أو فلتر الأقسام.
+ const latestProductIds=new Set(products.slice(0,5).map(p=>p.id));
  $("products").innerHTML=visible.length?visible.map(p=>{
    const imgs=productImages(p), cover=imgs[0];
+   const isNew=latestProductIds.has(p.id);
    return `<article class="card">
      <button class="card-photo" data-open="${safe(p.id)}" aria-label="عرض تفاصيل ${safe(p.name)}">
        ${cover?`<img src="${safe(cover)}" alt="${safe(p.name)}" loading="lazy">`:`<span class="photo-placeholder" aria-hidden="true">▧</span>`}
+       ${isNew?`<span class="new-product-badge" aria-label="أحدث منتج">جديد</span>`:""}
        ${imgs.length>1?`<span class="image-count">▧ ${imgs.length} صور</span>`:""}
      </button>
      <div class="content">
