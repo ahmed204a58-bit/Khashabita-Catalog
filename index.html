@@ -296,6 +296,32 @@ stroke:currentColor;
  .card-photo .new-product-badge{top:8px;left:8px;transform:scale(.88);transform-origin:top left}
 }
 
+
+/* Final visibility fallback for the newest-five navy corner ribbon */
+.card-photo{position:relative}
+.card-photo .new-product-badge{
+ position:absolute!important;top:10px!important;left:12px!important;right:auto!important;
+ z-index:20!important;display:block!important;width:104px!important;height:72px!important;
+ opacity:1!important;visibility:visible!important;pointer-events:none!important;
+ filter:drop-shadow(0 5px 8px rgba(0,12,35,.42))!important
+}
+.new-badge-cap{
+ position:absolute!important;top:0!important;left:0!important;width:104px!important;height:15px!important;z-index:1!important;
+ background:linear-gradient(90deg,#0a2d58,#6dc8f4,#c9f1ff,#4b9ed4,#08284f)!important;
+ clip-path:polygon(7% 0,93% 0,100% 100%,0 100%)!important
+}
+.new-badge-body{
+ position:absolute!important;top:8px!important;left:10px!important;width:84px!important;height:59px!important;z-index:2!important;
+ display:grid!important;place-items:center!important;
+ background:linear-gradient(155deg,#124b7b,#08294e 48%,#04172f)!important;
+ border:1px solid #62caff!important;border-top:0!important;border-radius:0 0 19px 19px!important
+}
+.new-badge-body b{font-size:19px!important;color:#fff!important;font-weight:900!important}
+.new-badge-fold{position:absolute!important;top:12px!important;z-index:0!important;width:12px!important;height:14px!important;background:linear-gradient(145deg,#05172d,#123b61)!important}
+.new-badge-fold.left{left:0!important;clip-path:polygon(100% 0,100% 100%,0 72%)!important}
+.new-badge-fold.right{right:0!important;clip-path:polygon(0 0,100% 72%,0 100%)!important}
+@media(max-width:520px){.card-photo .new-product-badge{top:8px!important;left:8px!important;transform:scale(.88)!important;transform-origin:top left!important}}
+
 </style></head>
 <body>
 <header class="hero" aria-label="بنر خشابيتا CNC">
@@ -377,7 +403,7 @@ stroke:currentColor;
 </main><div id="productModal" class="product-modal hidden" role="dialog" aria-modal="true" aria-label="تفاصيل المنتج">
  <div class="modal-shell"><button id="modalClose" class="modal-close" aria-label="إغلاق">×</button><div id="modalContent" class="modal-layout"></div></div>
 </div>
-<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261125-navytech-ribbon"></script>
+<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261125-navy-ribbon-final"></script>
 <script>
 (() => {
   // ربط أزرار الأقسام بعد تحميل عناصر الصفحة.
