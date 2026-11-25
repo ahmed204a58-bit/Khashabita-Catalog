@@ -48,6 +48,7 @@ $("themeToggle")?.addEventListener("click", () => {
 });
 
 let products = [], editingId = null, unsubscribe = null, currentUser = null;
+let visitorCounterDecisionMade = false;
 let activeProduct = null, activeImageIndex = 0;
 let imageChangeDirection = 1;
 let deepLinkHandled = false;
@@ -61,6 +62,11 @@ function isOfferProduct(p){const original=Number(p?.price||0),sale=Number(p?.off
 function offerDiscount(p){return isOfferProduct(p)?Math.round((1-Number(p.offerPrice)/Number(p.price))*100):0;}
 function priceMarkup(p){return isOfferProduct(p)?`<div class="price offer-price-group"><del>${money(p.price)}</del><strong>${money(p.offerPrice)}</strong></div>`:`<div class="price">${money(p.price)}</div>`;}
 function isAdmin(){return !!currentUser && currentUser.email?.toLowerCase()===ADMIN_EMAIL.toLowerCase();}
+function startVisitorCounterAfterAuth(){
+ if(visitorCounterDecisionMade)return;
+ visitorCounterDecisionMade=true;
+ if(!isAdmin())updateVisitorCounter();
+}
 function validImage(u){return /^https:\/\//i.test(u) || (/^(?:\.\/|products\/)[\w./-]+\.(?:png|jpe?g|webp|gif)$/i.test(u) && !u.includes(".."));}
 function productImages(p){return (Array.isArray(p.imageUrls)?p.imageUrls:(p.imageUrl?[p.imageUrl]:[])).filter(validImage);}
 function showAdmin(on){$("catalog").classList.toggle("hidden",on);$("admin").classList.toggle("hidden",!on);$("adminBtn").textContent=on?"عرض الكتالوج":"دخول الإدارة";if(on)loadAdminStats();}function waLink(p){const amount=isOfferProduct(p)?p.offerPrice:p.price;const priceText=isOfferProduct(p)?("السعر بعد الخصم "+amount+" جنيه بدل "+p.price+" جنيه"):("السعر "+(amount||"")+" جنيه");return "https://wa.me/201116026022?text="+encodeURIComponent("السلام عليكم، عايز أستفسر عن "+p.name+" - الكود "+(p.sku||"")+" - "+priceText);}
@@ -173,9 +179,10 @@ $("adminList").onclick=async e=>{
 };
 onAuthStateChanged(auth,user=>{
  currentUser=user;
- if(user&&!isAdmin()){signOut(auth);currentUser=null;showAdmin(false);alert("هذا الحساب غير مصرح له.");return;}
+ if(user&&!isAdmin()){signOut(auth);currentUser=null;showAdmin(false);alert("هذا الحساب غير مصرح له.");startVisitorCounterAfterAuth();return;}
  $("adminEmail").textContent=user?`مسجل الدخول: ${user.email}`:"";
  if(unsubscribe)unsubscribe();startListener();showAdmin(!!user && isAdmin());
+ startVisitorCounterAfterAuth();
 });
 
 async function uploadSelectedImages(){
@@ -476,4 +483,3 @@ async function updateVisitorCounter() {
   }
 }
 
-updateVisitorCounter();
