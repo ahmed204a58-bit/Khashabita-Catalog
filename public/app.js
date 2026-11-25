@@ -27,7 +27,7 @@ function safe(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&l
 function money(n){return Number(n||0).toLocaleString("ar-EG")+" ج.م";}
 function isOfferProduct(p){const original=Number(p?.price||0),sale=Number(p?.offerPrice||0);return p?.isOffer===true&&original>0&&sale>0&&sale<original;}
 function offerDiscount(p){return isOfferProduct(p)?Math.round((1-Number(p.offerPrice)/Number(p.price))*100):0;}
-function priceMarkup(p){return isOfferProduct(p)?`<div class="price offer-price-group"><del>${money(p.price)}</del><strong>${money(p.offerPrice)}</strong></div>`:`${priceMarkup(p)}`;}
+function priceMarkup(p){return isOfferProduct(p)?`<div class="price offer-price-group"><del>${money(p.price)}</del><strong>${money(p.offerPrice)}</strong></div>`:`<div class="price">${money(p.price)}</div>`;}
 function isAdmin(){return !!currentUser && currentUser.email?.toLowerCase()===ADMIN_EMAIL.toLowerCase();}
 function validImage(u){return /^https:\/\//i.test(u) || (/^(?:\.\/|products\/)[\w./-]+\.(?:png|jpe?g|webp|gif)$/i.test(u) && !u.includes(".."));}
 function productImages(p){return (Array.isArray(p.imageUrls)?p.imageUrls:(p.imageUrl?[p.imageUrl]:[])).filter(validImage);}
