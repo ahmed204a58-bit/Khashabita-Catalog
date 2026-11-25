@@ -33,11 +33,15 @@ function render(){
  $("categoryFilter").value=cats.includes(chosen)?chosen:"";
  const term=$("search").value.trim().toLowerCase();
  const visible=products.filter(p=>(!$("categoryFilter").value||p.category===$("categoryFilter").value)&&(!term||[p.name,p.sku,p.category,p.description].join(" ").toLowerCase().includes(term)));
+ // products مرتبة حسب createdAt تنازليًا؛ نحدد أحدث خمسة في الكتالوج كله.
+ const latestProductIds=new Set(products.slice(0,5).map(p=>p.id));
  $("products").innerHTML=visible.length?visible.map(p=>{
    const imgs=productImages(p), cover=imgs[0];
+   const isNew=latestProductIds.has(p.id);
    return `<article class="card">
      <button class="card-photo" data-open="${safe(p.id)}" aria-label="عرض تفاصيل ${safe(p.name)}">
        ${cover?`<img src="${safe(cover)}" alt="${safe(p.name)}" loading="lazy">`:`<span class="photo-placeholder" aria-hidden="true">▧</span>`}
+       ${isNew?`<span class="new-product-badge" aria-label="أحدث منتج" style="position:absolute;top:12px;right:12px;z-index:2;display:inline-flex;align-items:center;padding:6px 12px;border-radius:7px;color:#fff;background:linear-gradient(135deg,#0879dc,#00b9df);border:1px solid #ffffffa8;box-shadow:0 3px 10px #002b5c55;font-size:12px;font-weight:800;line-height:1.2;pointer-events:none">✦ جديد</span>`:""}
        ${imgs.length>1?`<span class="image-count">▧ ${imgs.length} صور</span>`:""}
      </button>
      <div class="content">
