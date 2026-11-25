@@ -322,6 +322,34 @@ stroke:currentColor;
 .new-badge-fold.right{right:0!important;clip-path:polygon(0 0,100% 72%,0 100%)!important}
 @media(max-width:520px){.card-photo .new-product-badge{top:8px!important;left:8px!important;transform:scale(.88)!important;transform-origin:top left!important}}
 
+
+/* CSS-only fallback: show ribbon on the first five newest visible cards */
+#products>.card:nth-child(-n+5) .card-photo::before{
+ content:"جديد";
+ position:absolute;top:0;left:18px;z-index:30;
+ width:96px;height:62px;box-sizing:border-box;
+ display:flex;align-items:flex-end;justify-content:center;
+ padding:0 0 13px;
+ color:#fff;font-family:Tahoma,Arial,sans-serif;font-size:18px;font-weight:900;line-height:1;
+ text-shadow:0 0 8px rgba(62,196,255,.62),0 2px 2px rgba(0,0,0,.45);
+ background:linear-gradient(145deg,#174d7c 0%,#0a2e56 48%,#04172f 100%);
+ border:1px solid #70d4ff;border-top:0;border-radius:0 0 22px 22px;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.24),inset 0 -8px 14px rgba(0,0,0,.24),0 4px 10px rgba(0,14,42,.32);
+ pointer-events:none;
+}
+#products>.card:nth-child(-n+5) .card-photo::after{
+ content:"";position:absolute;top:0;left:11px;z-index:31;
+ width:110px;height:14px;
+ background:linear-gradient(90deg,#071b36 0%,#4d9acb 15%,#d8f5ff 45%,#4d9acb 82%,#071b36 100%);
+ clip-path:polygon(8% 0,92% 0,100% 100%,0 100%);
+ pointer-events:none;
+}
+#products .card-photo .new-product-badge{display:none!important}
+@media(max-width:520px){
+ #products>.card:nth-child(-n+5) .card-photo::before{left:12px;width:84px;height:54px;font-size:16px;padding-bottom:11px}
+ #products>.card:nth-child(-n+5) .card-photo::after{left:6px;width:96px;height:12px}
+}
+
 </style></head>
 <body>
 <header class="hero" aria-label="بنر خشابيتا CNC">
@@ -403,7 +431,7 @@ stroke:currentColor;
 </main><div id="productModal" class="product-modal hidden" role="dialog" aria-modal="true" aria-label="تفاصيل المنتج">
  <div class="modal-shell"><button id="modalClose" class="modal-close" aria-label="إغلاق">×</button><div id="modalContent" class="modal-layout"></div></div>
 </div>
-<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261125-inline-ribbon4"></script>
+<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261125-css-ribbon5"></script>
 <script>
 (() => {
   // ربط أزرار الأقسام بعد تحميل عناصر الصفحة.
