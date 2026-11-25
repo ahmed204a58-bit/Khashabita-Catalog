@@ -41,7 +41,7 @@ function render(){
    return `<article class="card">
      <button class="card-photo" data-open="${safe(p.id)}" aria-label="عرض تفاصيل ${safe(p.name)}">
        ${cover?`<img src="${safe(cover)}" alt="${safe(p.name)}" loading="lazy">`:`<span class="photo-placeholder" aria-hidden="true">▧</span>`}
-       ${isNew?`<span class="new-product-badge" aria-label="منتج جديد"><span class="new-badge-cap" aria-hidden="true"></span><span class="new-badge-fold left" aria-hidden="true"></span><span class="new-badge-fold right" aria-hidden="true"></span><span class="new-badge-body"><b>جديد</b></span></span>`:""}
+       ${isNew?`<span class="new-product-badge" aria-label="منتج جديد" style="position:absolute;top:10px;left:12px;right:auto;z-index:20;display:block;width:104px;height:72px;pointer-events:none;filter:drop-shadow(0 5px 8px rgba(0,12,35,.42))"><span class="new-badge-cap" aria-hidden="true"></span><span class="new-badge-fold left" aria-hidden="true"></span><span class="new-badge-fold right" aria-hidden="true"></span><span class="new-badge-body" style="position:absolute;top:8px;left:10px;width:84px;height:59px;z-index:2;display:grid;place-items:center;color:#fff;text-align:center;background:linear-gradient(155deg,#124b7b 0%,#08294e 48%,#04172f 100%);border:1px solid #62caff;border-top:0;border-radius:0 0 19px 19px;box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 -7px 15px rgba(0,8,28,.35),0 4px 10px rgba(0,14,42,.25)"><b style="position:relative;z-index:1;font-size:19px;font-weight:900;line-height:1;color:#f5fcff;text-shadow:0 0 8px rgba(43,190,255,.55),0 2px 2px rgba(0,0,0,.4)">جديد</b></span></span>`:""}
        ${imgs.length>1?`<span class="image-count">▧ ${imgs.length} صور</span>`:""}
      </button>
      <div class="content">
