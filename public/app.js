@@ -19,6 +19,7 @@ let products = [], editingId = null, unsubscribe = null, currentUser = null;
 let activeProduct = null, activeImageIndex = 0;
 let imageChangeDirection = 1;
 let deepLinkHandled = false;
+let modalHistoryPushed = false;
 // Set to the deployed Cloudflare Worker origin to enable product-specific social previews.
 const PRODUCT_SHARE_WORKER_BASE = "https://khashabita-product-share.ahmed204a58.workers.dev";
 
@@ -66,6 +67,12 @@ function startListener(){
 $("adminBtn").onclick=async()=>{if(isAdmin()){showAdmin($("catalog").classList.contains("hidden"));return;}try{const result=await signInWithPopup(auth,provider);if(result.user.email?.toLowerCase()!==ADMIN_EMAIL.toLowerCase()){await signOut(auth);alert("هذا الحساب غير مصرح له بإدارة الكتالوج.");}}catch(e){alert("تعذر تسجيل الدخول باستخدام Google: "+e.message);}};
 $("logout").onclick=()=>signOut(auth);
 $("search").oninput=render;$("categoryFilter").onchange=render;
+$("homeButton")?.addEventListener("click",()=>{
+ $("categoryFilter").value="";
+ $("search").value="";
+ render();
+ window.scrollTo({top:0,behavior:"smooth"});
+});
 $("productForm").onsubmit=async e=>{
  e.preventDefault();if(!isAdmin())return alert("غير مصرح.");
  const imageUrls=$("imageUrls").value.split(/\n|,/).map(u=>u.trim()).filter(Boolean);
@@ -155,9 +162,29 @@ function openSharedProductFromUrl(){
 }
 
 function openDetails(id){
- const p=products.find(x=>x.id===id);if(!p)return;
- activeProduct=p;activeImageIndex=0;renderDetails();
- $("productModal").classList.remove("hidden");document.body.classList.add("modal-open");
+ const p=products.find(x=>x.id===id);
+ if(!p)return;
+ const modalIsClosed=$("productModal").classList.contains("hidden");
+ if(modalIsClosed){
+  if(window.history.state?.khashabitaProductModal){
+   modalHistoryPushed=true;
+  }else{
+   const currentUrl=new URL(window.location.href);
+   const sharedProductId=currentUrl.searchParams.get("product");
+   if(sharedProductId===id){
+    const catalogUrl=new URL(currentUrl);
+    catalogUrl.searchParams.delete("product");
+    window.history.replaceState({khashabitaCatalog:true},"",catalogUrl.pathname+catalogUrl.search+catalogUrl.hash);
+   }
+   window.history.pushState({khashabitaProductModal:true,productId:id},"",window.location.href);
+   modalHistoryPushed=true;
+  }
+ }
+ activeProduct=p;
+ activeImageIndex=0;
+ renderDetails();
+ $("productModal").classList.remove("hidden");
+ document.body.classList.add("modal-open");
  $("modalClose").focus();
 }
 function renderDetails(){
@@ -200,15 +227,28 @@ function changeImage(delta){
 $("products").addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(b)openDetails(b.dataset.open);});
 $("modalClose").onclick=closeDetails;
 $("productModal").addEventListener("click",e=>{if(e.target===$("productModal"))closeDetails();});
-function closeDetails(){
+function hideProductDetails(){
  $("productModal").classList.add("hidden");
  document.body.classList.remove("modal-open");
  activeProduct=null;
- const url=new URL(window.location.href);
- if(url.searchParams.has("product")){
-  url.searchParams.delete("product");
-  window.history.replaceState({}, "", url.pathname+url.search+url.hash);
- }
  deepLinkHandled=false;
 }
+function closeDetails(){
+ const shouldReturnToCatalog=modalHistoryPushed;
+ modalHistoryPushed=false;
+ hideProductDetails();
+ if(shouldReturnToCatalog)window.history.back();
+}
+window.addEventListener("popstate",()=>{
+ const modalIsOpen=!$("productModal").classList.contains("hidden");
+ if(modalIsOpen&&!window.history.state?.khashabitaProductModal){
+  modalHistoryPushed=false;
+  hideProductDetails();
+  return;
+ }
+ if(!modalIsOpen&&window.history.state?.khashabitaProductModal){
+  const productId=window.history.state.productId||new URLSearchParams(window.location.search).get("product");
+  if(productId)openDetails(productId);
+ }
+});
 document.addEventListener("keydown",e=>{if($("productModal").classList.contains("hidden"))return;if(e.key==="Escape")closeDetails();if(e.key==="ArrowLeft")changeImage(1);if(e.key==="ArrowRight")changeImage(-1);});
