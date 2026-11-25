@@ -307,6 +307,20 @@ body.modal-open{overflow:hidden}
  .offers-percent{width:55px;height:55px;border-radius:16px;font-size:36px}
 }
 
+/* Dynamic offers + sale price */
+.offers-products{margin-top:18px}
+.offers-products .offer-card{border-color:#8bcdf0;box-shadow:0 8px 22px rgba(7,52,100,.12)}
+.offer-ribbon{position:absolute;top:12px;right:12px;z-index:5;padding:7px 11px;border:1px solid #ffc5cf;border-radius:9px;background:linear-gradient(135deg,#c91e42,#f04765);color:#fff;font-size:12px;font-weight:900;box-shadow:0 4px 12px rgba(124,13,39,.25)}
+.offer-price-group{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.offer-price-group del{color:#8a97a9;font-size:.82em;font-weight:500}
+.offer-price-group strong{color:#d92f48;font-size:1.14em;font-weight:900}
+.offer-admin-settings{grid-column:1/-1;padding:13px 15px;border:1px solid #b8d8ed;border-radius:13px;background:linear-gradient(135deg,#f3f9ff,#eaf5ff)}
+.offer-admin-settings .offer-check{display:flex;align-items:center;gap:10px;font-weight:800;color:#123969;cursor:pointer}
+.offer-admin-settings .offer-check input{width:18px;height:18px;accent-color:#0879dc}
+.offer-fields{display:grid;gap:7px;margin-top:12px;padding-top:12px;border-top:1px solid #c9deee}
+.offer-fields label{display:grid;gap:6px;font-weight:700}
+.offer-fields small{color:#526982;line-height:1.7}
+@media(max-width:600px){.offers-products{gap:12px}.offer-ribbon{top:8px;right:8px;padding:6px 8px;font-size:11px}}
 </style></head>
 <body>
 <header class="hero"><div class="top-actions"><button aria-label="القائمة">☰</button><button aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="adminBtn" aria-label="دخول الإدارة">إدارتي</button></div>
@@ -333,25 +347,33 @@ body.modal-open{overflow:hidden}
 <button class="cat cat-cars" data-cat="قسم السيارات"><span class="cat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 11 2-5h10l2 5 2 2v5h-2a2 2 0 0 1-4 0H9a2 2 0 0 1-4 0H3v-5l2-2Zm2 0h10M5 14h2m10 0h2"/></svg></span><b>قسم السيارات</b></button>
 </nav>
 
-<section class="offers-section" aria-label="عروض خشابيتا">
+<section class="offers-section" id="offersSection" aria-label="عروض خشابيتا">
  <div class="offers-banner">
   <div class="offers-copy">
    <span class="offers-kicker">عروض خشابيتا</span>
-   <h2>العروض والخصومات هتلاقيها هنا</h2>
-   <p>مساحة مخصصة لعرض أحدث عروض خشابيتا والخصومات على المنتجات المختارة.</p>
-   <a class="offers-action" href="#catalog">تصفح المنتجات <span aria-hidden="true">←</span></a>
+   <h2>وفر واستمتع بعروض خشابيتا</h2>
+   <p>منتجات مختارة بأسعار خاصة. كل العروض المتاحة هتظهر هنا تلقائيًا.</p>
+   <a class="offers-action" href="#offerProducts">شاهد العروض <span aria-hidden="true">←</span></a>
   </div>
   <div class="offers-visual" aria-hidden="true">
    <span class="offers-orbit"></span>
    <span class="offers-percent">٪</span>
   </div>
  </div>
+ <div id="offerProducts" class="grid offers-products"><div class="empty">جاري تحميل العروض...</div></div>
 </section>
 
 <main>
 <section id="catalog"><h2 class="section-title">⭐ أحدث المنتجات ⭐</h2><div class="toolbar"><input id="searchFallback" class="hidden" aria-hidden="true"><button type="button" id="homeButton" class="home-button">⌂ الرئيسية</button><select id="categoryFilter"><option value="">كل الأقسام</option><option>قسم السيارات</option></select></div><div id="products" class="grid"><div class="empty">جاري تحميل المنتجات...</div></div><div class="benefits"><span>🚚 شحن لجميع المحافظات</span><span>🛡️ جودة وتشطيب عالي</span><span>⚙️ تصميمات حصرية</span><span>💬 طلب مباشر على واتساب</span></div></section>
 <section id="admin" class="hidden"><div class="panel"><div class="actions" style="justify-content:space-between;align-items:center"><h2>لوحة إدارة خشابيتا</h2><button id="logout" class="danger">تسجيل الخروج</button></div><p id="adminEmail" class="muted"></p><div class="notice">أنت مسجل كمدير. أي منتج تحفظه أو تعدّل سعره سيظهر في كتالوج العملاء بعد الحفظ.</div><button id="backCatalog" class="light" style="margin-top:12px">عرض الكتالوج</button></div>
-<div class="panel"><h3 id="formTitle">إضافة منتج جديد</h3><form id="productForm"><div class="fields"><label>اسم المنتج<input id="name" required maxlength="120"></label><label>كود المنتج<input id="sku" required maxlength="50"></label><label>السعر بالجنيه<input id="price" type="number" min="0" step="0.01" required></label><label>القسم<input id="category" required placeholder="مثال: قسم السيارات"></label><label>المقاس<input id="dimensions" placeholder="مثال: 35 × 45 × 32 سم"></label><label>الخامة<input id="material" value="خشب MDF"></label><label>صور المنتج (رابط أو مسار صورة في كل سطر)<textarea id="imageUrls" rows="4" placeholder="products/car-1.jpg&#10;products/car-2.jpg"></textarea></label><label>وصف مختصر<input id="description" maxlength="300"></label></div><div id="imagePreviewWrap" class="hidden" style="margin-top:12px"><p class="muted">معاينة الصور</p><div id="imagePreviews" class="thumbs"></div></div><p class="muted">أضف رابط HTTPS مباشر أو مسار صورة داخل مجلد public/products في كل سطر. أول صورة هي الرئيسية والباقي يظهر في معرض التفاصيل.</p><p class="actions"><button class="primary" type="submit">حفظ المنتج</button><button id="cancelEdit" type="button" class="light">إلغاء</button></p></form></div><div class="panel"><h3>المنتجات الحالية</h3><div id="adminList"></div></div></section>
+<div class="panel"><h3 id="formTitle">إضافة منتج جديد</h3><form id="productForm"><div class="fields"><label>اسم المنتج<input id="name" required maxlength="120"></label><label>كود المنتج<input id="sku" required maxlength="50"></label><label>السعر الأساسي / قبل الخصم بالجنيه<input id="price" type="number" min="0" step="0.01" required></label>
+<div class="offer-admin-settings">
+ <label class="offer-check"><input id="isOffer" type="checkbox"><span>تفعيل عرض خاص لهذا المنتج</span></label>
+ <div id="offerFields" class="offer-fields hidden">
+  <label>السعر بعد الخصم بالجنيه<input id="offerPrice" type="number" min="0" step="0.01" placeholder="اكتب السعر بعد الخصم"></label>
+  <small>السعر الأساسي بالأعلى هيظهر مشطوبًا، والسعر ده هو اللي العميل هيدفعه.</small>
+ </div>
+</div><label>القسم<input id="category" required placeholder="مثال: قسم السيارات"></label><label>المقاس<input id="dimensions" placeholder="مثال: 35 × 45 × 32 سم"></label><label>الخامة<input id="material" value="خشب MDF"></label><label>صور المنتج (رابط أو مسار صورة في كل سطر)<textarea id="imageUrls" rows="4" placeholder="products/car-1.jpg&#10;products/car-2.jpg"></textarea></label><label>وصف مختصر<input id="description" maxlength="300"></label></div><div id="imagePreviewWrap" class="hidden" style="margin-top:12px"><p class="muted">معاينة الصور</p><div id="imagePreviews" class="thumbs"></div></div><p class="muted">أضف رابط HTTPS مباشر أو مسار صورة داخل مجلد public/products في كل سطر. أول صورة هي الرئيسية والباقي يظهر في معرض التفاصيل.</p><p class="actions"><button class="primary" type="submit">حفظ المنتج</button><button id="cancelEdit" type="button" class="light">إلغاء</button></p></form></div><div class="panel"><h3>المنتجات الحالية</h3><div id="adminList"></div></div></section>
 </main>
 <div id="productModal" class="product-modal hidden" role="dialog" aria-modal="true" aria-label="تفاصيل المنتج">
  <div class="modal-shell"><button id="modalClose" class="modal-close" aria-label="إغلاق">×</button><div id="modalContent" class="modal-layout"></div></div>
