@@ -246,6 +246,67 @@ body.modal-open{overflow:hidden}
  #products>.card:nth-child(-n+5) .card-photo::after{left:6px;width:47px;height:4px}
 }
 
+
+/* Offers spotlight below category tiles */
+.offers-section{max-width:1180px;margin:4px auto 24px;padding:0 18px}
+.offers-banner{
+ position:relative;isolation:isolate;overflow:hidden;min-height:154px;
+ display:grid;grid-template-columns:minmax(0,1fr) 190px;align-items:center;gap:18px;
+ padding:23px 28px;color:#fff;
+ background:linear-gradient(112deg,#061a40 0%,#0a3473 58%,#087eac 100%);
+ border:1px solid #72c9f4;border-radius:22px;
+ box-shadow:0 9px 24px rgba(8,48,100,.16),inset 0 1px 0 rgba(255,255,255,.22)
+}
+.offers-banner:before{
+ content:"";position:absolute;z-index:-1;width:330px;height:330px;left:14%;top:-220px;
+ border:1px solid rgba(157,224,255,.23);border-radius:50%;
+ box-shadow:0 0 0 24px rgba(112,202,246,.045),0 0 0 54px rgba(112,202,246,.035)
+}
+.offers-banner:after{
+ content:"";position:absolute;z-index:-1;inset:0;
+ background:linear-gradient(90deg,transparent 52%,rgba(255,255,255,.045) 52.2%,transparent 52.5%);
+ pointer-events:none
+}
+.offers-copy{position:relative;z-index:1}
+.offers-kicker{
+ display:inline-flex;align-items:center;gap:8px;padding:6px 11px;margin-bottom:9px;
+ border:1px solid rgba(183,231,255,.48);border-radius:30px;
+ color:#d8f4ff;background:rgba(3,22,54,.32);font-size:12px;font-weight:800
+}
+.offers-kicker:before{content:"";width:7px;height:7px;border-radius:50%;background:#5ee0ff;box-shadow:0 0 9px #5ee0ff}
+.offers-copy h2{margin:0 0 7px;color:#fff;font-size:clamp(20px,2.5vw,28px);line-height:1.35}
+.offers-copy p{margin:0;color:#d9ecff;font-size:14px;line-height:1.8;max-width:640px}
+.offers-action{
+ display:inline-flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;
+ padding:9px 16px;border-radius:10px;background:#f4fbff;color:#07346d;
+ border:1px solid #bceaff;font-size:13px;font-weight:900;text-decoration:none;
+ box-shadow:0 4px 10px rgba(0,10,30,.15);transition:transform .18s ease,box-shadow .18s ease
+}
+.offers-action:hover{transform:translateY(-2px);box-shadow:0 7px 15px rgba(0,10,30,.22)}
+.offers-visual{justify-self:center;position:relative;width:138px;height:116px;display:grid;place-items:center}
+.offers-orbit{position:absolute;inset:6px 10px;border:1px solid rgba(190,235,255,.55);border-radius:25px;transform:rotate(-12deg);box-shadow:0 0 18px rgba(81,194,255,.15),inset 0 0 14px rgba(81,194,255,.08)}
+.offers-orbit:before,.offers-orbit:after{content:"";position:absolute;width:7px;height:7px;border-radius:50%;background:#b5edff;box-shadow:0 0 9px #70d9ff}
+.offers-orbit:before{top:-4px;right:20px}.offers-orbit:after{bottom:-4px;left:18px}
+.offers-percent{
+ position:relative;display:grid;place-items:center;width:76px;height:76px;border-radius:22px;
+ color:#eafaff;font-size:48px;font-weight:900;line-height:1;
+ background:linear-gradient(145deg,rgba(255,255,255,.2),rgba(14,83,143,.26));
+ border:1px solid rgba(219,247,255,.78);text-shadow:0 0 15px rgba(100,220,255,.72);
+ box-shadow:0 0 22px rgba(67,186,255,.22),inset 0 1px 0 rgba(255,255,255,.32);
+ transform:rotate(7deg)
+}
+@media(max-width:650px){
+ .offers-section{padding:0 12px;margin:0 auto 20px}
+ .offers-banner{grid-template-columns:minmax(0,1fr) 76px;gap:7px;min-height:142px;padding:17px 15px;border-radius:17px}
+ .offers-copy h2{font-size:19px;max-width:270px}
+ .offers-copy p{font-size:12px;line-height:1.65;max-width:255px}
+ .offers-kicker{font-size:11px;margin-bottom:7px}
+ .offers-action{margin-top:11px;padding:8px 12px;font-size:12px}
+ .offers-visual{width:74px;height:85px}
+ .offers-orbit{inset:5px 2px;border-radius:17px}
+ .offers-percent{width:55px;height:55px;border-radius:16px;font-size:36px}
+}
+
 </style></head>
 <body>
 <header class="hero"><div class="top-actions"><button aria-label="القائمة">☰</button><button aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="adminBtn" aria-label="دخول الإدارة">إدارتي</button></div>
@@ -271,6 +332,22 @@ body.modal-open{overflow:hidden}
 <button class="cat cat-home" data-cat="ديكورات منزلية"><span class="cat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8M5 10v11h14V10M9 21v-7h6v7"/></svg></span><b>ديكورات منزلية</b></button>
 <button class="cat cat-cars" data-cat="قسم السيارات"><span class="cat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 11 2-5h10l2 5 2 2v5h-2a2 2 0 0 1-4 0H9a2 2 0 0 1-4 0H3v-5l2-2Zm2 0h10M5 14h2m10 0h2"/></svg></span><b>قسم السيارات</b></button>
 </nav>
+
+<section class="offers-section" aria-label="عروض خشابيتا">
+ <div class="offers-banner">
+  <div class="offers-copy">
+   <span class="offers-kicker">عروض خشابيتا</span>
+   <h2>العروض والخصومات هتلاقيها هنا</h2>
+   <p>مساحة مخصصة لعرض أحدث عروض خشابيتا والخصومات على المنتجات المختارة.</p>
+   <a class="offers-action" href="#catalog">تصفح المنتجات <span aria-hidden="true">←</span></a>
+  </div>
+  <div class="offers-visual" aria-hidden="true">
+   <span class="offers-orbit"></span>
+   <span class="offers-percent">٪</span>
+  </div>
+ </div>
+</section>
+
 <main>
 <section id="catalog"><h2 class="section-title">⭐ أحدث المنتجات ⭐</h2><div class="toolbar"><input id="searchFallback" class="hidden" aria-hidden="true"><button type="button" id="homeButton" class="home-button">⌂ الرئيسية</button><select id="categoryFilter"><option value="">كل الأقسام</option><option>قسم السيارات</option></select></div><div id="products" class="grid"><div class="empty">جاري تحميل المنتجات...</div></div><div class="benefits"><span>🚚 شحن لجميع المحافظات</span><span>🛡️ جودة وتشطيب عالي</span><span>⚙️ تصميمات حصرية</span><span>💬 طلب مباشر على واتساب</span></div></section>
 <section id="admin" class="hidden"><div class="panel"><div class="actions" style="justify-content:space-between;align-items:center"><h2>لوحة إدارة خشابيتا</h2><button id="logout" class="danger">تسجيل الخروج</button></div><p id="adminEmail" class="muted"></p><div class="notice">أنت مسجل كمدير. أي منتج تحفظه أو تعدّل سعره سيظهر في كتالوج العملاء بعد الحفظ.</div><button id="backCatalog" class="light" style="margin-top:12px">عرض الكتالوج</button></div>
