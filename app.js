@@ -38,6 +38,8 @@ const cats=[...new Set(["هدايا مخصصة","شبكة وخطوبة","أدو�
  // الصفحة الرئيسية تعرض أحدث 30 منتجًا فقط؛ الأقسام والبحث يعرضان كل النتائج المطابقة.
  const isHomeView=!$("categoryFilter").value&&!term;
  const visible=isHomeView?filtered.slice(0,30):filtered;
+ // products مرتبة حسب createdAt تنازليًا؛ الشارة تخص أحدث خمسة في الكتالوج كله، لا نتائج الفلتر فقط.
+ const latestProductIds=new Set(products.slice(0,5).map(p=>p.id));
  const displayNote=$("productDisplayNote");
  if(displayNote){
    if(isHomeView) displayNote.textContent=`نعرض أحدث ${visible.length} منتجًا من إجمالي ${products.length}. تصفّح الأقسام لرؤية باقي المنتجات.`;
@@ -46,9 +48,11 @@ const cats=[...new Set(["هدايا مخصصة","شبكة وخطوبة","أدو�
  }
  $("products").innerHTML=visible.length?visible.map(p=>{
    const imgs=productImages(p), cover=imgs[0];
+   const isNew=latestProductIds.has(p.id);
    return `<article class="card">
      <button class="card-photo" data-open="${safe(p.id)}" aria-label="عرض تفاصيل ${safe(p.name)}">
        ${cover?`<img src="${safe(cover)}" alt="${safe(p.name)}" loading="lazy">`:`<span class="photo-placeholder" aria-hidden="true">▧</span>`}
+       ${isNew?`<span class="new-product-badge" aria-label="أحدث منتج">جديد</span>`:""}
        ${imgs.length>1?`<span class="image-count">▧ ${imgs.length} صور</span>`:""}
      </button>
      <div class="content">
