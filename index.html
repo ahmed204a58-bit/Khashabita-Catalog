@@ -483,6 +483,20 @@ stroke:currentColor;
  .offers-percent{width:55px;height:55px;border-radius:16px;font-size:36px}
 }
 
+/* Dynamic offers + sale price */
+.offers-products{margin-top:18px}
+.offers-products .offer-card{border-color:#8bcdf0;box-shadow:0 8px 22px rgba(7,52,100,.12)}
+.offer-ribbon{position:absolute;top:12px;right:12px;z-index:5;padding:7px 11px;border:1px solid #ffc5cf;border-radius:9px;background:linear-gradient(135deg,#c91e42,#f04765);color:#fff;font-size:12px;font-weight:900;box-shadow:0 4px 12px rgba(124,13,39,.25)}
+.offer-price-group{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.offer-price-group del{color:#8a97a9;font-size:.82em;font-weight:500}
+.offer-price-group strong{color:#d92f48;font-size:1.14em;font-weight:900}
+.offer-admin-settings{grid-column:1/-1;padding:13px 15px;border:1px solid #b8d8ed;border-radius:13px;background:linear-gradient(135deg,#f3f9ff,#eaf5ff)}
+.offer-admin-settings .offer-check{display:flex;align-items:center;gap:10px;font-weight:800;color:#123969;cursor:pointer}
+.offer-admin-settings .offer-check input{width:18px;height:18px;accent-color:#0879dc}
+.offer-fields{display:grid;gap:7px;margin-top:12px;padding-top:12px;border-top:1px solid #c9deee}
+.offer-fields label{display:grid;gap:6px;font-weight:700}
+.offer-fields small{color:#526982;line-height:1.7}
+@media(max-width:600px){.offers-products{gap:12px}.offer-ribbon{top:8px;right:8px;padding:6px 8px;font-size:11px}}
 </style></head>
 <body>
 <header class="hero" aria-label="بنر خشابيتا CNC">
@@ -535,19 +549,20 @@ stroke:currentColor;
 </button>
 </nav>
 
-<section class="offers-section" aria-label="عروض خشابيتا">
+<section class="offers-section" id="offersSection" aria-label="عروض خشابيتا">
  <div class="offers-banner">
   <div class="offers-copy">
    <span class="offers-kicker">عروض خشابيتا</span>
-   <h2>العروض والخصومات هتلاقيها هنا</h2>
-   <p>مساحة مخصصة لعرض أحدث عروض خشابيتا والخصومات على المنتجات المختارة.</p>
-   <a class="offers-action" href="#catalog">تصفح المنتجات <span aria-hidden="true">←</span></a>
+   <h2>وفر واستمتع بعروض خشابيتا</h2>
+   <p>منتجات مختارة بأسعار خاصة. كل العروض المتاحة هتظهر هنا تلقائيًا.</p>
+   <a class="offers-action" href="#offerProducts">شاهد العروض <span aria-hidden="true">←</span></a>
   </div>
   <div class="offers-visual" aria-hidden="true">
    <span class="offers-orbit"></span>
    <span class="offers-percent">٪</span>
   </div>
  </div>
+ <div id="offerProducts" class="grid offers-products"><div class="empty">جاري تحميل العروض...</div></div>
 </section>
 
 <main>
@@ -573,7 +588,14 @@ stroke:currentColor;
   <p id="statsStatus" class="muted" role="status" aria-live="polite"></p>
 </div>
 
-<div class="panel"><h3 id="formTitle">إضافة منتج جديد</h3><form id="productForm"><div class="fields"><label>اسم المنتج<input id="name" required maxlength="120"></label><label>كود المنتج<input id="sku" required maxlength="50"></label><label>السعر بالجنيه<input id="price" type="number" min="0" step="0.01" required></label><label>القسم<input id="category" required placeholder="مثال: قمركبات"></label><label>المقاس<input id="dimensions" placeholder="مثال: 35 × 45 × 32 سم"></label><label>الخامة<input id="material" value="خشب MDF"></label><div class="image-upload-field"><label for="imageFiles">صور المنتج</label><label class="upload-picker" for="imageFiles"><span>＋</span><b>إضافة صور من الجهاز</b><small>اختار صورة أو أكتر (JPG / PNG / WEBP / GIF)</small></label><input id="imageFiles" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple hidden><textarea id="imageUrls" rows="2" hidden aria-hidden="true"></textarea><p id="uploadStatus" class="muted" role="status" aria-live="polite"></p></div><label>وصف مختصر<input id="description" maxlength="300"></label><label>رابط فيديو YouTube (اختياري)<input id="videoUrl" type="url" placeholder="https://youtu.be/..."><small class="muted">اترك الخانة فارغة لو المنتج ملوش فيديو.</small></label><label>رابط فيديو TikTok (اختياري)<input id="tiktokUrl" type="url" placeholder="https://www.tiktok.com/@username/video/..."><small class="muted">اترك الخانة فارغة لو المنتج ملوش فيديو.</small></label></div><div id="imagePreviewWrap" class="hidden" style="margin-top:12px"><p class="muted">معاينة الصور</p><div id="imagePreviews" class="thumbs"></div></div><p class="muted">ارفع الصور مباشرة من جهازك. أول صورة هي الرئيسية والباقي يظهر في معرض تفاصيل المنتج.</p><p class="actions"><button class="primary" type="submit">حفظ المنتج</button><button id="cancelEdit" type="button" class="light">إلغاء</button></p></form></div><div class="panel"><h3>المنتجات الحالية</h3><div id="adminList"></div></div><div class="panel">
+<div class="panel"><h3 id="formTitle">إضافة منتج جديد</h3><form id="productForm"><div class="fields"><label>اسم المنتج<input id="name" required maxlength="120"></label><label>كود المنتج<input id="sku" required maxlength="50"></label><label>السعر الأساسي / قبل الخصم بالجنيه<input id="price" type="number" min="0" step="0.01" required></label>
+<div class="offer-admin-settings">
+ <label class="offer-check"><input id="isOffer" type="checkbox"><span>تفعيل عرض خاص لهذا المنتج</span></label>
+ <div id="offerFields" class="offer-fields hidden">
+  <label>السعر بعد الخصم بالجنيه<input id="offerPrice" type="number" min="0" step="0.01" placeholder="اكتب السعر بعد الخصم"></label>
+  <small>السعر الأساسي بالأعلى هيظهر مشطوبًا، والسعر ده هو اللي العميل هيدفعه.</small>
+ </div>
+</div><label>القسم<input id="category" required placeholder="مثال: قمركبات"></label><label>المقاس<input id="dimensions" placeholder="مثال: 35 × 45 × 32 سم"></label><label>الخامة<input id="material" value="خشب MDF"></label><div class="image-upload-field"><label for="imageFiles">صور المنتج</label><label class="upload-picker" for="imageFiles"><span>＋</span><b>إضافة صور من الجهاز</b><small>اختار صورة أو أكتر (JPG / PNG / WEBP / GIF)</small></label><input id="imageFiles" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple hidden><textarea id="imageUrls" rows="2" hidden aria-hidden="true"></textarea><p id="uploadStatus" class="muted" role="status" aria-live="polite"></p></div><label>وصف مختصر<input id="description" maxlength="300"></label><label>رابط فيديو YouTube (اختياري)<input id="videoUrl" type="url" placeholder="https://youtu.be/..."><small class="muted">اترك الخانة فارغة لو المنتج ملوش فيديو.</small></label><label>رابط فيديو TikTok (اختياري)<input id="tiktokUrl" type="url" placeholder="https://www.tiktok.com/@username/video/..."><small class="muted">اترك الخانة فارغة لو المنتج ملوش فيديو.</small></label></div><div id="imagePreviewWrap" class="hidden" style="margin-top:12px"><p class="muted">معاينة الصور</p><div id="imagePreviews" class="thumbs"></div></div><p class="muted">ارفع الصور مباشرة من جهازك. أول صورة هي الرئيسية والباقي يظهر في معرض تفاصيل المنتج.</p><p class="actions"><button class="primary" type="submit">حفظ المنتج</button><button id="cancelEdit" type="button" class="light">إلغاء</button></p></form></div><div class="panel"><h3>المنتجات الحالية</h3><div id="adminList"></div></div><div class="panel">
 </div></section>
 
 
