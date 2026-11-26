@@ -56,11 +56,29 @@ function money(n){return Number(n||0).toLocaleString("ar-EG")+" ج.م";}
 function isOfferProduct(p){const original=Number(p?.price||0),sale=Number(p?.offerPrice||0);return p?.isOffer===true&&original>0&&sale>0&&sale<original;}
 function offerDiscount(p){return isOfferProduct(p)?Math.round((1-Number(p.offerPrice)/Number(p.price))*100):0;}
 function priceMarkup(p){return isOfferProduct(p)?`<div class="price offer-price-group"><del>${money(p.price)}</del><strong>${money(p.offerPrice)}</strong></div>`:`<div class="price">${money(p.price)}</div>`;}
+function productAvailability(p){
+ const value=p?.availabilityStatus;
+ return ["available","made-to-order","unavailable"].includes(value)?value:"available";
+}
+function availabilityLabel(p){
+ return ({available:"متاح الآن","made-to-order":"ينفذ حسب الطلب",unavailable:"غير متاح حاليًا"})[productAvailability(p)];
+}
+function availabilityBadgeMarkup(p, extraClass=""){
+ const status=productAvailability(p);
+ return `<span class="product-availability-badge availability-${status} ${extraClass}">${availabilityLabel(p)}</span>`;
+}
+function orderButtonMarkup(p,label,className="btn wa",track=false){
+ const status=productAvailability(p);
+ if(status==="unavailable")return `<span class="${className} availability-disabled" aria-disabled="true">غير متاح حاليًا</span>`;
+ const finalLabel=status==="made-to-order"?(label==="اطلب"?"حسب الطلب":"اطلب حسب الطلب"):label;
+ return `<a class="${className}" target="_blank" rel="noopener" href="${waLink(p)}"${track?` data-track-whatsapp="${safe(p.id)}"`:""}>${finalLabel}</a>`;
+}
+
 function isAdmin(){return !!currentUser && currentUser.email?.toLowerCase()===ADMIN_EMAIL.toLowerCase();}
 function validImage(u){return /^https:\/\//i.test(u) || (/^(?:\.\/|products\/)[\w./-]+\.(?:png|jpe?g|webp|gif)$/i.test(u) && !u.includes(".."));}
 function productImages(p){return (Array.isArray(p.imageUrls)?p.imageUrls:(p.imageUrl?[p.imageUrl]:[])).filter(validImage);}
 function showAdmin(on){$("catalog").classList.toggle("hidden",on);$("admin").classList.toggle("hidden",!on);$("adminBtn").textContent=on?"عرض الكتالوج":"دخول الإدارة";}
-function waLink(p){const amount=isOfferProduct(p)?p.offerPrice:p.price;const priceText=isOfferProduct(p)?("السعر بعد الخصم "+amount+" جنيه بدل "+p.price+" جنيه"):("السعر "+(amount||"")+" جنيه");return "https://wa.me/201116026022?text="+encodeURIComponent("السلام عليكم، عايز أستفسر عن "+p.name+" - الكود "+(p.sku||"")+" - "+priceText);}
+function waLink(p){const amount=isOfferProduct(p)?p.offerPrice:p.price;const priceText=isOfferProduct(p)?("السعر بعد الخصم "+amount+" جنيه بدل "+p.price+" جنيه"):("السعر "+(amount||"")+" جنيه");const orderNote=productAvailability(p)==="made-to-order"?" - المنتج بيتنفذ حسب الطلب":"";return "https://wa.me/201116026022?text="+encodeURIComponent("السلام عليكم، عايز أطلب "+p.name+" - الكود "+(p.sku||"")+" - "+priceText+orderNote);}
 
 function render(){
  const cats=[...new Set(["هدايا مخصصة","دروع وتكريم","ألعاب وبازل","رمضان والأعياد","مجسمات معمارية","ديكورات منزلية","قسم السيارات",...products.map(p=>p.category).filter(Boolean)])];
@@ -68,7 +86,8 @@ function render(){
  $("categoryFilter").innerHTML='<option value="">كل الأقسام</option>'+cats.map(c=>`<option value="${safe(c)}">${safe(c)}</option>`).join("");
  $("categoryFilter").value=cats.includes(chosen)?chosen:"";
  const term=$("search").value.trim().toLowerCase();
- const visible=products.filter(p=>(!$("categoryFilter").value||p.category===$("categoryFilter").value)&&(!term||[p.name,p.sku,p.category,p.description].join(" ").toLowerCase().includes(term)));
+ const selectedAvailability=$("availabilityFilter")?.value||"";
+ const visible=products.filter(p=>(!$("categoryFilter").value||p.category===$("categoryFilter").value)&&(!selectedAvailability||productAvailability(p)===selectedAvailability)&&(!term||[p.name,p.sku,p.category,p.description].join(" ").toLowerCase().includes(term)));
 
  $("products").innerHTML=visible.length?visible.map(p=>{
    const imgs=productImages(p), cover=imgs[0];
@@ -80,15 +99,15 @@ function render(){
        ${imgs.length>1?`<span class="image-count">▧ ${imgs.length} صور</span>`:""}
      </button>
      <div class="content">
-       <span class="product-category">${safe(p.category||"منتج خشبي")}</span>
+       <span class="product-category">${safe(p.category||"منتج خشبي")}</span>${availabilityBadgeMarkup(p)}
        <h3>${safe(p.name)}</h3>
        <div class="muted">${p.dimensions?safe(p.dimensions)+" · ":""}${safe(p.material||"خشب MDF")}</div>
        ${priceMarkup(p)}
-       <div class="card-actions"><button class="light" data-open="${safe(p.id)}">تفاصيل المنتج</button><a class="btn wa" target="_blank" rel="noopener" href="${waLink(p)}">اطلب على واتساب</a></div>
+       <div class="card-actions"><button class="light" data-open="${safe(p.id)}">تفاصيل المنتج</button>${orderButtonMarkup(p,"اطلب على واتساب","btn wa",true)}</div>
      </div></article>`;
  }).join(""):'<div class="empty"><span class="empty-icon">⌕</span><b>لا توجد منتجات مطابقة</b><p>جرّب البحث بكلمة تانية أو اختار قسم مختلف.</p></div>';
  renderOffers();
- $("adminList").innerHTML=products.length?products.map(p=>`<div class="adminrow"><span><b>${safe(p.name)}</b><br><small class="muted">${safe(p.sku)} · ${isOfferProduct(p)?`عرض بسعر ${money(p.offerPrice)} بدل ${money(p.price)}`:money(p.price)}</small></span><span class="actions"><button class="light" data-edit="${safe(p.id)}">تعديل</button><button class="danger" data-delete="${safe(p.id)}">حذف</button></span></div>`).join(""):'<p class="muted">لا توجد منتجات بعد.</p>';
+ $("adminList").innerHTML=products.length?products.map(p=>`<div class="adminrow"><span><b>${safe(p.name)}</b><br><small class="muted">${safe(p.sku)} · ${availabilityLabel(p)} · ${isOfferProduct(p)?`عرض بسعر ${money(p.offerPrice)} بدل ${money(p.price)}`:money(p.price)}</small></span><span class="actions"><button class="light" data-edit="${safe(p.id)}">تعديل</button><button class="danger" data-delete="${safe(p.id)}">حذف</button></span></div>`).join(""):'<p class="muted">لا توجد منتجات بعد.</p>';
 }
 function renderOffers(){
  const target=$("offerProducts");
@@ -106,14 +125,14 @@ function renderOffers(){
     <div class="offer-mini-prices"><del>${money(p.price)}</del><strong>${money(p.offerPrice)}</strong></div>
     <div class="offer-mini-actions">
      <button type="button" class="offer-mini-details" data-open="${safe(p.id)}">التفاصيل</button>
-     <a class="offer-mini-buy" target="_blank" rel="noopener" href="${waLink(p)}">اطلب</a>
+     ${orderButtonMarkup(p,"اطلب","offer-mini-buy",true)}
     </div>
    </div>
   </article>`;
  }).join(""):'<div class="offers-empty">العروض الخاصة هتظهر هنا بمجرد تفعيلها من لوحة الإدارة.</div>';
 }
 
-function resetForm(){editingId=null;$("productForm").reset();$("isOffer").checked=false;$("offerPrice").value="";$("offerFields").classList.add("hidden");$("material").value="خشب MDF";$("formTitle").textContent="إضافة منتج جديد";$("imagePreviewWrap").classList.add("hidden");$("imagePreviews").innerHTML="";}
+function resetForm(){editingId=null;$("productForm").reset();$("availabilityStatus").value="available";$("isOffer").checked=false;$("offerPrice").value="";$("offerFields").classList.add("hidden");$("material").value="خشب MDF";$("formTitle").textContent="إضافة منتج جديد";$("imagePreviewWrap").classList.add("hidden");$("imagePreviews").innerHTML="";}
 function startListener(){
  if(unsubscribe)unsubscribe();
  const q=query(collection(db,"products"),orderBy("createdAt","desc"));
@@ -121,9 +140,10 @@ function startListener(){
 }
 $("adminBtn").onclick=async()=>{if(isAdmin()){showAdmin($("catalog").classList.contains("hidden"));return;}try{const result=await signInWithPopup(auth,provider);if(result.user.email?.toLowerCase()!==ADMIN_EMAIL.toLowerCase()){await signOut(auth);alert("هذا الحساب غير مصرح له بإدارة الكتالوج.");}}catch(e){alert("تعذر تسجيل الدخول باستخدام Google: "+e.message);}};
 $("logout").onclick=()=>signOut(auth);
-$("search").oninput=render;$("categoryFilter").onchange=render;
+$("search").oninput=render;$("categoryFilter").onchange=render;$("availabilityFilter").onchange=render;
 $("homeButton")?.addEventListener("click",()=>{
  $("categoryFilter").value="";
+ $("availabilityFilter").value="";
  $("search").value="";
  render();
  window.scrollTo({top:0,behavior:"smooth"});
@@ -135,7 +155,7 @@ $("productForm").onsubmit=async e=>{
  if(imageUrls.some(u=>!validImage(u)))return alert("استخدم روابط صور HTTPS أو مسارات صور داخل مجلد products مثل products/car-1.jpg");
  const originalPrice=Number($("price").value),offerEnabled=$("isOffer").checked,discountedPrice=Number($("offerPrice").value);
  if(offerEnabled&&(!discountedPrice||discountedPrice<=0||discountedPrice>=originalPrice))return alert("سعر العرض لازم يكون أكبر من صفر وأقل من السعر الأساسي.");
- const data={name:$("name").value.trim(),sku:$("sku").value.trim(),price:Number($("price").value),isOffer:offerEnabled,offerPrice:offerEnabled?discountedPrice:null,category:$("category").value.trim(),dimensions:$("dimensions").value.trim(),material:$("material").value.trim(),description:$("description").value.trim(),imageUrls,updatedAt:serverTimestamp()};
+ const data={name:$("name").value.trim(),sku:$("sku").value.trim(),availabilityStatus:$("availabilityStatus").value||"available",price:Number($("price").value),isOffer:offerEnabled,offerPrice:offerEnabled?discountedPrice:null,category:$("category").value.trim(),dimensions:$("dimensions").value.trim(),material:$("material").value.trim(),description:$("description").value.trim(),imageUrls,updatedAt:serverTimestamp()};
  try{
   if(editingId)await updateDoc(doc(db,"products",editingId),data);
   else await addDoc(collection(db,"products"),{...data,createdAt:serverTimestamp()});
@@ -145,7 +165,7 @@ $("productForm").onsubmit=async e=>{
 $("cancelEdit").onclick=resetForm;
 $("adminList").onclick=async e=>{
  const edit=e.target.dataset.edit, del=e.target.dataset.delete;
- if(edit){const p=products.find(x=>x.id===edit);if(!p)return;editingId=p.id;for(const k of ["name","sku","price","category","dimensions","material","description"])$(k).value=p[k]??"";$("isOffer").checked=isOfferProduct(p);$("offerPrice").value=isOfferProduct(p)?p.offerPrice:"";$("offerFields").classList.toggle("hidden",!$("isOffer").checked);$("imageUrls").value=productImages(p).join("\n");updateImagePreview();$("formTitle").textContent="تعديل المنتج";$("productForm").scrollIntoView({behavior:"smooth"});}
+ if(edit){const p=products.find(x=>x.id===edit);if(!p)return;editingId=p.id;$("availabilityStatus").value=p.availabilityStatus||"available";for(const k of ["name","sku","price","category","dimensions","material","description"])$(k).value=p[k]??"";$("isOffer").checked=isOfferProduct(p);$("offerPrice").value=isOfferProduct(p)?p.offerPrice:"";$("offerFields").classList.toggle("hidden",!$("isOffer").checked);$("imageUrls").value=productImages(p).join("\n");updateImagePreview();$("formTitle").textContent="تعديل المنتج";$("productForm").scrollIntoView({behavior:"smooth"});}
  if(del&&confirm("هل تريد حذف المنتج نهائياً؟")){try{await deleteDoc(doc(db,"products",del));}catch(err){alert("تعذر الحذف: "+err.message);}}
 };
 onAuthStateChanged(auth,user=>{
@@ -267,6 +287,7 @@ function renderDetails(){
    </div>
    <article class="product-page-info">
     <span class="product-category">${safe(p.category||"منتج خشبي")}</span>
+    ${availabilityBadgeMarkup(p,"product-page-status")}
     <h1>${safe(p.name)}</h1>
     ${priceMarkup(p)}
     <p class="product-page-description">${safe(p.description||"منتج مصنوع بعناية في خشابيتا CNC.")}</p>
@@ -282,7 +303,7 @@ function renderDetails(){
     </div>
     ${videoLinks?`<div class="product-page-video-links">${videoLinks}</div>`:""}
     <div class="product-page-actions">
-     <a class="btn wa" target="_blank" rel="noopener" href="${waLink(p)}" data-track-whatsapp="${safe(p.id)}">اطلب المنتج على واتساب</a>
+     ${orderButtonMarkup(p,"اطلب المنتج على واتساب","btn wa",true)}
      <button type="button" class="btn light modal-share-link" id="copyProductLink">نسخ رابط المنتج</button>
     </div>
    </article>
