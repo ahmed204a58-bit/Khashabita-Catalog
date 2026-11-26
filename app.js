@@ -595,34 +595,32 @@ async function updateVisitorCounter() {
 
 
 // ===== Khashabita PWA install support =====
-let pendingKhashabitaInstall = null;
+let pendingKhashabitaInstall = window.__khashabitaInstallPrompt || null;
 const installAppButton = $("installAppBtn");
 const supportsWebInstall = typeof Navigator.prototype.install === "function";
 const isKhashabitaInstalled = () =>
   Boolean(window.matchMedia?.("(display-mode: standalone)")?.matches || window.navigator.standalone === true);
 
 if (installAppButton) {
-  // Never show a fake install control: only reveal it when the browser can prompt.
-  if (isKhashabitaInstalled()) {
-    installAppButton.hidden = true;
-  } else if (supportsWebInstall) {
-    installAppButton.hidden = false;
-  }
+  // Keep the install icon visible beside the social icons until installation succeeds.
+  installAppButton.hidden = isKhashabitaInstalled();
 
   installAppButton.addEventListener("click", async () => {
     if (isKhashabitaInstalled() || installAppButton.getAttribute("aria-disabled") === "true") return;
     installAppButton.setAttribute("aria-disabled", "true");
 
     try {
+      const promptEvent = pendingKhashabitaInstall || window.__khashabitaInstallPrompt;
       if (supportsWebInstall) {
         await navigator.install();
-        installAppButton.hidden = true;
-      } else if (pendingKhashabitaInstall) {
-        const promptEvent = pendingKhashabitaInstall;
+      } else if (promptEvent) {
         pendingKhashabitaInstall = null;
+        window.__khashabitaInstallPrompt = null;
         await promptEvent.prompt();
-        await promptEvent.userChoice;
-        installAppButton.hidden = true;
+        const choice = await promptEvent.userChoice;
+        if (choice?.outcome === "accepted") installAppButton.hidden = true;
+      } else {
+        alert("التثبيت المباشر غير متاح في المتصفح الحالي.");
       }
     } catch (error) {
       if (error?.name !== "AbortError") console.warn("Khashabita installation could not start:", error);
@@ -634,11 +632,12 @@ if (installAppButton) {
   window.addEventListener("beforeinstallprompt", event => {
     event.preventDefault();
     pendingKhashabitaInstall = event;
-    if (!supportsWebInstall && !isKhashabitaInstalled()) installAppButton.hidden = false;
+    window.__khashabitaInstallPrompt = event;
   });
 
   window.addEventListener("appinstalled", () => {
     pendingKhashabitaInstall = null;
+    window.__khashabitaInstallPrompt = null;
     installAppButton.hidden = true;
   });
 }

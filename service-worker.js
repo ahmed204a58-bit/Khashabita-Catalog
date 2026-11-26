@@ -1,8 +1,8 @@
-const CACHE_NAME = "khashabita-pwa-v4";
+const CACHE_NAME = "khashabita-pwa-v5";
 const APP_SHELL = [
   "./index.html",
   "./manifest.webmanifest",
-  "./app.js?v=20261126-pwa4",
+  "./app.js?v=20261126-pwa5",
   "./khashabita-icon-192.png",
   "./khashabita-icon-512.png",
   "./favicon.ico",
