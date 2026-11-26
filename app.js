@@ -597,40 +597,51 @@ async function updateVisitorCounter() {
 // ===== Khashabita PWA install support =====
 let pendingKhashabitaInstall = null;
 const installAppButton = $("installAppBtn");
+const supportsWebInstall = typeof Navigator.prototype.install === "function";
 const isKhashabitaInstalled = () =>
   Boolean(window.matchMedia?.("(display-mode: standalone)")?.matches || window.navigator.standalone === true);
 
 if (installAppButton) {
   if (isKhashabitaInstalled()) {
-    installAppButton.textContent = "التطبيق مثبت";
-    installAppButton.disabled = true;
+    installAppButton.hidden = true;
+  } else if (supportsWebInstall) {
+    installAppButton.hidden = false;
   }
 
   installAppButton.addEventListener("click", async () => {
-    if (isKhashabitaInstalled()) return;
+    if (isKhashabitaInstalled() || installAppButton.getAttribute("aria-disabled") === "true") return;
+    installAppButton.setAttribute("aria-disabled", "true");
 
-    if (!pendingKhashabitaInstall) {
-      alert("لتثبيت خشابيتا على أندرويد: افتح الموقع في Chrome، واضغط قائمة ⋮ ثم اختر «تثبيت التطبيق» أو «إضافة إلى الشاشة الرئيسية».\n\nعلى iPhone: افتح الموقع في Safari، واضغط مشاركة ثم «إضافة إلى الشاشة الرئيسية».");
-      return;
+    try {
+      if (supportsWebInstall) {
+        // Browser-owned confirmation UI; call synchronously from this user gesture.
+        await navigator.install();
+        installAppButton.hidden = true;
+      } else if (pendingKhashabitaInstall) {
+        const promptEvent = pendingKhashabitaInstall;
+        pendingKhashabitaInstall = null;
+        await promptEvent.prompt();
+        await promptEvent.userChoice;
+        installAppButton.hidden = true;
+      }
+    } catch (error) {
+      if (error?.name !== "AbortError") {
+        console.warn("Khashabita installation could not start:", error);
+      }
+    } finally {
+      installAppButton.removeAttribute("aria-disabled");
     }
-
-    const installPrompt = pendingKhashabitaInstall;
-    pendingKhashabitaInstall = null;
-    await installPrompt.prompt();
-    const choice = await installPrompt.userChoice;
-    if (choice?.outcome === "accepted") installAppButton.textContent = "جاري التثبيت...";
   });
 
   window.addEventListener("beforeinstallprompt", event => {
     event.preventDefault();
     pendingKhashabitaInstall = event;
-    installAppButton.textContent = "تثبيت التطبيق";
+    if (!supportsWebInstall && !isKhashabitaInstalled()) installAppButton.hidden = false;
   });
 
   window.addEventListener("appinstalled", () => {
     pendingKhashabitaInstall = null;
-    installAppButton.textContent = "التطبيق مثبت";
-    installAppButton.disabled = true;
+    installAppButton.hidden = true;
   });
 }
 

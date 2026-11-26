@@ -764,14 +764,23 @@ html[data-theme="dark"] .related-product-name{color:#e7eef8}
 @media(max-width:850px){.related-products-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}}
 @media(max-width:560px){.related-products-section{margin:23px 0 5px;padding:19px 12px;border-radius:17px}.related-products-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.related-product-info{padding:10px}.related-product-name{font-size:12px;min-height:39px}.related-product-info .price{font-size:15px}.related-product-info .offer-price-group strong{font-size:15px}}
 @media(prefers-reduced-motion:reduce){.related-product-card,.related-product-image img{transition:none}}
-.install-app-btn{background:linear-gradient(135deg,#e8f7ff,#8bdcff)!important;color:#062e66!important;border:1px solid #fff!important;box-shadow:0 3px 12px #001c4e55}
-.install-app-btn:disabled{opacity:.92;cursor:default}
-@media(max-width:600px){.hero .top-actions .install-app-btn{padding:7px 9px;font-size:10px}}
+.social-strip>.install-app-btn{
+ display:inline-flex;align-items:center;justify-content:center;
+ width:42px;height:42px;min-height:42px;margin:5px;padding:0!important;
+ border-radius:12px!important;background:linear-gradient(135deg,#dff7ff,#69caff)!important;
+ color:#07346d!important;border:1px solid #fff!important;
+ box-shadow:0 3px 10px #00183d30;cursor:pointer;transition:.2s
+}
+.social-strip>.install-app-btn svg{width:21px;height:21px;display:block}
+.social-strip>.install-app-btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.social-strip>.install-app-btn[hidden]{display:none!important}
+@media(max-width:520px){.social-strip>.install-app-btn{width:38px;height:38px;min-height:38px;margin:3px}}
+
 </style></head>
 <body>
 <header class="hero" aria-label="بنر خشابيتا CNC">
   <img class="hero-banner" src="khashabita-banner-new.png.png" alt="أحمد خشابيتا - كتالوج المنتجات الخشبية - قص ليزر CO2">
-  <div class="top-actions"><button id="adminBtn" aria-label="دخول الإدارة">دخول الإدارة</button><button type="button" id="installAppBtn" class="install-app-btn" aria-label="تثبيت تطبيق خشابيتا">تثبيت التطبيق</button></div>
+  <div class="top-actions"><button id="adminBtn" aria-label="دخول الإدارة">دخول الإدارة</button></div>
 </header>
 <div class="social-strip" aria-label="تابع خشابيتا على مواقع التواصل">
 <a href="https://www.facebook.com/share/1DUHTuDPca/" target="_blank" rel="noopener noreferrer" aria-label="فيسبوك" title="فيسبوك">
@@ -783,6 +792,9 @@ html[data-theme="dark"] .related-product-name{color:#e7eef8}
 <a href="https://www.tiktok.com/@khashabita?_r=1&_t=ZS-9BHYWpW8PDU" target="_blank" rel="noopener noreferrer" aria-label="تيك توك" title="تيك توك">
 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.6 7.1a6.8 6.8 0 0 1-4.2-1.5v8.1a6.1 6.1 0 1 1-5.3-6.1v3.2a2.9 2.9 0 1 0 2.1 2.8V2h3.2c.2 1.8 1.6 3.4 4.2 3.7v1.4Z"/></svg>
 </a>
+<button type="button" id="installAppBtn" class="install-app-btn" aria-label="تثبيت تطبيق خشابيتا" title="تثبيت تطبيق خشابيتا" hidden>
+<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v12m0 0 4-4m-4 4-4-4M4 16v4h16v-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
 <button type="button" id="themeToggle" class="theme-toggle" aria-label="التبديل إلى الوضع الداكن" aria-pressed="false" title="تغيير مظهر الموقع">☾</button>
 <div class="visitor-counter" role="status" aria-live="polite" title="إجمالي زيارات الموقع منذ تشغيل العداد">
   <span class="visitor-icon" aria-hidden="true">👁</span>
@@ -877,7 +889,7 @@ html[data-theme="dark"] .related-product-name{color:#e7eef8}
  </div>
  <div id="productPageContent"></div>
 </section>
-<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261126-pwa1"></script>
+<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261126-pwa2"></script>
 <script>
 (() => {
   // ربط أزرار الأقسام بعد تحميل عناصر الصفحة.
