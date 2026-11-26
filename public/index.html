@@ -475,6 +475,97 @@ html[data-theme="dark"] .social-links>.theme-toggle{
 }
 @media(max-width:850px){.social-links>.theme-toggle{width:36px;height:36px;min-height:36px}}
 @media(max-width:520px){.social-strip>.theme-toggle{width:38px;height:38px;min-height:38px;margin:3px}}
+/* Custom design request */
+.custom-order-section{max-width:1180px;margin:20px auto 24px;padding:0 18px}
+.custom-order-card{
+ position:relative;isolation:isolate;overflow:hidden;display:grid;
+ grid-template-columns:minmax(0,1fr) auto 74px;align-items:center;gap:20px;
+ padding:22px 26px;border:1px solid #78c9f1;border-radius:20px;
+ background:linear-gradient(112deg,#061b45 0%,#0a3978 58%,#087ea9 100%);
+ color:#fff;box-shadow:0 8px 22px rgba(8,48,100,.15)
+}
+.custom-order-card:before{
+ content:"";position:absolute;z-index:-1;width:260px;height:260px;right:8%;top:-190px;
+ border:1px solid rgba(188,230,255,.2);border-radius:50%;
+ box-shadow:0 0 0 22px rgba(147,218,255,.05),0 0 0 48px rgba(147,218,255,.035)
+}
+.custom-order-copy{min-width:0}
+.custom-order-kicker{display:inline-flex;padding:5px 10px;margin-bottom:7px;border:1px solid #a8ddf4aa;border-radius:20px;color:#d9f5ff;background:#061b4555;font-size:12px;font-weight:800}
+.custom-order-copy h2,.custom-order-heading h2{margin:0 0 6px;color:#fff;font-size:clamp(19px,2.5vw,26px);line-height:1.4}
+.custom-order-copy p,.custom-order-heading p{margin:0;color:#d8eaff;font-size:13px;line-height:1.8}
+.custom-order-open{
+ display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:12px 18px;
+ border-radius:12px;border:1px solid #c2ecff;background:#effaff;color:#07346d;
+ font-size:14px;font-weight:900;white-space:nowrap;box-shadow:0 5px 13px #00183d30
+}
+.custom-order-open:hover{transform:translateY(-2px);filter:brightness(1.04)}
+.custom-order-mark{
+ width:64px;height:64px;display:grid;place-items:center;border:1px solid #b7e8ff99;
+ border-radius:20px;background:#ffffff19;color:#e5f7ff;font-size:42px;
+ transform:rotate(-9deg);text-shadow:0 0 14px #6dcfff99
+}
+.custom-order-modal{
+ position:fixed;inset:0;z-index:1200;display:flex;align-items:center;justify-content:center;
+ padding:18px;background:rgba(2,13,33,.76);backdrop-filter:blur(6px);overflow:auto
+}
+.custom-order-shell{
+ position:relative;width:min(760px,100%);max-height:92vh;overflow:auto;padding:26px;
+ border:1px solid #c8e4f6;border-radius:22px;background:#f8fbff;color:#102b59;
+ box-shadow:0 24px 80px #00132d88
+}
+.custom-order-close{
+ position:absolute;top:12px;left:12px;width:38px;height:38px;padding:0;border-radius:50%;
+ background:#e5efff;color:#12345f;font-size:26px;line-height:1
+}
+.custom-order-heading{padding:0 0 16px;border-bottom:1px solid #dbe7f2;margin-bottom:17px}
+.custom-order-heading .custom-order-kicker{background:#e7f5ff;color:#07518b;border-color:#b7dcf5}
+.custom-order-heading h2{color:#082e70;font-size:24px}
+.custom-order-heading p{color:#65758d}
+.custom-order-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.custom-order-fields label,.custom-order-file-box{display:grid;gap:6px;font-size:13px;font-weight:800;color:#29466f}
+.custom-order-fields input,.custom-order-fields select,.custom-order-fields textarea{
+ width:100%;min-width:0;padding:10px 12px;border:1px solid #cbdced;border-radius:10px;
+ background:#fff;color:#102b59;font:inherit;font-size:14px;outline:none
+}
+.custom-order-fields textarea{resize:vertical;line-height:1.7}
+.custom-order-fields input:focus,.custom-order-fields select:focus,.custom-order-fields textarea:focus{border-color:#168bd5;box-shadow:0 0 0 3px #168bd522}
+.custom-order-description{grid-column:1/-1}
+.custom-order-file-box{margin-top:15px;padding:12px;border:1px dashed #a9c9e5;border-radius:12px;background:#edf6ff}
+.custom-order-file-box input{font:inherit;font-size:13px;font-weight:500}
+.custom-order-file-box small,.custom-order-privacy{color:#64788f;font-size:12px;line-height:1.8}
+.custom-order-privacy{margin:10px 0}
+.custom-order-actions{display:flex;gap:10px;flex-wrap:wrap}
+.custom-order-submit,.custom-order-cancel{padding:11px 17px;border-radius:11px;font-size:14px;font-weight:900}
+.custom-order-submit{background:#087bba;color:#fff}
+.custom-order-cancel{background:#e5efff;color:#18385f}
+body.custom-order-open{overflow:hidden}
+html[data-theme="dark"] .custom-order-shell{background:#142238;color:#e7eef8;border-color:#385572}
+html[data-theme="dark"] .custom-order-heading{border-color:#35506b}
+html[data-theme="dark"] .custom-order-heading h2{color:#9acbff}
+html[data-theme="dark"] .custom-order-heading p,
+html[data-theme="dark"] .custom-order-privacy,
+html[data-theme="dark"] .custom-order-file-box small{color:#b4c7dc}
+html[data-theme="dark"] .custom-order-fields label,
+html[data-theme="dark"] .custom-order-file-box{color:#dbeaff}
+html[data-theme="dark"] .custom-order-fields input,
+html[data-theme="dark"] .custom-order-fields select,
+html[data-theme="dark"] .custom-order-fields textarea{background:#172b43;color:#e7eef8;border-color:#45617d}
+html[data-theme="dark"] .custom-order-file-box{background:#1a304a;border-color:#55708c}
+html[data-theme="dark"] .custom-order-close,
+html[data-theme="dark"] .custom-order-cancel{background:#2b415d;color:#eff7ff}
+@media(max-width:650px){
+ .custom-order-section{padding:0 12px;margin:16px auto 20px}
+ .custom-order-card{grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:17px 15px;border-radius:17px}
+ .custom-order-copy h2{font-size:19px}
+ .custom-order-copy p{font-size:12px}
+ .custom-order-open{grid-column:1/-1;width:100%;padding:11px 14px;font-size:13px}
+ .custom-order-mark{width:48px;height:48px;border-radius:15px;font-size:31px}
+ .custom-order-shell{padding:22px 15px 16px;border-radius:17px}
+ .custom-order-fields{grid-template-columns:minmax(0,1fr);gap:11px}
+ .custom-order-description{grid-column:auto}
+ .custom-order-heading h2{font-size:21px}
+ .custom-order-actions>*{flex:1}
+}
 </style></head>
 <body>
 <header class="hero"><div class="top-actions"><button aria-label="القائمة">☰</button><button aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="adminBtn" aria-label="دخول الإدارة">إدارتي</button></div>
@@ -516,6 +607,20 @@ html[data-theme="dark"] .social-links>.theme-toggle{
  </div>
 </section>
 
+<section class="custom-order-section" aria-label="اطلب تصميمك الخاص">
+ <div class="custom-order-card">
+  <div class="custom-order-copy">
+   <span class="custom-order-kicker">تنفيذ حسب الطلب</span>
+   <h2>عندك فكرة في دماغك؟</h2>
+   <p>احكيلنا على تصميمك، واختار المقاس والخامة واللون، وهنساعدك نحول فكرتك لواقع.</p>
+  </div>
+  <button type="button" id="openCustomOrder" class="custom-order-open">
+   اطلب تصميمك الخاص <span aria-hidden="true">←</span>
+  </button>
+  <div class="custom-order-mark" aria-hidden="true">✎</div>
+ </div>
+</section>
+
 <main>
 <section id="catalog"><h2 class="section-title">⭐ أحدث المنتجات ⭐</h2><div class="toolbar"><input id="searchFallback" class="hidden" aria-hidden="true"><button type="button" id="homeButton" class="home-button">⌂ الرئيسية</button><select id="categoryFilter"><option value="">كل الأقسام</option><option>قسم السيارات</option></select></div><div id="products" class="grid"><div class="empty">جاري تحميل المنتجات...</div></div><div class="benefits"><span>🚚 شحن لجميع المحافظات</span><span>🛡️ جودة وتشطيب عالي</span><span>⚙️ تصميمات حصرية</span><span>💬 طلب مباشر على واتساب</span></div></section>
 <section id="admin" class="hidden"><div class="panel"><div class="actions" style="justify-content:space-between;align-items:center"><h2>لوحة إدارة خشابيتا</h2><button id="logout" class="danger">تسجيل الخروج</button></div><p id="adminEmail" class="muted"></p><div class="notice">أنت مسجل كمدير. أي منتج تحفظه أو تعدّل سعره سيظهر في كتالوج العملاء بعد الحفظ.</div><button id="backCatalog" class="light" style="margin-top:12px">عرض الكتالوج</button></div>
@@ -528,9 +633,52 @@ html[data-theme="dark"] .social-links>.theme-toggle{
  </div>
 </div><label>القسم<input id="category" required placeholder="مثال: قسم السيارات"></label><label>المقاس<input id="dimensions" placeholder="مثال: 35 × 45 × 32 سم"></label><label>الخامة<input id="material" value="خشب MDF"></label><label>صور المنتج (رابط أو مسار صورة في كل سطر)<textarea id="imageUrls" rows="4" placeholder="products/car-1.jpg&#10;products/car-2.jpg"></textarea></label><label>وصف مختصر<input id="description" maxlength="300"></label></div><div id="imagePreviewWrap" class="hidden" style="margin-top:12px"><p class="muted">معاينة الصور</p><div id="imagePreviews" class="thumbs"></div></div><p class="muted">أضف رابط HTTPS مباشر أو مسار صورة داخل مجلد public/products في كل سطر. أول صورة هي الرئيسية والباقي يظهر في معرض التفاصيل.</p><p class="actions"><button class="primary" type="submit">حفظ المنتج</button><button id="cancelEdit" type="button" class="light">إلغاء</button></p></form></div><div class="panel"><h3>المنتجات الحالية</h3><div id="adminList"></div></div></section>
 </main>
+<div id="customOrderModal" class="custom-order-modal hidden" role="dialog" aria-modal="true" aria-labelledby="customOrderTitle">
+ <div class="custom-order-shell">
+  <button type="button" id="customOrderClose" class="custom-order-close" aria-label="إغلاق">×</button>
+  <div class="custom-order-heading">
+   <span class="custom-order-kicker">خشابيتا تنفذ فكرتك</span>
+   <h2 id="customOrderTitle">اطلب تصميمك الخاص</h2>
+   <p>اكتب تفاصيل فكرتك، وهنجهزلك رسالة مباشرة لفريق خشابيتا.</p>
+  </div>
+  <form id="customOrderForm">
+   <div class="custom-order-fields">
+    <label>اسمك <input id="customOrderName" required maxlength="80" placeholder="اكتب اسمك"></label>
+    <label>رقم للتواصل (اختياري) <input id="customOrderPhone" type="tel" maxlength="25" placeholder="01xxxxxxxxx"></label>
+    <label>نوع المنتج
+     <select id="customOrderType" required>
+      <option value="">اختار نوع التصميم</option>
+      <option>هدية مخصصة</option><option>درع أو تكريم</option><option>ديكور منزلي</option>
+      <option>مجسم معماري أو سيارة</option><option>لعبة أو بازل</option><option>منتج آخر</option>
+     </select>
+    </label>
+    <label>المقاس المطلوب (اختياري) <input id="customOrderSize" maxlength="100" placeholder="مثال: 30 × 40 سم"></label>
+    <label>الخامة المفضلة
+     <select id="customOrderMaterial">
+      <option value="مش محدد، اقترحوا عليّا">مش محدد، اقترحوا عليّا</option>
+      <option>خشب MDF</option><option>أكريليك</option><option>خشب طبيعي</option><option>خامة أخرى</option>
+     </select>
+    </label>
+    <label>اللون المطلوب (اختياري) <input id="customOrderColor" maxlength="80" placeholder="مثال: كحلي وأبيض"></label>
+    <label>الكمية <input id="customOrderQty" type="number" min="1" max="999" value="1" required></label>
+    <label class="custom-order-description">احكيلنا تفاصيل فكرتك <textarea id="customOrderDetails" rows="4" required maxlength="1200" placeholder="عايز التصميم يكون شكله إزاي؟ وأي تفاصيل مهمة..."></textarea></label>
+   </div>
+   <div class="custom-order-file-box">
+    <label for="customOrderFiles">صورة أو رسم للتصميم (اختياري)</label>
+    <input id="customOrderFiles" type="file" accept="image/*,.pdf" multiple>
+    <small id="customOrderFileNames">تقدر تختار صور أو ملف PDF، بحد أقصى 5 ملفات.</small>
+   </div>
+   <p class="custom-order-privacy">مرفقاتك هتتبعت مع طلب المشاركة لو جهازك بيدعم مشاركة الملفات. وفي حالة عدم الدعم، هتفتح محادثة واتساب وتقدر تضيف الصور بنفسك.</p>
+   <div class="custom-order-actions">
+    <button type="submit" class="custom-order-submit">إرسال الطلب على واتساب</button>
+    <button type="button" id="customOrderCancel" class="custom-order-cancel">إلغاء</button>
+   </div>
+  </form>
+ </div>
+</div>
 <div id="productModal" class="product-modal hidden" role="dialog" aria-modal="true" aria-label="تفاصيل المنتج">
  <div class="modal-shell"><button id="modalClose" class="modal-close" aria-label="إغلاق">×</button><div id="modalContent" class="modal-layout"></div></div>
 </div>
-<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261126-theme-social1"></script>
+<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261126-custom-order-form1"></script>
 <script>document.querySelectorAll('.cat').forEach(b=>b.addEventListener('click',()=>{document.getElementById('categoryFilter').value=b.dataset.cat;document.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('categoryFilter').dispatchEvent(new Event('change'));document.getElementById('catalog').scrollIntoView({behavior:'smooth'});}));document.getElementById('search').addEventListener('input',e=>{const real=document.querySelector('#search');real.dispatchEvent(new Event('change'));});document.getElementById('backCatalog').onclick=()=>{document.getElementById('admin').classList.add('hidden');document.getElementById('catalog').classList.remove('hidden');};</script>
 </body></html>
