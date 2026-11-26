@@ -427,7 +427,6 @@ function closeCustomOrder() {
  customOrderModal.classList.add("hidden");
  document.body.classList.remove("custom-order-open");
 }
-$("heroCustomOrder")?.addEventListener("click",()=> $("openCustomOrder")?.click());
 $("openCustomOrder")?.addEventListener("click",()=>{
  customOrderModal?.classList.remove("hidden");
  document.body.classList.add("custom-order-open");
