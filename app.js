@@ -336,6 +336,38 @@ function openDetails(id, options={}){
  if(typeof trackProductView==="function")trackProductView(p.id);
  window.scrollTo({top:0,behavior:"smooth"});
 }
+
+function relatedProductsMarkup(product){
+ const others=products.filter(item=>item.id!==product.id);
+ const sameCategory=product.category?others.filter(item=>item.category===product.category):[];
+ const recommendations=[...sameCategory,...others.filter(item=>!sameCategory.some(match=>match.id===item.id))].slice(0,4);
+ if(!recommendations.length)return "";
+ return `
+  <section class="related-products-section" aria-label="منتجات ممكن تعجبك">
+   <div class="related-products-heading">
+    <span class="related-products-kicker">اكتشف المزيد من خشابيتا</span>
+    <h2>منتجات ممكن تعجبك</h2>
+    <p>${sameCategory.length?"اختيارات من نفس القسم ومنتجات مميزة تانية":"شوف منتجات تانية ممكن تناسبك"}</p>
+   </div>
+   <div class="related-products-grid">
+    ${recommendations.map(item=>{
+     const cover=productImages(item)[0];
+     return `<button type="button" class="related-product-card" data-open="${safe(item.id)}" aria-label="عرض تفاصيل ${safe(item.name)}">
+      <span class="related-product-image">
+       ${cover?`<img src="${safe(cover)}" alt="${safe(item.name)}" loading="lazy">`:'<span class="related-product-placeholder" aria-hidden="true">▧</span>'}
+      </span>
+      <span class="related-product-info">
+       <span class="related-product-category">${safe(item.category||"منتج خشبي")}</span>
+       <strong class="related-product-name">${safe(item.name)}</strong>
+       ${availabilityBadgeMarkup(item,"related-product-status")}
+       ${priceMarkup(item)}
+      </span>
+     </button>`;
+    }).join("")}
+   </div>
+  </section>`;
+}
+
 function renderDetails(){
  if(!activeProduct)return;
  const p=activeProduct, imgs=productImages(p);
@@ -376,7 +408,9 @@ function renderDetails(){
      <button type="button" class="btn light modal-share-link" id="copyProductLink">نسخ رابط المنتج</button>
     </div>
    </article>
-  </div>`;
+  </div>
+  ${relatedProductsMarkup(p)}
+  `;
  $("productGalleryPrev")?.addEventListener("click",()=>changeImage(-1));
  $("productGalleryNext")?.addEventListener("click",()=>changeImage(1));
  const mainImage=$("productPageContent").querySelector(".product-page-main-image");
@@ -408,6 +442,7 @@ function handleProductOpen(e){
  if(button)openDetails(button.dataset.open);
 }
 $("products").addEventListener("click",handleProductOpen);
+$("productPageContent").addEventListener("click",handleProductOpen);
 $("offerProducts")?.addEventListener("click",handleProductOpen);
 function showCatalogPage(){
  setCatalogVisibility(true);
