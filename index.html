@@ -742,6 +742,68 @@ html[data-theme="dark"] .custom-order-cancel{background:#2b415d;color:#eff7ff}
  .custom-order-heading h2{font-size:21px}
  .custom-order-actions>*{flex:1}
 }
+/* Dedicated product detail page (replaces the overlay modal) */
+.product-page{max-width:1220px;min-height:58vh;margin:20px auto 54px;padding:0 20px;color:#102b59;animation:productPageEnter .28s ease both}
+@keyframes productPageEnter{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+.product-page-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.product-page-back{display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid #c4d9ef;border-radius:12px;background:#eef6ff;color:#0a3970;font-size:13px;font-weight:900}
+.product-page-back:hover{background:#dceeff;transform:translateY(-1px)}
+.product-page-breadcrumb{font-size:12px;color:#7b8da4}
+.product-page-breadcrumb strong{color:#1766a9;font-weight:800}
+.product-page-layout{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(310px,.9fr);gap:24px;align-items:start}
+.product-page-gallery{min-width:0;padding:13px;border:1px solid #d6e5f5;border-radius:22px;background:linear-gradient(145deg,#fff,#f2f8ff);box-shadow:0 8px 28px rgba(11,58,112,.09)}
+.product-page-main-image{position:relative;height:clamp(330px,43vw,560px);display:grid;place-items:center;overflow:hidden;border:1px solid #e1ebf6;border-radius:16px;background:linear-gradient(145deg,#f6faff,#eaf3fc);touch-action:pan-y}
+.product-page-main-image img{display:block;width:100%;height:100%;object-fit:contain;backface-visibility:hidden}
+.product-page-main-image.slide-from-right img{animation:khashabita-gallery-next .28s ease both}
+.product-page-main-image.slide-from-left img{animation:khashabita-gallery-prev .28s ease both}
+.product-page-placeholder{font-size:80px;color:#8ca9c9}
+.product-page-image-position{position:absolute;right:13px;bottom:13px;padding:6px 11px;border:1px solid #ffffffaa;border-radius:20px;background:#071f49d9;color:#fff;font-size:12px;font-weight:800}
+.product-page-thumbs{display:flex;gap:9px;overflow-x:auto;padding:12px 2px 2px;scrollbar-width:thin}
+.product-page-thumbs button{flex:0 0 78px;width:78px;height:68px;padding:3px;border:2px solid #d7e5f3;border-radius:11px;background:#fff;overflow:hidden}
+.product-page-thumbs button.selected{border-color:#0788d1;box-shadow:0 0 0 3px #0788d122}
+.product-page-thumbs img{width:100%;height:100%;object-fit:cover;border-radius:7px}
+.product-page-info{position:sticky;top:18px;padding:26px;border:1px solid #d7e6f5;border-radius:22px;background:#fff;box-shadow:0 9px 28px rgba(11,58,112,.09)}
+.product-page-info h1{margin:6px 0 12px;color:#092f69;font-size:clamp(23px,3vw,34px);line-height:1.45}
+.product-page-info .product-category{margin-bottom:8px}
+.product-page-info .price{font-size:27px}
+.product-page-description{margin:15px 0;color:#53677f;font-size:15px;line-height:2}
+.product-page-divider{height:1px;margin:19px 0;background:#e4edf6}
+.product-page-specs{display:grid;gap:9px;margin:0}
+.product-page-specs>div{display:flex;justify-content:space-between;gap:14px;padding:12px 14px;border:1px solid #e4edf6;border-radius:11px;background:#f7faff}
+.product-page-specs dt{color:#71839a;font-size:13px}
+.product-page-specs dd{margin:0;color:#173c6a;font-size:13px;font-weight:900;text-align:left}
+.product-page-badges{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:15px}
+.product-page-discount{padding:6px 10px;border-radius:20px;background:#fff0f2;color:#cf2948;font-size:12px;font-weight:900}
+.product-page-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}
+.product-page-actions .wa{grid-column:1/-1;margin:0;padding:14px}
+.product-page-actions .modal-share-link{width:100%;margin:0;padding:12px}
+.product-page-video-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.product-page-video-links a{padding:8px 11px;border-radius:9px}
+html[data-theme="dark"] .product-page{color:#e7eef8}
+html[data-theme="dark"] .product-page-back{background:#203b59;color:#e4f2ff;border-color:#3d5c7a}
+html[data-theme="dark"] .product-page-breadcrumb{color:#a6bad0}
+html[data-theme="dark"] .product-page-breadcrumb strong{color:#8bcaff}
+html[data-theme="dark"] .product-page-gallery,
+html[data-theme="dark"] .product-page-info{background:#152338;border-color:#304b68;box-shadow:0 8px 25px #0004}
+html[data-theme="dark"] .product-page-main-image{background:#1b2c42;border-color:#344d69}
+html[data-theme="dark"] .product-page-thumbs button{background:#1c2f48;border-color:#405b79}
+html[data-theme="dark"] .product-page-info h1{color:#a6d2ff}
+html[data-theme="dark"] .product-page-description{color:#bfd0e3}
+html[data-theme="dark"] .product-page-divider{background:#344c68}
+html[data-theme="dark"] .product-page-specs>div{background:#1b2f48;border-color:#344f6d}
+html[data-theme="dark"] .product-page-specs dt{color:#a7bbd1}
+html[data-theme="dark"] .product-page-specs dd{color:#e3f0ff}
+html[data-theme="dark"] .product-page-discount{background:#512b3b;color:#ffc5d0}
+@media(max-width:800px){
+ .product-page{padding:0 13px;margin:13px auto 35px}
+ .product-page-layout{grid-template-columns:minmax(0,1fr);gap:14px}
+ .product-page-info{position:static;padding:19px}
+ .product-page-main-image{height:clamp(270px,78vw,470px)}
+ .product-page-toolbar{align-items:flex-start}
+ .product-page-info h1{font-size:25px}
+ .product-page-description{font-size:14px}
+}
+@media(prefers-reduced-motion:reduce){.product-page{animation:none}.product-page-main-image.slide-from-right img,.product-page-main-image.slide-from-left img{animation:none}}
 </style></head>
 <body>
 <header class="hero" aria-label="بنر خشابيتا CNC">
@@ -900,10 +962,14 @@ html[data-theme="dark"] .custom-order-cancel{background:#2b415d;color:#eff7ff}
   </form>
  </div>
 </div>
-<div id="productModal" class="product-modal hidden" role="dialog" aria-modal="true" aria-label="تفاصيل المنتج">
- <div class="modal-shell"><button id="modalClose" class="modal-close" aria-label="إغلاق">×</button><div id="modalContent" class="modal-layout"></div></div>
-</div>
-<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261126-custom-order-form1"></script>
+<section id="productPage" class="product-page hidden" aria-label="صفحة تفاصيل المنتج">
+ <div class="product-page-toolbar">
+  <button type="button" id="productBack" class="product-page-back">→ الرجوع للكتالوج</button>
+  <div class="product-page-breadcrumb"><span>الرئيسية</span><span> / </span><strong id="productBreadcrumbName">تفاصيل المنتج</strong></div>
+ </div>
+ <div id="productPageContent"></div>
+</section>
+<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261126-dedicated-product-page1"></script>
 <script>
 (() => {
   // ربط أزرار الأقسام بعد تحميل عناصر الصفحة.
