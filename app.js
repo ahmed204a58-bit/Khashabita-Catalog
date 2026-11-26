@@ -52,7 +52,7 @@ let visitorCounterDecisionMade = false;
 let activeProduct = null, activeImageIndex = 0;
 let imageChangeDirection = 1;
 let deepLinkHandled = false;
-let modalHistoryPushed = false;
+const CATALOG_PAGE_TITLE = document.title;
 // Set to the deployed Cloudflare Worker origin to enable product-specific social previews.
 const PRODUCT_SHARE_WORKER_BASE = "https://khashabita-product-share.ahmed204a58.workers.dev";
 
@@ -309,6 +309,7 @@ function openDetails(id, options={}){
  activeProduct=p;
  activeImageIndex=0;
  deepLinkHandled=true;
+ document.title=p.name+" | خشابيتا";
  setCatalogVisibility(false);
  renderDetails();
  if(typeof trackProductView==="function")trackProductView(p.id);
@@ -390,6 +391,7 @@ function showCatalogPage(){
  setCatalogVisibility(true);
  activeProduct=null;
  deepLinkHandled=false;
+ document.title=CATALOG_PAGE_TITLE;
  const url=new URL(window.location.href);
  if(url.searchParams.has("product")){
   url.searchParams.delete("product");
@@ -420,6 +422,7 @@ window.addEventListener("popstate",()=>{
   setCatalogVisibility(true);
   activeProduct=null;
   deepLinkHandled=false;
+  document.title=CATALOG_PAGE_TITLE;
  }
 });
 document.addEventListener("keydown",e=>{
