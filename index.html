@@ -817,6 +817,38 @@ html[data-theme="dark"] .availability-made-to-order{background:#173a5b;color:#a9
 html[data-theme="dark"] .availability-unavailable{background:#4b2834;color:#ffc2cb;border-color:#82404e}
 html[data-theme="dark"] .availability-disabled{background:#46566b!important;color:#d6e0ec!important;border-color:#62748c!important}
 @media(max-width:650px){#availabilityFilter{min-width:155px;flex:1}}
+
+/* Related products inside product details */
+.related-products-section{margin:34px 0 10px;padding:26px 22px;border:1px solid #d6e5f5;border-radius:22px;background:linear-gradient(145deg,#fff,#f4f9ff);box-shadow:0 8px 25px rgba(11,58,112,.07)}
+.related-products-heading{text-align:center;margin-bottom:20px}
+.related-products-kicker{display:inline-flex;padding:5px 11px;border-radius:20px;background:#e8f4ff;color:#1263a7;font-size:11px;font-weight:900}
+.related-products-heading h2{margin:8px 0 5px;color:#092f69;font-size:clamp(20px,2.5vw,27px)}
+.related-products-heading p{margin:0;color:#71839a;font-size:13px}
+.related-products-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.related-product-card{display:flex;flex-direction:column;min-width:0;padding:0;overflow:hidden;text-align:right;border:1px solid #dce8f4;border-radius:16px;background:#fff;color:#17365d;box-shadow:0 4px 13px rgba(9,48,94,.06);transition:transform .2s ease,box-shadow .2s ease}
+.related-product-card:hover{transform:translateY(-4px);box-shadow:0 11px 23px rgba(9,48,94,.13)}
+.related-product-image{display:grid;place-items:center;width:100%;aspect-ratio:1.15;background:#eef5fc;overflow:hidden}
+.related-product-image img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .25s ease}
+.related-product-card:hover .related-product-image img{transform:scale(1.04)}
+.related-product-placeholder{font-size:48px;color:#8ca9c9}
+.related-product-info{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:12px}
+.related-product-category{font-size:10px;color:#6d829c}
+.related-product-name{display:-webkit-box;width:100%;overflow:hidden;color:#15375f;font-size:13px;line-height:1.6;text-align:right;-webkit-line-clamp:2;-webkit-box-orient:vertical;min-height:42px}
+.related-product-status{margin:0;padding:4px 8px;font-size:10px}
+.related-product-info .price{margin:3px 0 0;font-size:17px}
+.related-product-info .offer-price-group{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
+.related-product-info .offer-price-group del{font-size:11px}
+.related-product-info .offer-price-group strong{font-size:17px}
+html[data-theme="dark"] .related-products-section{background:linear-gradient(145deg,#152338,#1a2d45);border-color:#304b68;box-shadow:0 8px 25px #0004}
+html[data-theme="dark"] .related-products-kicker{background:#203d5d;color:#9bd4ff}
+html[data-theme="dark"] .related-products-heading h2{color:#a6d2ff}
+html[data-theme="dark"] .related-products-heading p,html[data-theme="dark"] .related-product-category{color:#a8bbd1}
+html[data-theme="dark"] .related-product-card{background:#1b2c43;color:#e7eef8;border-color:#344f6d}
+html[data-theme="dark"] .related-product-image{background:#223850}
+html[data-theme="dark"] .related-product-name{color:#e7eef8}
+@media(max-width:850px){.related-products-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}}
+@media(max-width:560px){.related-products-section{margin:23px 0 5px;padding:19px 12px;border-radius:17px}.related-products-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.related-product-info{padding:10px}.related-product-name{font-size:12px;min-height:39px}.related-product-info .price{font-size:15px}.related-product-info .offer-price-group strong{font-size:15px}}
+@media(prefers-reduced-motion:reduce){.related-product-card,.related-product-image img{transition:none}}
 </style></head>
 <body>
 <header class="hero" aria-label="بنر خشابيتا CNC">
@@ -982,7 +1014,7 @@ html[data-theme="dark"] .availability-disabled{background:#46566b!important;colo
  </div>
  <div id="productPageContent"></div>
 </section>
-<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261126-availability-status1"></script>
+<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261126-related-products1"></script>
 <script>
 (() => {
   // ربط أزرار الأقسام بعد تحميل عناصر الصفحة.
