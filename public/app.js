@@ -219,52 +219,76 @@ function openSharedProductFromUrl(){
  openDetails(product.id);
 }
 
-function openDetails(id){
+function setCatalogVisibility(showCatalog){
+ const selectors=[".searchbar","#categoryTiles","#offersSection",".custom-order-section","#catalog"];
+ selectors.forEach(selector=>document.querySelectorAll(selector).forEach(el=>el.classList.toggle("hidden",!showCatalog)));
+ $("productPage").classList.toggle("hidden",showCatalog);
+}
+function openDetails(id, options={}){
  const p=products.find(x=>x.id===id);
  if(!p)return;
- const modalIsClosed=$("productModal").classList.contains("hidden");
- if(modalIsClosed){
-  if(window.history.state?.khashabitaProductModal){
-   modalHistoryPushed=true;
-  }else{
-   const currentUrl=new URL(window.location.href);
-   const sharedProductId=currentUrl.searchParams.get("product");
-   if(sharedProductId===id){
-    const catalogUrl=new URL(currentUrl);
-    catalogUrl.searchParams.delete("product");
-    window.history.replaceState({khashabitaCatalog:true},"",catalogUrl.pathname+catalogUrl.search+catalogUrl.hash);
-   }
-   window.history.pushState({khashabitaProductModal:true,productId:id},"",window.location.href);
-   modalHistoryPushed=true;
+ if(!options.fromHistory){
+  const nextUrl=new URL(window.location.href);
+  const alreadyCurrent=nextUrl.searchParams.get("product")===id;
+  if(!(window.history.state?.khashabitaProductPage&&window.history.state.productId===id)){
+   nextUrl.searchParams.set("product",id);
+   const state={khashabitaProductPage:true,productId:id,direct:alreadyCurrent};
+   const address=nextUrl.pathname+nextUrl.search+nextUrl.hash;
+   if(alreadyCurrent)window.history.replaceState(state,"",address);
+   else window.history.pushState(state,"",address);
   }
  }
  activeProduct=p;
  activeImageIndex=0;
+ deepLinkHandled=true;
+ setCatalogVisibility(false);
  renderDetails();
- $("productModal").classList.remove("hidden");
- document.body.classList.add("modal-open");
- $("modalClose").focus();
+ if(typeof trackProductView==="function")trackProductView(p.id);
+ window.scrollTo({top:0,behavior:"smooth"});
 }
 function renderDetails(){
  if(!activeProduct)return;
  const p=activeProduct, imgs=productImages(p);
  const current=imgs[activeImageIndex]||"";
- $("modalContent").innerHTML=`
-  <div class="modal-gallery">
-   <div class="modal-main-image ${imageChangeDirection > 0 ? "slide-from-right" : "slide-from-left"}">${current?`<img src="${safe(current)}" alt="${safe(p.name)}">`:`<span class="photo-placeholder">▧</span>`}
-    ${imgs.length>1?`<button class="gallery-arrow prev" id="galleryPrev" aria-label="الصورة السابقة">‹</button><button class="gallery-arrow next" id="galleryNext" aria-label="الصورة التالية">›</button>`:""}
-    ${imgs.length?`<span class="gallery-position">${activeImageIndex+1} / ${imgs.length}</span>`:""}
+ const videoLinks=
+  (/^https:\/\/(www\.)?(youtube\.com|youtu\.be)\//i.test(p.videoUrl||"")?'<a class="btn light" target="_blank" rel="noopener noreferrer" href="'+safe(p.videoUrl)+'">▶ شاهد على YouTube</a>':"")+
+  (/^https:\/\/(www\.)?(tiktok\.com|vm\.tiktok\.com)\//i.test(p.tiktokUrl||"")?'<a class="btn light" target="_blank" rel="noopener noreferrer" href="'+safe(p.tiktokUrl)+'">▶ شاهد على TikTok</a>':"");
+ $("productBreadcrumbName").textContent=p.name;
+ $("productPageContent").innerHTML=`
+  <div class="product-page-layout">
+   <div class="product-page-gallery">
+    <div class="product-page-main-image ${imageChangeDirection>0?"slide-from-right":"slide-from-left"}">
+     ${current?`<img src="${safe(current)}" alt="${safe(p.name)}">`:`<span class="product-page-placeholder" aria-hidden="true">▧</span>`}
+     ${imgs.length>1?`<button class="gallery-arrow prev" id="productGalleryPrev" aria-label="الصورة السابقة">‹</button><button class="gallery-arrow next" id="productGalleryNext" aria-label="الصورة التالية">›</button>`:""}
+     ${imgs.length?`<span class="product-page-image-position">${activeImageIndex+1} / ${imgs.length}</span>`:""}
+    </div>
+    ${imgs.length>1?`<div class="product-page-thumbs">${imgs.map((u,i)=>`<button type="button" class="${i===activeImageIndex?"selected":""}" data-image-index="${i}" aria-label="عرض الصورة ${i+1}"><img src="${safe(u)}" alt=""></button>`).join("")}</div>`:""}
    </div>
-   ${imgs.length>1?`<div class="modal-thumbs">${imgs.map((u,i)=>`<button class="${i===activeImageIndex?"selected":""}" data-image-index="${i}" aria-label="عرض الصورة ${i+1}"><img src="${safe(u)}" alt=""></button>`).join("")}</div>`:""}
-  </div>
-  <div class="modal-info"><span class="product-category">${safe(p.category||"منتج خشبي")}</span><h2>${safe(p.name)}</h2>
-   ${priceMarkup(p)}<p>${safe(p.description||"منتج مصنوع بعناية في خشابيتا CNC.")}</p>
-   <dl class="product-specs"><div><dt>كود المنتج</dt><dd>${safe(p.sku||"—")}</dd></div><div><dt>المقاس</dt><dd>${safe(p.dimensions||"حسب الطلب")}</dd></div><div><dt>الخامة</dt><dd>${safe(p.material||"خشب MDF")}</dd></div></dl>
-   <a class="btn wa modal-wa" target="_blank" rel="noopener" href="${waLink(p)}">اطلب المنتج على واتساب</a> <button type="button" class="btn light modal-share-link" id="copyProductLink">نسخ رابط المنتج</button>
+   <article class="product-page-info">
+    <span class="product-category">${safe(p.category||"منتج خشبي")}</span>
+    <h1>${safe(p.name)}</h1>
+    ${priceMarkup(p)}
+    <p class="product-page-description">${safe(p.description||"منتج مصنوع بعناية في خشابيتا CNC.")}</p>
+    <div class="product-page-divider"></div>
+    <dl class="product-page-specs">
+     <div><dt>كود المنتج</dt><dd>${safe(p.sku||"—")}</dd></div>
+     <div><dt>المقاس</dt><dd>${safe(p.dimensions||"حسب الطلب")}</dd></div>
+     <div><dt>الخامة</dt><dd>${safe(p.material||"خشب MDF")}</dd></div>
+    </dl>
+    <div class="product-page-badges">
+     ${isOfferProduct(p)?`<span class="product-page-discount">خصم ${offerDiscount(p)}٪</span>`:""}
+     <span class="muted">تصميم وتنفيذ خشابيتا CNC</span>
+    </div>
+    ${videoLinks?`<div class="product-page-video-links">${videoLinks}</div>`:""}
+    <div class="product-page-actions">
+     <a class="btn wa" target="_blank" rel="noopener" href="${waLink(p)}" data-track-whatsapp="${safe(p.id)}">اطلب المنتج على واتساب</a>
+     <button type="button" class="btn light modal-share-link" id="copyProductLink">نسخ رابط المنتج</button>
+    </div>
+   </article>
   </div>`;
- $("galleryPrev")?.addEventListener("click",()=>changeImage(-1));
- $("galleryNext")?.addEventListener("click",()=>changeImage(1));
- const mainImage=$("modalContent").querySelector(".modal-main-image");
+ $("productGalleryPrev")?.addEventListener("click",()=>changeImage(-1));
+ $("productGalleryNext")?.addEventListener("click",()=>changeImage(1));
+ const mainImage=$("productPageContent").querySelector(".product-page-main-image");
  let touchStartX=0;
  mainImage?.addEventListener("touchstart",e=>{touchStartX=e.changedTouches[0]?.clientX||0;},{passive:true});
  mainImage?.addEventListener("touchend",e=>{
@@ -272,19 +296,70 @@ function renderDetails(){
   const swipeDistance=touchEndX-touchStartX;
   if(Math.abs(swipeDistance)>45)changeImage(swipeDistance<0?1:-1);
  },{passive:true});
- $("modalContent").querySelectorAll("[data-image-index]").forEach(b=>b.addEventListener("click",()=>{const nextIndex=Number(b.dataset.imageIndex);imageChangeDirection=nextIndex>=activeImageIndex?1:-1;activeImageIndex=nextIndex;renderDetails();}));
+ $("productPageContent").querySelectorAll("[data-image-index]").forEach(button=>button.addEventListener("click",()=>{
+  const nextIndex=Number(button.dataset.imageIndex);
+  imageChangeDirection=nextIndex>=activeImageIndex?1:-1;
+  activeImageIndex=nextIndex;
+  renderDetails();
+ }));
  $("copyProductLink")?.addEventListener("click",e=>copyProductLink(p.id,e.currentTarget));
 }
 function changeImage(delta){
- const n=productImages(activeProduct).length;
- if(!n)return;
+ const count=productImages(activeProduct).length;
+ if(!count)return;
  imageChangeDirection=delta>0?1:-1;
- activeImageIndex=(activeImageIndex+delta+n)%n;
+ activeImageIndex=(activeImageIndex+delta+count)%count;
  renderDetails();
 }
-$("products").addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(b)openDetails(b.dataset.open);});
-$("modalClose").onclick=closeDetails;
-$("productModal").addEventListener("click",e=>{if(e.target===$("productModal"))closeDetails();});
+$("productBack").addEventListener("click",closeDetails);
+function handleProductOpen(e){
+ const button=e.target.closest("[data-open]");
+ if(button)openDetails(button.dataset.open);
+}
+$("products").addEventListener("click",handleProductOpen);
+$("offerProducts")?.addEventListener("click",handleProductOpen);
+function showCatalogPage(){
+ setCatalogVisibility(true);
+ activeProduct=null;
+ deepLinkHandled=false;
+ const url=new URL(window.location.href);
+ if(url.searchParams.has("product")){
+  url.searchParams.delete("product");
+  window.history.replaceState({khashabitaCatalog:true},"",url.pathname+url.search+url.hash);
+ }
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function closeDetails(){
+ if(!activeProduct)return;
+ const state=window.history.state;
+ if(state?.khashabitaProductPage&&!state.direct){
+  window.history.back();
+  return;
+ }
+ showCatalogPage();
+}
+window.addEventListener("popstate",()=>{
+ const productId=new URLSearchParams(window.location.search).get("product");
+ if(productId){
+  const product=products.find(item=>item.id===productId);
+  if(product){
+   deepLinkHandled=true;
+   openDetails(product.id,{fromHistory:true});
+   return;
+  }
+ }
+ if(!$("productPage").classList.contains("hidden")){
+  setCatalogVisibility(true);
+  activeProduct=null;
+  deepLinkHandled=false;
+ }
+});
+document.addEventListener("keydown",e=>{
+ if(e.key==="Escape"&&!$("productPage").classList.contains("hidden"))closeDetails();
+ if($("productPage").classList.contains("hidden"))return;
+ if(e.key==="ArrowLeft")changeImage(1);
+ if(e.key==="ArrowRight")changeImage(-1);
+});
 
 // ===== Custom design request via WhatsApp =====
 const customOrderModal = $("customOrderModal");
@@ -358,28 +433,3 @@ document.addEventListener("keydown",e=>{
  if(e.key==="Escape"&&customOrderModal&&!customOrderModal.classList.contains("hidden"))closeCustomOrder();
 });
 
-function hideProductDetails(){
- $("productModal").classList.add("hidden");
- document.body.classList.remove("modal-open");
- activeProduct=null;
- deepLinkHandled=false;
-}
-function closeDetails(){
- const shouldReturnToCatalog=modalHistoryPushed;
- modalHistoryPushed=false;
- hideProductDetails();
- if(shouldReturnToCatalog)window.history.back();
-}
-window.addEventListener("popstate",()=>{
- const modalIsOpen=!$("productModal").classList.contains("hidden");
- if(modalIsOpen&&!window.history.state?.khashabitaProductModal){
-  modalHistoryPushed=false;
-  hideProductDetails();
-  return;
- }
- if(!modalIsOpen&&window.history.state?.khashabitaProductModal){
-  const productId=window.history.state.productId||new URLSearchParams(window.location.search).get("product");
-  if(productId)openDetails(productId);
- }
-});
-document.addEventListener("keydown",e=>{if($("productModal").classList.contains("hidden"))return;if(e.key==="Escape")closeDetails();if(e.key==="ArrowLeft")changeImage(1);if(e.key==="ArrowRight")changeImage(-1);});
