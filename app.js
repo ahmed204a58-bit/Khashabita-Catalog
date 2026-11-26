@@ -400,7 +400,7 @@ function renderDetails(){
     </dl>
     <div class="product-page-badges">
      ${isOfferProduct(p)?`<span class="product-page-discount">خصم ${offerDiscount(p)}٪</span>`:""}
-     <span class="muted">تصميم وتنفيذ خشابيتا CNC</span>
+     <span class="muted">تصميم وتنفيذ أحمد خشابيتا</span>
     </div>
     ${videoLinks?`<div class="product-page-video-links">${videoLinks}</div>`:""}
     <div class="product-page-actions">
