@@ -1,18 +1,25 @@
 {
-  "id": "./",
+  "id": "https://ahmed204a58-bit.github.io/Khashabita-Catalog/",
   "name": "خشابيتا - كتالوج أحمد خشابيتا",
   "short_name": "خشابيتا",
   "description": "كتالوج خشابيتا للمنتجات الخشبية والهدايا والديكورات المصنوعة بالليزر.",
   "lang": "ar",
   "dir": "rtl",
-  "start_url": "./?source=pwa",
-  "scope": "./",
+  "start_url": "https://ahmed204a58-bit.github.io/Khashabita-Catalog/?source=pwa",
+  "scope": "https://ahmed204a58-bit.github.io/Khashabita-Catalog/",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui"],
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
   "orientation": "portrait",
   "background_color": "#f3f8ff",
   "theme_color": "#082e70",
-  "categories": ["shopping", "business"],
+  "prefer_related_applications": false,
+  "categories": [
+    "shopping",
+    "business"
+  ],
   "icons": [
     {
       "src": "./khashabita-icon-192.png",

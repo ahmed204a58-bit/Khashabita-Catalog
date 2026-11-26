@@ -16,6 +16,12 @@ window.addEventListener("beforeinstallprompt", event => {
   event.preventDefault();
   window.__khashabitaInstallPrompt = event;
 });
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js", { scope: "./" })
+      .catch(error => console.warn("Khashabita service worker:", error));
+  });
+}
 </script><meta name="description" content="كتالوج خشابيتا CNC – أحمد خشابيتا. منتجات خشبية من MDF بتصميم وتنفيذ بالليزر، هدايا مخصصة، دروع تكريم، ديكورات، أنتيكات، ألعاب وبازل ومنتجات حسب الطلب.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="خشابيتا | كتالوج المنتجات الخشبية">
@@ -896,7 +902,7 @@ html[data-theme="dark"] .related-product-name{color:#e7eef8}
  </div>
  <div id="productPageContent"></div>
 </section>
-<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261126-pwa6"></script>
+<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261126-pwa7"></script>
 <script>
 (() => {
   // ربط أزرار الأقسام بعد تحميل عناصر الصفحة.
