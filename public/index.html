@@ -582,6 +582,19 @@ html[data-theme="dark"] .related-product-name{color:#e7eef8}
 @media(max-width:850px){.related-products-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}}
 @media(max-width:560px){.related-products-section{margin:23px 0 5px;padding:19px 12px;border-radius:17px}.related-products-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.related-product-info{padding:10px}.related-product-name{font-size:12px;min-height:39px}.related-product-info .price{font-size:15px}.related-product-info .offer-price-group strong{font-size:15px}}
 @media(prefers-reduced-motion:reduce){.related-product-card,.related-product-image img{transition:none}}
+
+/* Price colors follow the selected site theme */
+.price,
+.offer-price-group strong,
+.offer-mini-prices strong {
+  color: #082e70 !important;
+}
+html[data-theme="dark"] .price,
+html[data-theme="dark"] .offer-price-group strong,
+html[data-theme="dark"] .offer-mini-prices strong {
+  color: #ffffff !important;
+}
+
 </style></head>
 <body>
 <header class="hero"><div class="top-actions"><button aria-label="القائمة">☰</button><button aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="adminBtn" aria-label="دخول الإدارة">إدارتي</button></div>
@@ -644,7 +657,7 @@ html[data-theme="dark"] .related-product-name{color:#e7eef8}
  </div>
  <div id="productPageContent"></div>
 </section>
-<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261126-ahmed-brand1"></script>
+<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=price-theme1"></script>
 <script>document.querySelectorAll('.cat').forEach(b=>b.addEventListener('click',()=>{document.getElementById('categoryFilter').value=b.dataset.cat;document.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('categoryFilter').dispatchEvent(new Event('change'));document.getElementById('catalog').scrollIntoView({behavior:'smooth'});}));document.getElementById('search').addEventListener('input',e=>{const real=document.querySelector('#search');real.dispatchEvent(new Event('change'));});document.getElementById('backCatalog').onclick=()=>{document.getElementById('admin').classList.add('hidden');document.getElementById('catalog').classList.remove('hidden');};</script>
 </body></html>
 
