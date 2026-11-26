@@ -3,7 +3,13 @@
 <head><link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="icon" type="image/png" sizes="512x512" href="favicon-512.png">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#082e70"><meta name="description" content="كتالوج خشابيتا CNC – أحمد خشابيتا. منتجات خشبية من MDF بتصميم وتنفيذ بالليزر، هدايا مخصصة، دروع تكريم، ديكورات، أنتيكات، ألعاب وبازل ومنتجات حسب الطلب.">
+<meta name="theme-color" content="#082e70">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./khashabita-icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="خشابيتا"><meta name="description" content="كتالوج خشابيتا CNC – أحمد خشابيتا. منتجات خشبية من MDF بتصميم وتنفيذ بالليزر، هدايا مخصصة، دروع تكريم، ديكورات، أنتيكات، ألعاب وبازل ومنتجات حسب الطلب.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="خشابيتا | كتالوج المنتجات الخشبية">
 <meta property="og:description" content="من الفكرة لواقع ملموس.. اكتشف منتجات خشابيتا CNC">
@@ -758,11 +764,14 @@ html[data-theme="dark"] .related-product-name{color:#e7eef8}
 @media(max-width:850px){.related-products-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}}
 @media(max-width:560px){.related-products-section{margin:23px 0 5px;padding:19px 12px;border-radius:17px}.related-products-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.related-product-info{padding:10px}.related-product-name{font-size:12px;min-height:39px}.related-product-info .price{font-size:15px}.related-product-info .offer-price-group strong{font-size:15px}}
 @media(prefers-reduced-motion:reduce){.related-product-card,.related-product-image img{transition:none}}
+.install-app-btn{background:linear-gradient(135deg,#e8f7ff,#8bdcff)!important;color:#062e66!important;border:1px solid #fff!important;box-shadow:0 3px 12px #001c4e55}
+.install-app-btn:disabled{opacity:.92;cursor:default}
+@media(max-width:600px){.hero .top-actions .install-app-btn{padding:7px 9px;font-size:10px}}
 </style></head>
 <body>
 <header class="hero" aria-label="بنر خشابيتا CNC">
   <img class="hero-banner" src="khashabita-banner-new.png.png" alt="أحمد خشابيتا - كتالوج المنتجات الخشبية - قص ليزر CO2">
-  <div class="top-actions"><button id="adminBtn" aria-label="دخول الإدارة">دخول الإدارة</button></div>
+  <div class="top-actions"><button id="adminBtn" aria-label="دخول الإدارة">دخول الإدارة</button><button type="button" id="installAppBtn" class="install-app-btn" aria-label="تثبيت تطبيق خشابيتا">تثبيت التطبيق</button></div>
 </header>
 <div class="social-strip" aria-label="تابع خشابيتا على مواقع التواصل">
 <a href="https://www.facebook.com/share/1DUHTuDPca/" target="_blank" rel="noopener noreferrer" aria-label="فيسبوك" title="فيسبوك">
@@ -868,7 +877,7 @@ html[data-theme="dark"] .related-product-name{color:#e7eef8}
  </div>
  <div id="productPageContent"></div>
 </section>
-<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261126-related-products1"></script>
+<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261126-pwa1"></script>
 <script>
 (() => {
   // ربط أزرار الأقسام بعد تحميل عناصر الصفحة.

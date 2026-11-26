@@ -592,3 +592,51 @@ async function updateVisitorCounter() {
   }
 }
 
+
+
+// ===== Khashabita PWA install support =====
+let pendingKhashabitaInstall = null;
+const installAppButton = $("installAppBtn");
+const isKhashabitaInstalled = () =>
+  Boolean(window.matchMedia?.("(display-mode: standalone)")?.matches || window.navigator.standalone === true);
+
+if (installAppButton) {
+  if (isKhashabitaInstalled()) {
+    installAppButton.textContent = "التطبيق مثبت";
+    installAppButton.disabled = true;
+  }
+
+  installAppButton.addEventListener("click", async () => {
+    if (isKhashabitaInstalled()) return;
+
+    if (!pendingKhashabitaInstall) {
+      alert("لتثبيت خشابيتا على أندرويد: افتح الموقع في Chrome، واضغط قائمة ⋮ ثم اختر «تثبيت التطبيق» أو «إضافة إلى الشاشة الرئيسية».\n\nعلى iPhone: افتح الموقع في Safari، واضغط مشاركة ثم «إضافة إلى الشاشة الرئيسية».");
+      return;
+    }
+
+    const installPrompt = pendingKhashabitaInstall;
+    pendingKhashabitaInstall = null;
+    await installPrompt.prompt();
+    const choice = await installPrompt.userChoice;
+    if (choice?.outcome === "accepted") installAppButton.textContent = "جاري التثبيت...";
+  });
+
+  window.addEventListener("beforeinstallprompt", event => {
+    event.preventDefault();
+    pendingKhashabitaInstall = event;
+    installAppButton.textContent = "تثبيت التطبيق";
+  });
+
+  window.addEventListener("appinstalled", () => {
+    pendingKhashabitaInstall = null;
+    installAppButton.textContent = "التطبيق مثبت";
+    installAppButton.disabled = true;
+  });
+}
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js", { scope: "./" })
+      .catch(error => console.warn("Khashabita offline support:", error));
+  });
+}
