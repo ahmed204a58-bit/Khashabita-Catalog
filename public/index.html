@@ -673,166 +673,11 @@ html[data-theme="dark"] .related-product-name{color:#e7eef8}
 @media(max-width:850px){.related-products-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}}
 @media(max-width:560px){.related-products-section{margin:23px 0 5px;padding:19px 12px;border-radius:17px}.related-products-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.related-product-info{padding:10px}.related-product-name{font-size:12px;min-height:39px}.related-product-info .price{font-size:15px}.related-product-info .offer-price-group strong{font-size:15px}}
 @media(prefers-reduced-motion:reduce){.related-product-card,.related-product-image img{transition:none}}
-
-/* Khashabita visual refresh — homepage hero */
-.hero.hero-modern{position:relative;isolation:isolate;display:block;min-height:0;height:auto;margin:0;padding:0;overflow:hidden;color:#f4f9ff;line-height:normal;background:radial-gradient(ellipse at 78% 52%,rgba(0,154,225,.22),transparent 34%),radial-gradient(ellipse at 12% 12%,rgba(73,167,255,.14),transparent 32%),linear-gradient(122deg,#061329 0%,#08264c 48%,#073b70 100%);border-bottom:1px solid rgba(125,204,255,.34)}
-.hero.hero-modern:before,.hero.hero-modern:after{display:block;content:"";position:absolute;pointer-events:none;z-index:-1}
-.hero.hero-modern:before{inset:0;background-image:linear-gradient(rgba(133,204,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(133,204,255,.055) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(90deg,transparent,#000 24%,#000 82%,transparent)}
-.hero.hero-modern:after{width:580px;height:580px;inset:auto auto -390px -150px;border:1px solid rgba(125,207,255,.16);border-radius:50%;box-shadow:0 0 0 32px rgba(125,207,255,.035),0 0 0 72px rgba(125,207,255,.025)}
-.hero-modern-shell{position:relative;z-index:1;max-width:1240px;margin:auto;padding:17px 28px 0}
-.hero-modern-glow{position:absolute;z-index:-1;border-radius:50%;pointer-events:none;filter:blur(2px)}
-.hero-modern-glow-a{width:270px;height:270px;top:95px;left:8%;background:rgba(0,170,255,.10);box-shadow:0 0 90px rgba(0,170,255,.16)}
-.hero-modern-glow-b{width:160px;height:160px;top:20px;right:20%;background:rgba(113,191,255,.07);box-shadow:0 0 65px rgba(113,191,255,.13)}
-.hero-modern-topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;min-height:74px;padding-bottom:10px;border-bottom:1px solid rgba(178,220,255,.16)}
-.hero-modern-logo{display:flex;align-items:center;justify-content:flex-start;width:185px;height:64px}
-.hero-modern-logo img{display:block;max-width:100%;max-height:62px;object-fit:contain;filter:drop-shadow(0 5px 12px rgba(0,0,0,.23))}
-.hero-modern-identity{display:inline-flex;align-items:center;gap:9px;padding:9px 14px;border:1px solid rgba(150,210,255,.25);border-radius:30px;background:rgba(255,255,255,.045);color:#d9efff;font-size:12px;font-weight:800;letter-spacing:.2px}
-.hero-status-dot,.hero-modern-eyebrow span{width:7px;height:7px;border-radius:50%;background:#39c9ff;box-shadow:0 0 12px #39c9ff;flex:0 0 auto}
-.hero.hero-modern .top-actions{position:static;display:flex;align-items:center;gap:8px;line-height:normal}
-.hero.hero-modern .top-actions button{display:inline-flex;align-items:center;gap:9px;padding:10px 15px;border:1px solid rgba(178,220,255,.42);border-radius:11px;background:linear-gradient(135deg,rgba(10,54,99,.95),rgba(8,117,177,.88));color:#fff;font-size:12px;font-weight:900;box-shadow:0 5px 16px rgba(0,0,0,.18);transition:transform .2s ease,filter .2s ease}
-.hero.hero-modern .top-actions button:hover{transform:translateY(-2px);filter:brightness(1.13)}
-.hero-modern-main{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(310px,.92fr);align-items:center;gap:34px;min-height:390px;padding:30px 0 24px}
-.hero-modern-copy{position:relative;z-index:2;max-width:640px}
-.hero-modern-eyebrow{display:inline-flex;align-items:center;gap:9px;margin-bottom:15px;color:#a9dfff;font-size:12px;font-weight:900;letter-spacing:.45px}
-.hero-modern-eyebrow i{width:26px;height:1px;background:linear-gradient(90deg,transparent,#59c9ff)}
-.hero-modern-copy h1{margin:0;color:#fff;font-size:clamp(38px,5vw,65px);line-height:1.28;font-weight:900;letter-spacing:-1.2px;text-shadow:0 5px 24px rgba(0,0,0,.18)}
-.hero-modern-copy h1 strong{color:#8cddff;font-weight:900;text-shadow:0 0 27px rgba(42,173,242,.18)}
-.hero-modern-copy>p{max-width:590px;margin:13px 0 22px;color:#c4d9ed;font-size:15px;line-height:2.05}
-.hero-modern-actions{display:flex;align-items:center;gap:11px;flex-wrap:wrap}
-.hero-modern-primary,.hero-modern-secondary{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:46px;padding:12px 18px;border-radius:12px;font-size:13px;font-weight:900;text-decoration:none;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease,background .2s ease}
-.hero-modern-primary{border:1px solid #9fe4ff;background:linear-gradient(120deg,#0b9bda,#0875c7);color:#fff;box-shadow:0 9px 24px rgba(0,133,210,.24)}
-.hero-modern-primary:hover,.hero-modern-secondary:hover{transform:translateY(-2px)}
-.hero-modern-primary span{font-size:18px;line-height:1}
-.hero-modern-secondary{border:1px solid rgba(173,216,249,.34);background:rgba(255,255,255,.055);color:#e9f6ff}
-.hero-modern-secondary>span{color:#7ddaff;font-size:17px}
-.hero-modern-features{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:29px;padding-top:19px;border-top:1px solid rgba(174,217,248,.16)}
-.hero-feature{display:flex;align-items:center;gap:9px;min-width:0}
-.hero-feature-icon{display:grid;place-items:center;width:34px;height:34px;flex:0 0 34px;border:1px solid rgba(102,202,255,.38);border-radius:10px;background:rgba(27,143,208,.13);color:#8bdcff;font-size:11px;font-weight:900}
-.hero-feature b,.hero-feature small{display:block;white-space:normal}
-.hero-feature b{color:#eff8ff;font-size:11px;line-height:1.6}
-.hero-feature small{margin-top:2px;color:#9db9d2;font-size:9px;line-height:1.6}
-.hero-modern-visual{position:relative;display:flex;align-items:center;justify-content:center;min-width:0;min-height:340px}
-.hero-visual-stage{position:relative;display:flex;align-items:flex-end;justify-content:center;width:min(100%,400px);height:350px;overflow:hidden;border:1px solid rgba(146,211,255,.28);border-radius:48% 48% 23px 23px / 39% 39% 23px 23px;background:linear-gradient(155deg,rgba(29,105,159,.28),rgba(5,23,49,.12) 62%,rgba(0,162,218,.12));box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 24px 55px rgba(0,0,0,.18);backdrop-filter:blur(3px)}
-.hero-visual-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(141,212,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(141,212,255,.08) 1px,transparent 1px);background-size:24px 24px;mask-image:linear-gradient(to bottom,transparent,#000 25%,#000 75%,transparent)}
-.hero-modern-character{position:relative;z-index:1;display:block;width:auto;height:94%;max-width:92%;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 18px 24px rgba(0,0,0,.3))}
-.hero-visual-orbit{position:absolute;top:50%;left:50%;border:1px solid rgba(108,205,255,.2);border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}
-.hero-visual-orbit-one{width:430px;height:290px;transform:translate(-50%,-50%) rotate(-19deg)}
-.hero-visual-orbit-two{width:370px;height:235px;transform:translate(-50%,-50%) rotate(28deg);border-color:rgba(197,232,255,.13)}
-.hero-visual-glass-card{position:absolute;z-index:3;right:17px;bottom:18px;display:flex;align-items:center;gap:9px;padding:10px 12px;border:1px solid rgba(196,229,255,.3);border-radius:13px;background:rgba(4,22,45,.78);box-shadow:0 8px 24px rgba(0,0,0,.2);backdrop-filter:blur(10px)}
-.hero-glass-icon{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#0d8ecb,#174b85);color:#e4f8ff;font-size:18px}
-.hero-visual-glass-card b,.hero-visual-glass-card small{display:block}
-.hero-visual-glass-card b{color:#f3fbff;font-size:10px}
-.hero-visual-glass-card small{margin-top:3px;color:#9dc9e7;font-size:9px}
-.hero-visual-code{position:absolute;z-index:3;top:17px;left:17px;padding:8px 10px;border:1px solid rgba(154,219,255,.34);border-radius:11px;background:rgba(5,28,57,.75);text-align:center;box-shadow:0 6px 18px rgba(0,0,0,.18)}
-.hero-visual-code b{display:block;color:#a4e4ff;font-size:19px;line-height:1}
-.hero-visual-code small{display:block;margin-top:4px;color:#bdd7eb;font-size:8px;letter-spacing:1px}
-.hero-visual-caption{position:absolute;bottom:-8px;right:50%;transform:translateX(50%);display:flex;align-items:center;gap:8px;color:#bbd8ed;font-size:10px;white-space:nowrap}
-.hero-visual-caption span{width:5px;height:5px;border-radius:50%;background:#5bcaff;box-shadow:0 0 9px #5bcaff}
-.hero-visual-caption i{color:#57bde9;font-style:normal}
-.hero-modern-footer{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 2px 15px;border-top:1px solid rgba(168,216,249,.17);color:#b7d5eb;font-size:10px;font-weight:800}
-.hero-modern-footer>span:last-child{color:#83b8dc;font-size:8px;letter-spacing:1.6px}
-.hero-modern-footer b{color:#59cfff;font-size:12px;margin-right:7px}
-.hero-social-strip{display:flex;align-items:center;justify-content:center;gap:10px;padding:10px 12px;background:#eef5fd;border-bottom:1px solid #d8e8f7}
-.hero-social-strip .social-links{display:flex;align-items:center;justify-content:center;gap:10px;margin:0}
-.hero-social-strip .social-links a{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid #c6ddf0;border-radius:50%;background:#fff;color:#0b4d83;box-shadow:0 3px 9px rgba(0,42,82,.08)}
-.hero-social-strip .social-links svg{width:18px;height:18px;fill:currentColor}
-html[data-theme="dark"] .hero-social-strip{background:#101c2d;border-color:#2d4661}
-html[data-theme="dark"] .hero-social-strip .social-links a{background:#1b2f48;border-color:#45617f;color:#a9d8ff}
-@media(max-width:850px){
- .hero-modern-shell{padding:13px 18px 0}
- .hero-modern-main{grid-template-columns:minmax(0,1fr) minmax(250px,.82fr);gap:15px;min-height:360px;padding:24px 0 19px}
- .hero-modern-copy h1{font-size:clamp(34px,5.6vw,49px)}
- .hero-modern-copy>p{font-size:13px}
- .hero-feature{gap:6px}
- .hero-feature-icon{width:29px;height:29px;flex-basis:29px}
- .hero-feature b{font-size:10px}
- .hero-feature small{font-size:8px}
- .hero-visual-stage{height:300px}
-}
-@media(max-width:620px){
- .hero-modern-shell{padding:10px 14px 0}
- .hero-modern-topbar{min-height:58px;gap:8px}
- .hero-modern-logo{width:122px;height:48px}
- .hero-modern-logo img{max-height:46px}
- .hero-modern-identity{gap:6px;padding:7px 9px;font-size:9px}
- .hero.hero-modern .top-actions button{padding:8px 9px;font-size:10px}
- .hero.hero-modern .top-actions button span{display:none}
- .hero-modern-main{grid-template-columns:minmax(0,1fr);gap:10px;min-height:0;padding:24px 0 18px}
- .hero-modern-copy{max-width:none}
- .hero-modern-eyebrow{font-size:10px;margin-bottom:10px}
- .hero-modern-copy h1{font-size:clamp(34px,10vw,46px);line-height:1.24}
- .hero-modern-copy>p{margin:11px 0 17px;font-size:12px;line-height:1.85}
- .hero-modern-actions{gap:8px}
- .hero-modern-primary,.hero-modern-secondary{flex:1;min-height:43px;padding:10px 9px;font-size:11px;gap:7px}
- .hero-modern-features{gap:7px;margin-top:19px;padding-top:13px}
- .hero-feature{align-items:flex-start;gap:5px}
- .hero-feature-icon{width:25px;height:25px;flex-basis:25px;border-radius:8px;font-size:9px}
- .hero-feature b{font-size:9px;line-height:1.5}
- .hero-feature small{font-size:7px;line-height:1.45}
- .hero-modern-visual{min-height:0;padding:3px 0 20px}
- .hero-visual-stage{width:min(82%,310px);height:255px;border-radius:48% 48% 20px 20px / 38% 38% 20px 20px}
- .hero-modern-character{height:96%}
- .hero-visual-orbit-one{width:330px;height:225px}
- .hero-visual-orbit-two{width:290px;height:190px}
- .hero-visual-code{top:12px;left:12px;padding:7px 8px}
- .hero-visual-code b{font-size:16px}
- .hero-visual-glass-card{right:8px;bottom:12px;padding:7px 9px}
- .hero-visual-glass-card b{font-size:9px}
- .hero-visual-glass-card small{font-size:8px}
- .hero-visual-caption{bottom:5px;font-size:9px}
- .hero-modern-footer{padding:10px 1px 12px;font-size:9px}
- .hero-modern-footer>span:last-child{font-size:7px;letter-spacing:1px}
-}
-@media(max-width:370px){
- .hero-modern-identity{font-size:8px;padding:6px 7px}
- .hero-modern-logo{width:105px}
- .hero-modern-actions{flex-direction:column;align-items:stretch}
- .hero-modern-primary,.hero-modern-secondary{width:100%}
- .hero-feature small{display:none}
-}
-@media(prefers-reduced-motion:reduce){.hero.hero-modern *{scroll-behavior:auto;transition:none!important}}
 </style></head>
 <body>
-<header class="hero hero-modern" id="homeTop" aria-label="خشابيتا CNC">
- <div class="hero-modern-glow hero-modern-glow-a" aria-hidden="true"></div>
- <div class="hero-modern-glow hero-modern-glow-b" aria-hidden="true"></div>
- <div class="hero-modern-shell">
-  <div class="hero-modern-topbar">
-   <a class="hero-modern-logo" href="#homeTop" aria-label="العودة إلى بداية خشابيتا"><img src="logo-khashabita.png" alt="شعار خشابيتا"></a>
-   <div class="hero-modern-identity"><span class="hero-status-dot"></span><span>تصميم وتنفيذ بليزر CO₂</span></div>
-   <div class="top-actions"><button id="adminBtn" type="button" aria-label="دخول الإدارة">دخول الإدارة <span aria-hidden="true">↗</span></button></div>
-  </div>
-  <div class="hero-modern-main">
-   <div class="hero-modern-copy">
-    <div class="hero-modern-eyebrow"><span></span> خشابيتا CNC <i></i> إبداع يتنفذ بدقة</div>
-    <h1>من الخيال<br><strong>لواقع ملموس</strong></h1>
-    <p>بنحوّل أفكارك لمنتجات خشبية مميزة، بهدايا مخصصة ودروع وديكورات ومجسمات بتنفيذ دقيق بتقنية ليزر CO₂.</p>
-    <div class="hero-modern-actions">
-     <a class="hero-modern-primary" href="#catalog">اكتشف المنتجات <span aria-hidden="true">←</span></a>
-     <button class="hero-modern-secondary" id="heroCustomOrder" type="button"><span aria-hidden="true">✦</span> اطلب تصميمك الخاص</button>
-    </div>
-    <div class="hero-modern-features">
-     <div class="hero-feature"><span class="hero-feature-icon">01</span><span><b>قص ليزر CO₂</b><small>تفاصيل دقيقة وتشطيب أنيق</small></span></div>
-     <div class="hero-feature"><span class="hero-feature-icon">02</span><span><b>تصميم حسب الطلب</b><small>فكرتك تتنفذ بمقاسك</small></span></div>
-     <div class="hero-feature"><span class="hero-feature-icon">03</span><span><b>هدايا ومنتجات مميزة</b><small>للمناسبات وكل لحظة</small></span></div>
-    </div>
-   </div>
-   <div class="hero-modern-visual" aria-label="أحمد خشابيتا">
-    <div class="hero-visual-orbit hero-visual-orbit-one"></div>
-    <div class="hero-visual-orbit hero-visual-orbit-two"></div>
-    <div class="hero-visual-stage">
-     <div class="hero-visual-grid" aria-hidden="true"></div>
-     <img class="hero-modern-character" src="ahmed-cartoon.png" alt="أحمد خشابيتا">
-     <div class="hero-visual-glass-card"><span class="hero-glass-icon">✧</span><span><b>من الفكرة للتنفيذ</b><small>خشابيتا CNC</small></span></div>
-     <div class="hero-visual-code"><b>CO₂</b><small>LASER CRAFT</small></div>
-    </div>
-    <div class="hero-visual-caption"><span></span> تصميم <i>•</i> دقة <i>•</i> إبداع</div>
-   </div>
-  </div>
-  <div class="hero-modern-footer"><span>خشابيتا — من الخيال لواقع ملموس</span><span>MADE WITH PRECISION <b>✦</b></span></div>
- </div>
-</header>
-<div class="hero-social-strip"><div class="social-links" aria-label="تابع خشابيتا على مواقع التواصل">
+<header class="hero"><div class="top-actions"><button aria-label="القائمة">☰</button><button aria-label="بحث" onclick="document.getElementById('search').focus()">⌕</button><button id="adminBtn" aria-label="دخول الإدارة">إدارتي</button></div>
+<img src="laser-machine-banner.jpg" alt="بنر خشابيتا" class="hero-banner"><div class="hero-inner"><div class="portrait"><img src="ahmed-cartoon.png" alt="أحمد خشابيتا"></div><div class="brand"><img src="logo-khashabita.png" alt="لوجو خشابيتا"><div class="tag">كتالوج المنتجات الخشبية</div><p>تصميم • قص ليزر CO2 • ديكورات وهدايا مميزة</p>
+<div class="social-links" aria-label="تابع خشابيتا على مواقع التواصل">
 <a href="https://www.facebook.com/share/1DUHTuDPca/" target="_blank" rel="noopener noreferrer" aria-label="فيسبوك" title="فيسبوك">
 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.3-1.5 1.6-1.5h1.7V3.6c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.1H7.3V13h2.8v8h3.4Z"/></svg>
 </a>
@@ -843,7 +688,7 @@ html[data-theme="dark"] .hero-social-strip .social-links a{background:#1b2f48;bo
 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.6 7.1a6.8 6.8 0 0 1-4.2-1.5v8.1a6.1 6.1 0 1 1-5.3-6.1v3.2a2.9 2.9 0 1 0 2.1 2.8V2h3.2c.2 1.8 1.6 3.4 4.2 3.7v1.4Z"/></svg>
 </a>
 <button type="button" id="themeToggle" class="theme-toggle" aria-label="التبديل إلى الوضع الداكن" aria-pressed="false" title="تغيير مظهر الموقع">☾</button>
-</div></div>
+</div></div><div class="laser-art">⚡</div></div></header>
 <div class="searchbar"><div class="inner"><input id="search" placeholder="ابحث عن منتجك هنا..."><button onclick="document.getElementById('search').focus()">بحث</button></div></div>
 <nav class="categories" id="categoryTiles">
 <button class="cat cat-gifts" data-cat="هدايا مخصصة"><span class="cat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 7v14M12 7H7.5a2.5 2.5 0 1 1 2.5-2.5C10 6 12 7 12 7Zm0 0h4.5A2.5 2.5 0 1 0 14 4.5C14 6 12 7 12 7Z"/></svg></span><b>هدايا مخصصة</b></button>
@@ -945,6 +790,6 @@ html[data-theme="dark"] .hero-social-strip .social-links a{background:#1b2f48;bo
  </div>
  <div id="productPageContent"></div>
 </section>
-<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261126-hero-redesign1"></script>
+<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261126-related-products1"></script>
 <script>document.querySelectorAll('.cat').forEach(b=>b.addEventListener('click',()=>{document.getElementById('categoryFilter').value=b.dataset.cat;document.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('categoryFilter').dispatchEvent(new Event('change'));document.getElementById('catalog').scrollIntoView({behavior:'smooth'});}));document.getElementById('search').addEventListener('input',e=>{const real=document.querySelector('#search');real.dispatchEvent(new Event('change'));});document.getElementById('backCatalog').onclick=()=>{document.getElementById('admin').classList.add('hidden');document.getElementById('catalog').classList.remove('hidden');};</script>
 </body></html>
