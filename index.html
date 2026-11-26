@@ -804,6 +804,19 @@ html[data-theme="dark"] .product-page-discount{background:#512b3b;color:#ffc5d0}
  .product-page-description{font-size:14px}
 }
 @media(prefers-reduced-motion:reduce){.product-page{animation:none}.product-page-main-image.slide-from-right img,.product-page-main-image.slide-from-left img{animation:none}}
+
+/* Product availability states */
+.product-availability-badge{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;margin:5px 0 0 6px;padding:5px 10px;border:1px solid transparent;border-radius:20px;font-size:11px;font-weight:900;line-height:1.45;white-space:nowrap}
+.availability-available{background:#e8f8f0;color:#087443;border-color:#a8e3c3}
+.availability-made-to-order{background:#e8f4ff;color:#075da5;border-color:#abd6f6}
+.availability-unavailable{background:#fff0f1;color:#a52635;border-color:#f2bbc2}
+.product-page-status{margin:0 0 10px;font-size:12px;padding:7px 13px}
+.availability-disabled{display:inline-flex;align-items:center;justify-content:center;opacity:.68;cursor:not-allowed;pointer-events:none;background:#64748b!important;color:#fff!important;border:1px solid #64748b!important}
+html[data-theme="dark"] .availability-available{background:#153e35;color:#9df0c4;border-color:#276b58}
+html[data-theme="dark"] .availability-made-to-order{background:#173a5b;color:#a9d7ff;border-color:#32658d}
+html[data-theme="dark"] .availability-unavailable{background:#4b2834;color:#ffc2cb;border-color:#82404e}
+html[data-theme="dark"] .availability-disabled{background:#46566b!important;color:#d6e0ec!important;border-color:#62748c!important}
+@media(max-width:650px){#availabilityFilter{min-width:155px;flex:1}}
 </style></head>
 <body>
 <header class="hero" aria-label="بنر خشابيتا CNC">
@@ -886,7 +899,7 @@ html[data-theme="dark"] .product-page-discount{background:#512b3b;color:#ffc5d0}
 </section>
 
 <main>
-<section id="catalog"><h2 class="section-title">⭐ أحدث المنتجات ⭐</h2><div class="toolbar"><input id="searchFallback" class="hidden" aria-hidden="true"><button type="button" id="homeButton" class="home-button">⌂ الرئيسية</button><select id="categoryFilter"><option value="">كل الأقسام</option><option>قمركبات</option></select></div><p id="productDisplayNote" class="muted product-display-note" aria-live="polite"></p><div id="products" class="grid"><div class="empty">جاري تحميل المنتجات...</div></div><div class="benefits"><span>🚚 شحن لجميع المحافظات</span><span>✓ جودة وتشطيب عالي</span><span>⚙️ تصميمات حصرية</span><span>💬 طلب مباشر على واتساب</span></div></section>
+<section id="catalog"><h2 class="section-title">⭐ أحدث المنتجات ⭐</h2><div class="toolbar"><input id="searchFallback" class="hidden" aria-hidden="true"><button type="button" id="homeButton" class="home-button">⌂ الرئيسية</button><select id="categoryFilter"><option value="">كل الأقسام</option><option>قمركبات</option></select><select id="availabilityFilter" aria-label="تصفية حسب التوفر"><option value="">كل حالات التوفر</option><option value="available">متاح الآن</option><option value="made-to-order">ينفذ حسب الطلب</option><option value="unavailable">غير متاح حاليًا</option></select></div><p id="productDisplayNote" class="muted product-display-note" aria-live="polite"></p><div id="products" class="grid"><div class="empty">جاري تحميل المنتجات...</div></div><div class="benefits"><span>🚚 شحن لجميع المحافظات</span><span>✓ جودة وتشطيب عالي</span><span>⚙️ تصميمات حصرية</span><span>💬 طلب مباشر على واتساب</span></div></section>
 <section id="admin" class="hidden"><div class="panel"><div class="actions" style="justify-content:space-between;align-items:center"><h2>لوحة إدارة خشابيتا</h2><button id="logout" class="danger">تسجيل الخروج</button></div><p id="adminEmail" class="muted"></p><div class="notice">أنت مسجل كمدير. أي منتج تحفظه أو تعدّل سعره سيظهر في كتالوج العملاء بعد الحفظ.</div><button id="backCatalog" class="light" style="margin-top:12px">عرض الكتالوج</button></div>
 
 
@@ -915,7 +928,7 @@ html[data-theme="dark"] .product-page-discount{background:#512b3b;color:#ffc5d0}
   <label>السعر بعد الخصم بالجنيه<input id="offerPrice" type="number" min="0" step="0.01" placeholder="اكتب السعر بعد الخصم"></label>
   <small>السعر الأساسي بالأعلى هيظهر مشطوبًا، والسعر ده هو اللي العميل هيدفعه.</small>
  </div>
-</div><label>القسم<input id="category" required placeholder="مثال: قمركبات"></label><label>المقاس<input id="dimensions" placeholder="مثال: 35 × 45 × 32 سم"></label><label>الخامة<input id="material" value="خشب MDF"></label><div class="image-upload-field"><label for="imageFiles">صور المنتج</label><label class="upload-picker" for="imageFiles"><span>＋</span><b>إضافة صور من الجهاز</b><small>اختار صورة أو أكتر (JPG / PNG / WEBP / GIF)</small></label><input id="imageFiles" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple hidden><textarea id="imageUrls" rows="2" hidden aria-hidden="true"></textarea><p id="uploadStatus" class="muted" role="status" aria-live="polite"></p></div><label>وصف مختصر<input id="description" maxlength="300"></label><label>رابط فيديو YouTube (اختياري)<input id="videoUrl" type="url" placeholder="https://youtu.be/..."><small class="muted">اترك الخانة فارغة لو المنتج ملوش فيديو.</small></label><label>رابط فيديو TikTok (اختياري)<input id="tiktokUrl" type="url" placeholder="https://www.tiktok.com/@username/video/..."><small class="muted">اترك الخانة فارغة لو المنتج ملوش فيديو.</small></label></div><div id="imagePreviewWrap" class="hidden" style="margin-top:12px"><p class="muted">معاينة الصور</p><div id="imagePreviews" class="thumbs"></div></div><p class="muted">ارفع الصور مباشرة من جهازك. أول صورة هي الرئيسية والباقي يظهر في معرض تفاصيل المنتج.</p><p class="actions"><button class="primary" type="submit">حفظ المنتج</button><button id="cancelEdit" type="button" class="light">إلغاء</button></p></form></div><div class="panel"><h3>المنتجات الحالية</h3><div id="adminList"></div></div><div class="panel">
+</div><label>حالة التوفر<select id="availabilityStatus"><option value="available">متاح الآن</option><option value="made-to-order">ينفذ حسب الطلب</option><option value="unavailable">غير متاح حاليًا</option></select></label><label>القسم<input id="category required placeholder="مثال: قمركبات"></label><label>المقاس<input id="dimensions" placeholder="مثال: 35 × 45 × 32 سم"></label><label>الخامة<input id="material" value="خشب MDF"></label><div class="image-upload-field"><label for="imageFiles">صور المنتج</label><label class="upload-picker" for="imageFiles"><span>＋</span><b>إضافة صور من الجهاز</b><small>اختار صورة أو أكتر (JPG / PNG / WEBP / GIF)</small></label><input id="imageFiles" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple hidden><textarea id="imageUrls" rows="2" hidden aria-hidden="true"></textarea><p id="uploadStatus" class="muted" role="status" aria-live="polite"></p></div><label>وصف مختصر<input id="description" maxlength="300"></label><label>رابط فيديو YouTube (اختياري)<input id="videoUrl" type="url" placeholder="https://youtu.be/..."><small class="muted">اترك الخانة فارغة لو المنتج ملوش فيديو.</small></label><label>رابط فيديو TikTok (اختياري)<input id="tiktokUrl" type="url" placeholder="https://www.tiktok.com/@username/video/..."><small class="muted">اترك الخانة فارغة لو المنتج ملوش فيديو.</small></label></div><div id="imagePreviewWrap" class="hidden" style="margin-top:12px"><p class="muted">معاينة الصور</p><div id="imagePreviews" class="thumbs"></div></div><p class="muted">ارفع الصور مباشرة من جهازك. أول صورة هي الرئيسية والباقي يظهر في معرض تفاصيل المنتج.</p><p class="actions"><button class="primary" type="submit">حفظ المنتج</button><button id="cancelEdit" type="button" class="light">إلغاء</button></p></form></div><div class="panel"><h3>المنتجات الحالية</h3><div id="adminList"></div></div><div class="panel">
 </div></section>
 
 
@@ -969,7 +982,7 @@ html[data-theme="dark"] .product-page-discount{background:#512b3b;color:#ffc5d0}
  </div>
  <div id="productPageContent"></div>
 </section>
-<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261126-dedicated-product-page2"></script>
+<footer>خشابيتا CNC © 2026</footer><script type="module" src="app.js?v=20261126-availability-status1"></script>
 <script>
 (() => {
   // ربط أزرار الأقسام بعد تحميل عناصر الصفحة.
