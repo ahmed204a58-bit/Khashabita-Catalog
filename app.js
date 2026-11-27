@@ -83,7 +83,10 @@ function isAdmin(){return !!currentUser && currentUser.email?.toLowerCase()===AD
 function startVisitorCounterAfterAuth(){
  if(visitorCounterDecisionMade)return;
  visitorCounterDecisionMade=true;
- if(!isAdmin())updateVisitorCounter();
+ if(!isAdmin()){
+  updateVisitorCounter();
+  trackVisitorCountry();
+ }
 }
 function validImage(u){return /^https:\/\//i.test(u) || (/^(?:\.\/|products\/)[\w./-]+\.(?:png|jpe?g|webp|gif)$/i.test(u) && !u.includes(".."));}
 function productImages(p){return (Array.isArray(p.imageUrls)?p.imageUrls:(p.imageUrl?[p.imageUrl]:[])).filter(validImage);}
@@ -508,6 +511,103 @@ async function callStatsRpc(functionName, payload = {}) {
   return result;
 }
 
+// Country-only analytics: the geolocation provider sees the visitor IP to
+// resolve the country; only country code/name and aggregate counts reach Supabase.
+const COUNTRY_CACHE_KEY = "khashabita-country-cache-v1";
+const COUNTRY_VISIT_KEY_PREFIX = "khashabita-country-visit:";
+
+function localDayKey() {
+  const now = new Date();
+  return [now.getFullYear(), String(now.getMonth()+1).padStart(2,"0"), String(now.getDate()).padStart(2,"0")].join("-");
+}
+
+async function resolveVisitorCountry() {
+  try {
+    const cached = JSON.parse(localStorage.getItem(COUNTRY_CACHE_KEY) || "null");
+    if (cached && cached.expiresAt > Date.now() && /^[A-Z]{2}$/.test(cached.code) && cached.name) {
+      return { code: cached.code, name: cached.name };
+    }
+  } catch (_) {}
+
+  const response = await fetch("https://get.geojs.io/v1/ip/geo.json", {
+    method: "GET",
+    headers: { "Accept": "application/json" },
+    cache: "no-store"
+  });
+  if (!response.ok) throw new Error("تعذر تحديد الدولة");
+  const geo = await response.json();
+  const code = String(geo?.country_code || "").trim().toUpperCase();
+  const name = String(geo?.country || "").trim().slice(0,100);
+  if (!/^[A-Z]{2}$/.test(code) || !name) throw new Error("بيانات الدولة غير مكتملة");
+
+  const country = { code, name };
+  try {
+    localStorage.setItem(COUNTRY_CACHE_KEY, JSON.stringify({
+      ...country,
+      expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000
+    }));
+  } catch (_) {}
+  return country;
+}
+
+async function trackVisitorCountry() {
+  const visitKey = COUNTRY_VISIT_KEY_PREFIX + localDayKey();
+  try {
+    if (localStorage.getItem(visitKey) === "1") return;
+  } catch (_) {}
+
+  try {
+    const country = await resolveVisitorCountry();
+    await callStatsRpc("record_country_visit", {
+      p_country_code: country.code,
+      p_country_name: country.name
+    });
+    try { localStorage.setItem(visitKey, "1"); } catch (_) {}
+  } catch (err) {
+    console.warn("Country visit tracking:", err);
+  }
+}
+
+function countryFlag(code) {
+  return String(code || "").toUpperCase().replace(/[A-Z]/g, letter =>
+    String.fromCodePoint(127397 + letter.charCodeAt(0))
+  );
+}
+
+function renderCountryStats(items) {
+  const target = $("countryStats");
+  if (!target) return;
+  if (!Array.isArray(items) || !items.length) {
+    target.innerHTML = '<div class="country-stats-empty">لسه مفيش زيارات مسجلة حسب الدولة.</div>';
+    return;
+  }
+
+  const rows = items.map(item => ({
+    code: /^[A-Z]{2}$/.test(String(item.country_code || "").toUpperCase()) ? String(item.country_code).toUpperCase() : "",
+    name: String(item.country_name || "دولة غير محددة"),
+    visits: Math.max(0, Number(item.visits ?? item.visit_count ?? item.count ?? 0))
+  })).filter(item => item.visits > 0).sort((a,b) => b.visits-a.visits);
+  const maxVisits = Math.max(1, ...rows.map(item => item.visits));
+  const total = rows.reduce((sum,item) => sum+item.visits,0);
+  if (!rows.length) {
+    target.innerHTML = '<div class="country-stats-empty">لسه مفيش زيارات مسجلة حسب الدولة.</div>';
+    return;
+  }
+  target.innerHTML = rows.map(item => {
+    const share = total ? item.visits / total * 100 : 0;
+    const width = Math.max(2, item.visits / maxVisits * 100);
+    return `<div class="country-stat-row">
+      <div class="country-stat-label">
+        <span class="country-stat-flag" aria-hidden="true">${countryFlag(item.code)}</span>
+        <span>${safe(item.name)}</span>
+        <b>${item.visits.toLocaleString("ar-EG")}</b>
+      </div>
+      <span class="country-stat-share">${share.toLocaleString("ar-EG",{maximumFractionDigits:1})}٪</span>
+      <div class="country-stat-track"><i style="width:${width}%"></i></div>
+    </div>`;
+  }).join("");
+}
+
 function trackProductView(productId) {
   if (!productId) return;
   callStatsRpc("track_product_view", { p_product_id: String(productId) })
@@ -550,6 +650,14 @@ async function loadAdminStats() {
     };
     renderTop(views, "topViewedProducts", "لا توجد مشاهدات مسجلة للمنتجات حتى الآن.");
     renderTop(clicks, "topWhatsappProducts", "لا توجد ضغطات واتساب مسجلة حتى الآن.");
+    try {
+      const countries = await callStatsRpc("get_country_visit_stats");
+      renderCountryStats(countries);
+    } catch (countryError) {
+      console.warn("Country analytics:", countryError);
+      const countryTarget = $("countryStats");
+      if (countryTarget) countryTarget.innerHTML = '<div class="country-stats-empty">شغّل ملف supabase/country_analytics.sql مرة واحدة لتفعيل إحصائيات الدول.</div>';
+    }
     status.textContent = "تم تحديث الإحصائيات بنجاح.";
   } catch (err) {
     console.error("Admin analytics:", err);

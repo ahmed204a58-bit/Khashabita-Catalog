@@ -905,6 +905,32 @@ html[data-theme="dark"] .offer-mini-prices strong {
  .offers-banner.is-expanded .offers-products{grid-template-columns:1fr}
 }
 
+
+/* Country analytics */
+.country-stats-panel{
+ margin:20px 0 8px;padding:16px;border:1px solid #d7e8fb;border-radius:15px;
+ background:linear-gradient(145deg,#f8fbff,#edf5ff);
+}
+.country-stats-heading{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.country-stats-heading h4{margin:0;color:#123b70}
+.country-stats-heading span{font-size:11px;color:#6b7f98}
+.country-stats-list{display:grid;gap:11px}
+.country-stat-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 12px;align-items:center}
+.country-stat-label{display:flex;align-items:center;gap:8px;min-width:0;color:#244565;font-size:13px}
+.country-stat-flag{font-size:18px;line-height:1}
+.country-stat-label b{margin-inline-start:auto;color:#082e70;font-size:13px;white-space:nowrap}
+.country-stat-track{height:8px;overflow:hidden;border-radius:20px;background:#dce9f7;grid-column:1/-1}
+.country-stat-track i{display:block;height:100%;min-width:3px;border-radius:20px;background:linear-gradient(90deg,#0a4d92,#18b7dc)}
+.country-stat-share{font-size:11px;color:#7a8ca2;white-space:nowrap}
+.country-stats-empty{padding:12px;border-radius:10px;background:#fff;color:#6b7f98;font-size:12px;line-height:1.8}
+html[data-theme="dark"] .country-stats-panel{background:linear-gradient(145deg,#152338,#1a2d45);border-color:#304b68}
+html[data-theme="dark"] .country-stats-heading h4{color:#a6d2ff}
+html[data-theme="dark"] .country-stats-heading span{color:#a8bbd1}
+html[data-theme="dark"] .country-stat-label{color:#d8e6f5}
+html[data-theme="dark"] .country-stat-label b{color:#a6d2ff}
+html[data-theme="dark"] .country-stat-track{background:#2a405a}
+html[data-theme="dark"] .country-stats-empty{background:#1b2f48;color:#bfd0e3}
+
 </style></head>
 <body>
 <header class="hero" aria-label="بنر خشابيتا CNC">
@@ -994,6 +1020,13 @@ html[data-theme="dark"] .offer-mini-prices strong {
   <div id="topViewedProducts" class="muted">جاري تحميل الإحصائيات...</div>
   <h4>أكثر المنتجات طلبًا عبر واتساب</h4>
   <div id="topWhatsappProducts" class="muted">جاري تحميل الإحصائيات...</div>
+  <div class="country-stats-panel">
+    <div class="country-stats-heading">
+      <h4>الزيارات حسب الدولة</h4>
+      <span>التوزيع الجغرافي للزيارات المسجلة</span>
+    </div>
+    <div id="countryStats" class="country-stats-list" aria-live="polite">جاري تحميل بيانات الدول...</div>
+  </div>
   <p id="statsStatus" class="muted" role="status" aria-live="polite"></p>
 </div>
 
