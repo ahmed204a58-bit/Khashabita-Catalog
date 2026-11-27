@@ -398,7 +398,7 @@ function renderDetails(){
     <div class="product-page-divider"></div>
     <dl class="product-page-specs">
      <div><dt>كود المنتج</dt><dd>${safe(p.sku||"—")}</dd></div>
-     <div><dt>المقاس</dt><dd>${safe(p.dimensions||"حسب الطلب")}</dd></div>
+     ${p.dimensions?`<div><dt>المقاس</dt><dd>${safe(p.dimensions)}</dd></div>`:""}
      <div><dt>الخامة</dt><dd>${safe(p.material||"خشب MDF")}</dd></div>
     </dl>
     <div class="product-page-badges">
