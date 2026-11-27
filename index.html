@@ -869,6 +869,42 @@ html[data-theme="dark"] .offer-mini-prices strong {
   color: #ffffff !important;
 }
 
+
+/* Expand/collapse all sale products inside the offers banner */
+.offers-banner.is-expanded{
+ grid-template-columns:minmax(0,1fr)!important;
+ align-items:stretch;
+}
+.offers-banner.is-expanded:after{display:none}
+.offers-banner.is-expanded .offers-copy{width:100%;padding:10px 9px 4px}
+.offers-banner.is-expanded .offers-products{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));
+ align-items:stretch;
+ gap:14px;
+ margin:4px 0 0;
+ padding:3px 2px 5px;
+ overflow:visible;
+ scroll-snap-type:none;
+}
+.offers-banner.is-expanded .offer-mini-card{
+ flex:initial;
+ width:100%;
+ min-width:0;
+ min-height:270px;
+}
+.offers-banner.is-expanded .offers-empty{grid-column:1/-1}
+@media(max-width:700px){
+ .offers-banner.is-expanded .offers-products{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+ }
+ .offers-banner.is-expanded .offer-mini-card{min-height:250px}
+}
+@media(max-width:370px){
+ .offers-banner.is-expanded .offers-products{grid-template-columns:1fr}
+}
+
 </style></head>
 <body>
 <header class="hero" aria-label="بنر خشابيتا CNC">
@@ -928,7 +964,7 @@ html[data-theme="dark"] .offer-mini-prices strong {
    <span class="offers-kicker">عروض خشابيتا</span>
    <h2>وفر واستمتع بعروض خشابيتا</h2>
    <p>اختار من عروضنا الخاصة واستمتع بسعر مميز على منتجات خشابيتا.</p>
-   <a class="offers-action" href="#catalog">تصفح باقي المنتجات <span aria-hidden="true">←</span></a>
+   <button type="button" class="offers-action" id="offersToggle" aria-expanded="false" aria-controls="offerProducts">تصفح منتجات العرض <span aria-hidden="true">↓</span></button>
   </div>
   <div id="offerProducts" class="offers-products" aria-live="polite">
    <div class="offers-empty">العروض الخاصة هتظهر هنا بمجرد تفعيلها من لوحة الإدارة.</div>
@@ -1024,4 +1060,26 @@ html[data-theme="dark"] .offer-mini-prices strong {
     });
   }
 })();
-</script></body></html>
+</script>
+<script>
+(() => {
+  const toggle = document.getElementById("offersToggle");
+  const banner = document.querySelector("#offersSection .offers-banner");
+  const products = document.getElementById("offerProducts");
+  if (!toggle || !banner) return;
+
+  toggle.addEventListener("click", () => {
+    const expanded = banner.classList.toggle("is-expanded");
+    toggle.setAttribute("aria-expanded", String(expanded));
+    toggle.innerHTML = expanded
+      ? 'إخفاء منتجات العرض <span aria-hidden="true">↑</span>'
+      : 'تصفح منتجات العرض <span aria-hidden="true">↓</span>';
+
+    if (expanded && products) {
+      products.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  });
+})();
+</script>
+
+</body></html>
